@@ -1,0 +1,91 @@
+﻿@page "/Admin/Stations/EditMedia/{stationId:int}/{mediaId?}"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.EditMediaModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = Model.IsNew ? "Neues Medium anlegen" : "Medium bearbeiten";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h5>Station: @Model.Station.Title</h5>
+
+<form method="post" enctype="multipart/form-data">
+    <!-- WICHTIG: Id & StationId mitposten -->
+    <input type="hidden" asp-for="Media.Id" />
+    <input type="hidden" asp-for="Media.StationId" />
+
+    <div class="mb-3">
+        <label asp-for="Media.MediaType" class="form-label">Medientyp</label>
+        <select asp-for="Media.MediaType" class="form-select">
+            <option value="Image">Bild</option>
+            <option value="Audio">Audio</option>
+            <option value="Video">Video</option>
+        </select>
+        <span asp-validation-for="Media.MediaType" class="text-danger"></span>
+    </div>
+
+    @* Falls schon eine Datei/URL existiert: anzeigen *@
+    @if (!string.IsNullOrEmpty(Model.Media.Url))
+    {
+        <div class="mb-3">
+            <label class="form-label">Aktuelle Datei / URL</label>
+            <div>
+                <a href="@Model.Media.Url" target="_blank">@Model.Media.Url</a>
+            </div>
+        </div>
+    }
+
+    <div class="mb-3">
+        <label asp-for="Media.Url" class="form-label">URL</label>
+        <input asp-for="Media.Url" class="form-control" />
+        <small class="form-text text-muted">
+            Entweder hier eine bestehende URL angeben (z.&nbsp;B. von einer bereits
+            hochgeladenen Datei) oder unten eine Datei hochladen.
+        </small>
+        <span asp-validation-for="Media.Url" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Datei hochladen (optional)</label>
+        <div class="input-group">
+            <input asp-for="UploadFile" type="file" class="form-control" />
+            <span class="input-group-text">
+                <i class="bi bi-upload"></i>
+            </span>
+        </div>
+        <small class="form-text text-muted">
+            Wenn eine Datei ausgewählt wird, wird sie auf dem Server gespeichert und
+            die URL automatisch gesetzt.
+        </small>
+        <span asp-validation-for="UploadFile" class="text-danger"></span>
+    </div>
+
+
+    <div class="mb-3">
+        <label asp-for="Media.Caption" class="form-label">Caption / Beschreibung</label>
+        <textarea asp-for="Media.Caption" class="form-control" rows="2"></textarea>
+        <span asp-validation-for="Media.Caption" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Media.SortOrder" class="form-label">Sortierung</label>
+        <input asp-for="Media.SortOrder" class="form-control" type="number" />
+        <small class="form-text text-muted">
+            Kleinere Zahlen werden zuerst angezeigt.
+        </small>
+        <span asp-validation-for="Media.SortOrder" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg me-1"></i>
+        Speichern
+    </button>
+    <a asp-page="ManageMedia" asp-route-stationId="@Model.Station.Id" class="btn btn-secondary">
+        <i class="bi bi-x-lg me-1"></i>
+        Abbrechen
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

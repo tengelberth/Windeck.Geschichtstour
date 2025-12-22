@@ -1,0 +1,65 @@
+﻿@page "/Admin/Tours"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Tours.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Touren verwalten";
+}
+
+<h1>Touren verwalten</h1>
+
+<p>
+    <a asp-page="Edit" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>
+        Neue Tour anlegen
+    </a>
+</p>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Beschreibung</th>
+            <th>Stops</th>
+            <th style="width: 200px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tour in Model.Tours)
+        {
+            <tr>
+                <td>@tour.Title</td>
+                <td>@tour.Description</td>
+                <td>@tour.Stops.Count</td>
+                <td>
+                    <a asp-page="Edit"
+                       asp-route-id="@tour.Id"
+                       class="btn btn-sm btn-secondary"
+                       title="Tour bearbeiten">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+
+                    <a asp-page="ManageStops"
+                       asp-route-id="@tour.Id"
+                       class="btn btn-sm btn-info"
+                       title="Stops bearbeiten">
+                        <i class="bi bi-list-ol"></i>
+                    </a>
+
+                    <form method="post"
+                          asp-page-handler="Delete"
+                          asp-route-id="@tour.Id"
+                          style="display:inline"
+                          onsubmit="return confirm('Tour wirklich löschen?');">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger"
+                                title="Tour löschen">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

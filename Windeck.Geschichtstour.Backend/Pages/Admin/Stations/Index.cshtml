@@ -1,0 +1,99 @@
+﻿@page "/Admin/Stations"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Stationen verwalten";
+}
+
+<h1>Stationen verwalten</h1>
+
+<form method="get" class="mb-3">
+    <div class="input-group input-group-sm" style="max-width: 400px;">
+        <input type="text"
+               name="SearchTerm"
+               value="@Model.SearchTerm"
+               class="form-control"
+               placeholder="Nach Titel, Code oder Ort suchen..." />
+        <button class="btn btn-outline-primary" type="submit" title="Suchen">
+            <i class="bi bi-search"></i>
+        </button>
+        @if (!string.IsNullOrWhiteSpace(Model.SearchTerm))
+        {
+            <a href="@Url.Page("/Admin/Stations/Index")"
+               class="btn btn-outline-secondary"
+               title="Filter zurücksetzen">
+                <i class="bi bi-x-lg"></i>
+            </a>
+        }
+    </div>
+</form>
+
+<p>
+    <a asp-page="Edit" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>
+        Neue Station anlegen
+    </a>
+</p>
+
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titel</th>
+            <th>Code</th>
+            <th>Kategorie</th>
+            <th>Ort</th>
+            <th>Koordinaten</th>
+            <th style="width: 160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var station in Model.Stations)
+        {
+            <tr>
+                <td>@station.Title</td>
+                <td>@station.Code</td>
+                <td>@station.Category?.Name</td>
+                <td>@station.City</td>
+                <td>
+                    @if (station.Latitude.HasValue && station.Longitude.HasValue)
+                    {
+                        @($"{station.Latitude:0.0000}, {station.Longitude:0.0000}")
+                    }
+                </td>
+                <td>
+                    <!-- Bearbeiten -->
+                    <a asp-page="Edit"
+                       asp-route-id="@station.Id"
+                       class="btn btn-sm btn-secondary"
+                       title="Station bearbeiten">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+
+                    <!-- Medien -->
+                    <a asp-page="ManageMedia"
+                       asp-route-stationId="@station.Id"
+                       class="btn btn-sm btn-info"
+                       title="Medien verwalten">
+                        <i class="bi bi-images"></i>
+                    </a>
+
+                    <!-- Löschen -->
+                    <form method="post"
+                          asp-page-handler="Delete"
+                          asp-route-id="@station.Id"
+                          style="display:inline"
+                          onsubmit="return confirm('Station wirklich löschen?');">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger"
+                                title="Station löschen">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,74 @@
+﻿@page "/Admin"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin-Übersicht";
+}
+
+<h1>Adminbereich – Geschichtstour Windeck</h1>
+
+<div class="d-flex justify-content-center mb-4">
+<img src="~/images/windeck-wappen.png"
+     alt="Geschichtstour Windeck"
+     class="img-fluid"
+     style="max-height: 200px; width: auto;" />
+</div>
+
+<p>
+    Dieser Adminbereich dient der Pflege der Inhalte der digitalen Geschichtstour in Windeck.
+    Hier können Sie historische Stationen, Kategorien und geführte Touren anlegen, bearbeiten
+    und mit Medien wie Bildern, Audio- oder Videodateien ergänzen.
+</p>
+
+<p>
+    Die Anwendung ist im Rahmen einer Bachelorarbeit entstanden und soll langfristig als Werkzeug
+    für die Gemeinde und den Tourismusverein dienen, um die Geschichte Windecks für Bürgerinnen
+    und Bürger – insbesondere auch für Jüngere – digital erlebbar zu machen.
+</p>
+
+<div class="row mb-4">
+    <div class="col-md-3 mb-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.StationCount</div>
+                <div class="text-muted">
+                    <i class="bi bi-geo-alt me-1"></i>
+                    Stationen
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.TourCount</div>
+                <div class="text-muted">
+                    <i class="bi bi-map me-1"></i>
+                    Touren
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.CategoryCount</div>
+                <div class="text-muted">
+                    <i class="bi bi-tags me-1"></i>
+                    Kategorien
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-2">
+        <div class="card text-center">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.MediaCount</div>
+                <div class="text-muted">
+                    <i class="bi bi-image me-1"></i>
+                    Medien
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

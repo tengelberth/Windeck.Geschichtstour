@@ -1,0 +1,198 @@
+﻿@page "/Admin/Stations/Edit/{id?}"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.EditModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = Model.IsNew ? "Neue Station anlegen" : "Station bearbeiten";
+}
+
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+    <!-- WICHTIG: Id mit posten, damit die Station als bestehend erkannt wird -->
+    <input type="hidden" asp-for="Station.Id" />
+
+    <div class="mb-3">
+        <label asp-for="Station.Title" class="form-label"></label>
+        <input asp-for="Station.Title" class="form-control" />
+        <span asp-validation-for="Station.Title" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Station.Code" class="form-label"></label>
+        <input asp-for="Station.Code" class="form-control" />
+        <small class="form-text text-muted">
+            Eindeutiger Code, der z. B. im QR-Code verwendet wird.
+        </small>
+        <span asp-validation-for="Station.Code" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Station.CategoryId" class="form-label">Kategorie</label>
+        <select asp-for="Station.CategoryId" asp-items="Model.CategoryOptions" class="form-select"></select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Station.ShortDescription" class="form-label">Kurzbeschreibung</label>
+        <textarea asp-for="Station.ShortDescription" class="form-control" rows="2"></textarea>
+        <span asp-validation-for="Station.ShortDescription" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Station.LongDescription" class="form-label"></label>
+
+        @* Hidden-Textarea für die eigentliche Bindung ans Model *@
+        <textarea asp-for="Station.LongDescription"
+                  class="form-control d-none"
+                  id="LongDescriptionHidden"></textarea>
+        <span asp-validation-for="Station.LongDescription" class="text-danger"></span>
+
+        @* Sichtbarer Rich-Text-Editor *@
+        <div id="LongDescriptionEditor" style="height: 300px;"></div>
+    </div>
+
+
+    <h4>Adresse (optional)</h4>
+
+    <div class="row">
+        <div class="col-md-8 mb-3">
+            <label asp-for="Station.Street" class="form-label"></label>
+            <input asp-for="Station.Street" class="form-control" />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Station.HouseNumber" class="form-label"></label>
+            <input asp-for="Station.HouseNumber" class="form-control" />
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="Station.ZipCode" class="form-label"></label>
+            <input asp-for="Station.ZipCode" class="form-control" />
+        </div>
+        <div class="col-md-8 mb-3">
+            <label asp-for="Station.City" class="form-label"></label>
+            <input asp-for="Station.City" class="form-control" />
+        </div>
+    </div>
+
+    <h4>Koordinaten (für Karte und Navigation)</h4>
+
+    <p class="text-muted">
+        Hinweis: Koordinaten können über Google Maps ermittelt werden.
+        Adresse oder Titel eingeben, Rechtsklick auf den Punkt → Koordinaten kopieren
+        und unten in die Felder für Breite/Länge einfügen.
+    </p>
+
+    <p>
+        <button type="button"
+                class="btn btn-sm btn-outline-primary"
+                onclick="openGoogleMapsForStation()">
+            <i class="bi bi-geo-alt me-1"></i>
+            In Google Maps öffnen
+        </button>
+
+    </p>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label asp-for="Station.Latitude" class="form-label"></label>
+            <input asp-for="Station.Latitude" class="form-control" />
+            <small class="form-text text-muted">
+                Geografische Breite (z. B. 50.8000).
+            </small>
+            <span asp-validation-for="Station.Latitude" class="text-danger"></span>
+        </div>
+        <div class="col-md-6 mb-3">
+            <label asp-for="Station.Longitude" class="form-label"></label>
+            <input asp-for="Station.Longitude" class="form-control" />
+            <small class="form-text text-muted">
+                Geografische Länge (z. B. 7.5800).
+            </small>
+            <span asp-validation-for="Station.Longitude" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">
+        <i class="bi bi-check-lg me-1"></i>
+        Speichern
+    </button>
+    <a asp-page="Index" class="btn btn-secondary">
+        <i class="bi bi-x-lg me-1"></i>
+        Abbrechen
+    </a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function openGoogleMapsForStation() {
+            // IDs werden von asp-for="Station.XYZ" generiert (Station_Title, Station_Street, ...)
+            const title = document.getElementById("Station_Title")?.value ?? "";
+            const street = document.getElementById("Station_Street")?.value ?? "";
+            const houseNumber = document.getElementById("Station_HouseNumber")?.value ?? "";
+            const zip = document.getElementById("Station_ZipCode")?.value ?? "";
+            const city = document.getElementById("Station_City")?.value ?? "";
+
+            // Alles, was nicht leer ist, in einen Suchstring packen
+            const parts = [title, street, houseNumber, zip, city]
+                .map(p => p.trim())
+                .filter(p => p.length > 0);
+
+            if (parts.length === 0) {
+                alert("Bitte zuerst mindestens Titel oder Adresse eingeben, bevor Google Maps geöffnet wird.");
+                return;
+            }
+
+            const query = encodeURIComponent(parts.join(" "));
+            const url = "https://www.google.com/maps/search/?api=1&query=" + query;
+
+            // In neuem Tab/Fenster öffnen
+            window.open(url, "_blank");
+        }
+    </script>
+
+    <!-- Quill CSS & JS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const hiddenField = document.getElementById("LongDescriptionHidden");
+            const editorContainer = document.getElementById("LongDescriptionEditor");
+
+            if (!hiddenField || !editorContainer) {
+                return;
+            }
+
+            // Quill initialisieren
+            const quill = new Quill("#LongDescriptionEditor", {
+                theme: "snow",
+                modules: {
+                    toolbar: [
+                        ["bold", "italic", "underline"],
+                        [{ "list": "ordered" }, { "list": "bullet" }],
+                        ["link"],
+                        ["clean"]
+                    ]
+                }
+            });
+
+            // Bestehenden Inhalt aus dem Hidden-Feld in den Editor laden (falls vorhanden)
+            if (hiddenField.value) {
+                // Wenn du HTML gespeichert hast:
+                quill.clipboard.dangerouslyPasteHTML(hiddenField.value);
+            }
+
+            // Beim Formular-Submit: Inhalt aus Quill zurück ins Hidden-Feld schreiben
+            const form = hiddenField.closest("form");
+            if (form) {
+                form.addEventListener("submit", function () {
+                    hiddenField.value = quill.root.innerHTML;
+                });
+            }
+        });
+    </script>
+}

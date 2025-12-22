@@ -1,0 +1,55 @@
+﻿@page "/Admin/Categories"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Categories.IndexModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Kategorien verwalten";
+}
+
+<h1>Kategorien verwalten</h1>
+
+<p>
+    <a asp-page="Edit" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>
+        Neue Kategorie anlegen
+    </a>
+</p>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Beschreibung</th>
+            <th style="width: 160px;"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var category in Model.Categories)
+        {
+            <tr>
+                <td>@category.Name</td>
+                <td>@category.Description</td>
+                <td>
+                    <a asp-page="Edit"
+                       asp-route-id="@category.Id"
+                       class="btn btn-sm btn-secondary"
+                       title="Kategorie bearbeiten">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+
+                    <form method="post"
+                          asp-page-handler="Delete"
+                          asp-route-id="@category.Id"
+                          style="display:inline"
+                          onsubmit="return confirm('Kategorie wirklich löschen?');">
+                        <button type="submit"
+                                class="btn btn-sm btn-danger"
+                                title="Kategorie löschen">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

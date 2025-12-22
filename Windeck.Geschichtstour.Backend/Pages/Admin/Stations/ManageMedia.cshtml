@@ -1,0 +1,77 @@
+﻿@page "/Admin/Stations/ManageMedia/{stationId:int}"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.ManageMediaModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Medien verwalten";
+}
+
+<h1>Medien für Station: @Model.Station.Title</h1>
+
+<p>
+    <a asp-page="Edit" asp-route-id="@Model.Station.Id" class="btn btn-secondary">
+        Zur Station
+    </a>
+    <a asp-page="ManageMedia" asp-route-stationId="@Model.Station.Id" class="btn btn-light">
+        Aktualisieren
+    </a>
+    <a asp-page="EditMedia"
+       asp-route-stationId="@Model.Station.Id"
+       class="btn btn-primary">
+        <i class="bi bi-plus-circle me-1"></i>
+        Neues Medium anlegen
+    </a>
+
+</p>
+
+@if (!Model.MediaItems.Any())
+{
+    <p class="text-muted">Für diese Station sind bisher keine Medien hinterlegt.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sortierung</th>
+                <th>Typ</th>
+                <th>URL</th>
+                <th>Caption</th>
+                <th style="width: 180px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var media in Model.MediaItems)
+            {
+                <tr>
+                    <td>@media.SortOrder</td>
+                    <td>@media.MediaType</td>
+                    <td>@media.Url</td>
+                    <td>@media.Caption</td>
+                    <td>
+                        <a asp-page="EditMedia"
+                           asp-route-stationId="@Model.Station.Id"
+                           asp-route-mediaId="@media.Id"
+                           class="btn btn-sm btn-secondary"
+                           title="Medium bearbeiten">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+
+                        <form method="post"
+                              asp-page-handler="Delete"
+                              asp-route-stationId="@Model.Station.Id"
+                              asp-route-mediaId="@media.Id"
+                              style="display:inline"
+                              onsubmit="return confirm('Dieses Medium wirklich löschen?');">
+                            <button type="submit"
+                                    class="btn btn-sm btn-danger"
+                                    title="Medium löschen">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}

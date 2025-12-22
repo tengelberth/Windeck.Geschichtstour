@@ -1,0 +1,142 @@
+﻿@page "/Admin/Tours/ManageStops/{id}"
+@model Windeck.Geschichtstour.Backend.Pages.Admin.Tours.ManageStopsModel
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Stops verwalten";
+}
+
+<h1>Stops für Tour: @Model.Tour.Title</h1>
+
+<p>
+    <a asp-page="Index" class="btn btn-secondary">
+        Zurück zur Touren-Übersicht
+    </a>
+</p>
+
+<div class="row">
+    <!-- Linke Spalte: bestehende Stops -->
+    <div class="col-md-8">
+        <h4>Bestehende Stops</h4>
+
+        @if (!Model.Stops.Any())
+        {
+            <p class="text-muted">Für diese Tour sind noch keine Stops hinterlegt.</p>
+        }
+        else
+        {
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">Reihenfolge</th>
+                        <th>Station</th>
+                        <th>Ort</th>
+                        <th>Koordinaten</th>
+                        <th style="width: 160px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var stop in Model.Stops)
+                    {
+                        <tr>
+                            <td>
+                                <form method="post"
+                                      asp-page-handler="UpdateOrder"
+                                      asp-route-id="@Model.Tour.Id"
+                                      asp-route-stopId="@stop.Id"
+                                      class="d-flex align-items-center gap-1">
+                                    <input type="number"
+                                           name="newOrder"
+                                           class="form-control form-control-sm"
+                                           value="@stop.Order"
+                                           min="1"
+                                           style="max-width: 70px;" />
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-primary btn-icon"
+                                            title="Reihenfolge aktualisieren">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>@stop.Station?.Title</td>
+                            <td>@stop.Station?.City</td>
+                            <td>
+                                @if (stop.Station?.Latitude != null && stop.Station?.Longitude != null)
+                                {
+                                    @($"{stop.Station.Latitude:0.0000}, {stop.Station.Longitude:0.0000}")
+                                }
+                            </td>
+                            <td class="text-end">
+                                <form method="post"
+                                      asp-page-handler="DeleteStop"
+                                      asp-route-id="@Model.Tour.Id"
+                                      asp-route-stopId="@stop.Id"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Diesen Stop wirklich aus der Tour entfernen?');">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger btn-icon"
+                                            title="Stop entfernen">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- Rechte Spalte: neuen Stop hinzufügen -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Neuen Stop hinzufügen</h5>
+                <p class="card-text text-muted">
+                    Wählen Sie eine Station aus und legen Sie optional die Reihenfolge fest.
+                    Wird keine Reihenfolge angegeben, wird der Stop ans Ende der Tour gesetzt.
+                </p>
+
+                <form method="post" asp-page-handler="AddStop" asp-route-id="@Model.Tour.Id">
+                    <div class="mb-3">
+                        <label class="form-label" for="SelectedStationId">Station</label>
+                        <select asp-for="SelectedStationId"
+                                asp-items="Model.StationOptions"
+                                class="form-select">
+                            <option value="">Bitte Station wählen...</option>
+                        </select>
+                        <span asp-validation-for="SelectedStationId" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="NewStopOrder">Reihenfolge</label>
+                        <div class="input-group input-group-sm">
+                            <input asp-for="NewStopOrder"
+                                   class="form-control"
+                                   type="number"
+                                   min="1" />
+                            <span class="input-group-text">
+                                <i class="bi bi-list-ol"></i>
+                            </span>
+                        </div>
+                        <small class="form-text text-muted">
+                            Optional. Wenn leer, wird die nächste freie Nummer verwendet.
+                        </small>
+                        <span asp-validation-for="NewStopOrder" class="text-danger"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Stop hinzufügen
+                    </button>
+                </form>
+
+                @if (!ViewContext.ViewData.ModelState.IsValid)
+                {
+                    <div class="mt-3 text-danger">
+                        Bitte Eingaben prüfen.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
