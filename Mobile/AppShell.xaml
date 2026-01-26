@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell
+    x:Class="Windeck.Geschichtstour.Mobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Windeck.Geschichtstour.Mobile.Views"
+    Shell.FlyoutBehavior="Flyout"
+    Shell.TabBarTitleColor="{StaticResource Primary}"
+    Shell.TabBarForegroundColor="{StaticResource Primary}">
+
+    <!-- Start / Home -->
+    <FlyoutItem Title="Start" Route="home" Icon="qrblue.png">
+        <Tab>
+            <ShellContent
+                Title="Start"
+                ContentTemplate="{DataTemplate views:HomePage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <!-- Stationen mit Tabs: Liste + Karte -->
+    <FlyoutItem Title="Stationen" Route="stations" Icon="markerblue.png">
+        <Tab Title="Karte" Icon="markermapblue.png">
+            <ShellContent
+                Title="Karte"
+                ContentTemplate="{DataTemplate views:StationsMapPage}" />
+        </Tab>
+        
+        <Tab Title="Liste" Icon="listblue.png">
+            <ShellContent
+                Title="Liste"
+                ContentTemplate="{DataTemplate views:StationsListPage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Touren" Route="tours" Icon="mapblue.png">
+        <Tab>
+            <ShellContent
+            Title="Touren"
+            ContentTemplate="{DataTemplate views:ToursListPage}" />
+        </Tab>
+    </FlyoutItem>
+
+    <FlyoutItem Title="Über die App" Route="about" Icon="infoblue.png">
+        <Tab>
+            <ShellContent
+            Title="Über"
+            ContentTemplate="{DataTemplate views:AboutPage}" />
+        </Tab>
+    </FlyoutItem>
+    <Shell.FlyoutFooterTemplate>
+        <DataTemplate>
+            <StackLayout>
+                <Label Text="Engelberth Developing ©" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
+                <Label Text="30 März 2026" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8"/>
+                <Label Text="Version 1.0 (1)" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8" Margin="0,0,0,10"/>
+            </StackLayout>
+        </DataTemplate>
+    </Shell.FlyoutFooterTemplate>
+
+</Shell>

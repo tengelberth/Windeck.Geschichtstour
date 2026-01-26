@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.QrScannerPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:helper="clr-namespace:Windeck.Geschichtstour.Mobile.Helper"
+    Title="QR-Code scannen">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <helper:BarcodeEventToStringConverter x:Key="BarcodeEventToStringConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                       Command="{Binding AppearingCommand}" />
+        <toolkit:EventToCommandBehavior EventName="Disappearing"
+                                       Command="{Binding DisappearingCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid>
+        <zxing:CameraBarcodeReaderView x:Name="CameraView"
+                                       IsDetecting="{Binding IsDetecting}">
+            <zxing:CameraBarcodeReaderView.Behaviors>
+                <toolkit:EventToCommandBehavior EventName="BarcodesDetected"
+                                               Command="{Binding BarcodeDetectedCommand}"
+                                               EventArgsConverter="{StaticResource BarcodeEventToStringConverter}" />
+            </zxing:CameraBarcodeReaderView.Behaviors>
+        </zxing:CameraBarcodeReaderView>
+
+        <!-- Optionales Overlay -->
+        <Label Text="QR-Code in die Kamera halten"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="16"
+               BackgroundColor="#80000000"
+               TextColor="White"
+               Padding="10"/>
+    </Grid>
+</ContentPage>

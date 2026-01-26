@@ -1,0 +1,11 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.de.engelberth-developing.windeck.geschichtstour",
+        "paths": [ "/station*", "/share/station*" ]
+      }
+    ]
+  }
+}

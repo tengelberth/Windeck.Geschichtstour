@@ -1,0 +1,366 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Geschichtstour Windeck";
+}
+
+<!-- SLOT 1: HERO FULLSCREEN -->
+<section class="landing-slot landing-hero" id="top">
+    <div class="landing-hero-overlay"></div>
+
+    <div class="landing-hero-content container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-10 text-center text-light">
+
+                <h1 class="display-3 fw-bold mb-3 landing-fade-up">
+                    Geschichtstour Windeck
+                </h1>
+
+                <p class="lead mb-4 text-light-50 landing-fade-up" style="animation-delay:.06s">
+                    Geschichte entdecken – direkt vor Ort, per Smartphone.
+                </p>
+
+                <div class="landing-store-buttons d-flex flex-wrap justify-content-center gap-3 landing-fade-up" style="animation-delay:.12s">
+                    <a href="https://play.google.com/store/apps/details?id=DEIN.PACKAGE.NAME"
+                       class="btn btn-store btn-store-play btn-lg px-4"
+                       target="_blank" rel="noopener">
+                        <i class="bi bi-google-play me-2"></i>Google Play
+                    </a>
+
+                    <a href="https://apps.apple.com"
+                       class="btn btn-store btn-store-apple btn-lg px-4" target="_blank" rel="noopener">
+                        <i class="bi bi-apple me-2"></i>App Store
+                    </a>
+                </div>
+
+                <a href="#info" class="landing-scroll-pill mt-5 landing-fade-up" style="animation-delay:.18s">
+                    <i class="bi bi-arrow-down-short"></i> Mehr erfahren
+                </a>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 2: INFO -->
+<section class="landing-slot landing-slot-light" id="info">
+    <div class="container">
+        <div class="landing-split">
+            <div class="landing-split-image">
+                <img src="~/images/slot-info.jpg" alt="Historischer Ort in Windeck" class="landing-img-hover" />
+            </div>
+
+            <div class="landing-split-text">
+                <h2 class="display-6 fw-bold mb-3">Geschichte, wo sie passiert ist</h2>
+                <p class="lead mb-4">
+                    Erleben Sie historische Orte in Windeck mit Bildern, Hintergrundwissen und spannenden Geschichten –
+                    direkt draußen beim Spaziergang.
+                </p>
+
+                <ul class="landing-iconlist">
+                    <li class="landing-hover-card">
+                        <i class="bi bi-qr-code-scan"></i>
+                        <span>QR-Code scannen & sofort Inhalte finden</span>
+                    </li>
+                    <li class="landing-hover-card">
+                        <i class="bi bi-images"></i>
+                        <span>Fotos & Dokumente entdecken</span>
+                    </li>
+                    <li class="landing-hover-card">
+                        <i class="bi bi-signpost-2"></i>
+                        <span>Stationen & Touren einfach folgen</span>
+                    </li>
+                </ul>
+
+                <div class="mt-4 d-flex gap-2 flex-wrap">
+                    <a class="btn btn-primary rounded-pill px-4" href="#funktion">
+                        So funktioniert’s <i class="bi bi-chevron-right ms-1"></i>
+                    </a>
+                    <a class="btn btn-outline-primary rounded-pill px-4" href="#code">
+                        Hinter den Kulissen <i class="bi bi-code-slash ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 3: FUNKTION -->
+<section class="landing-slot landing-slot-dark" id="funktion">
+    <div class="container">
+        <div class="landing-split landing-split-reverse">
+            <div class="landing-split-image">
+                <img src="~/images/slot-qr.png" alt="QR Code an einer Station scannen" class="landing-img-hover" />
+            </div>
+
+            <div class="landing-split-text text-light">
+                <h2 class="display-6 fw-bold mb-3">So funktioniert’s</h2>
+                <p class="lead mb-4 text-light-50">
+                    In wenigen Sekunden startklar – ideal für Familien, Ausflüge und Schulklassen.
+                </p>
+
+                <div class="landing-stepcards">
+                    <div class="landing-stepcard landing-hover-card">
+                        <div class="landing-step-number">1</div>
+                        <div>
+                            <div class="fw-semibold">App installieren</div>
+                            <div class="text-light-50 small">Google Play oder App Store</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-stepcard landing-hover-card">
+                        <div class="landing-step-number">2</div>
+                        <div>
+                            <div class="fw-semibold">QR-Code scannen</div>
+                            <div class="text-light-50 small">An Schildern im Ort</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-stepcard landing-hover-card">
+                        <div class="landing-step-number">3</div>
+                        <div>
+                            <div class="fw-semibold">Station erleben</div>
+                            <div class="text-light-50 small">Bilder, Texte & Hintergründe</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-stepcard landing-hover-card">
+                        <div class="landing-step-number">4</div>
+                        <div>
+                            <div class="fw-semibold">Tour folgen</div>
+                            <div class="text-light-50 small">Von Station zu Station</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="#download" class="btn btn-store btn-store-play btn-lg px-4">
+                        <i class="bi bi-download me-2"></i> App herunterladen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 4: CODE -->
+<section class="landing-slot landing-slot-light" id="code">
+    <div class="container">
+        <div class="landing-split">
+            <div class="landing-split-image">
+                <img src="~/images/slot-code.png" alt="Code und Technik" class="landing-img-hover" />
+            </div>
+
+            <div class="landing-split-text">
+                <h2 class="display-6 fw-bold mb-3">Hinter den Kulissen</h2>
+                <p class="lead mb-4">
+                    Stationen und Inhalte werden zentral verwaltet und per API in die App übertragen, so bleibt alles leicht pflegbar und aktuell.
+                </p>
+
+                <div class="landing-tech-grid">
+                    <div class="landing-tech-card landing-hover-card">
+                        <div class="landing-tech-icon"><i class="bi bi-phone"></i></div>
+                        <div>
+                            <div class="fw-bold">.NET MAUI App</div>
+                            <div class="small text-muted">Mobile App für iOS & Android</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-tech-card landing-hover-card">
+                        <div class="landing-tech-icon"><i class="bi bi-braces"></i></div>
+                        <div>
+                            <div class="fw-bold">ASP.NET Core API</div>
+                            <div class="small text-muted">Backend für Stationen & Touren</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-tech-card landing-hover-card">
+                        <div class="landing-tech-icon"><i class="bi bi-database"></i></div>
+                        <div>
+                            <div class="fw-bold">Azure SQL</div>
+                            <div class="small text-muted">Zentrale Datenhaltung</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-tech-card landing-hover-card">
+                        <div class="landing-tech-icon"><i class="bi bi-cloud"></i></div>
+                        <div>
+                            <div class="fw-bold">Microsoft Azure</div>
+                            <div class="small text-muted">Hosting & Betrieb</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="landing-code-badge mt-4">
+                    <i class="bi bi-shield-check me-2"></i>
+                    Inhalte können leichter ergänzt, aktualisiert und langfristig gepflegt werden.
+                </div>
+                <div class="mt-3">
+                    <a href="/swagger" target="_blank" rel="noopener"
+                       class="btn btn-outline-primary rounded-pill px-4">
+                        <i class="bi bi-diagram-3 me-2"></i> Swagger API Dokumentation öffnen
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 5: BACHELOR -->
+<section class="landing-slot landing-slot-dark" id="bachelor">
+    <div class="container">
+        <div class="landing-split landing-split-reverse">
+            <div class="landing-split-image">
+                <img src="~/images/slot-bachelor.jpg" alt="Bachelorarbeit und Zusammenarbeit" class="landing-img-hover" />
+            </div>
+
+            <div class="landing-split-text text-light">
+                <h2 class="display-6 fw-bold mb-3">Bachelorarbeit & Zusammenarbeit</h2>
+
+                <p class="lead text-light-50 mb-4">
+                    Das Projekt ist im Rahmen einer Bachelorarbeit von Tobias Engelberth an der Universität der Bundeswehr
+                    in München entstanden und wird gemeinsam mit der Gemeinde Windeck sowie dem Tourismus Windecker Ländchen e. V.
+                    umgesetzt.
+                </p>
+
+                <div class="landing-highlight-cards">
+                    <div class="landing-highlight-card landing-hover-card">
+                        <i class="bi bi-people-fill"></i>
+                        <div>
+                            <div class="fw-semibold">Für alle gedacht</div>
+                            <div class="text-light-50 small">Einheimische, Familien, Schulklassen & Gäste</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-highlight-card landing-hover-card">
+                        <i class="bi bi-plus-circle-fill"></i>
+                        <div>
+                            <div class="fw-semibold">Wächst mit der Zeit</div>
+                            <div class="text-light-50 small">Neue Stationen, Touren & Inhalte kommen dazu</div>
+                        </div>
+                    </div>
+
+                    <div class="landing-highlight-card landing-hover-card">
+                        <i class="bi bi-chat-dots-fill"></i>
+                        <div>
+                            <div class="fw-semibold">Feedback willkommen</div>
+                            <div class="text-light-50 small">Hinweise & Ideen helfen beim Ausbau</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 d-flex flex-wrap gap-3">
+                    <a class="btn btn-store btn-store-apple btn-lg px-4" href="#bachelor-download">
+                        <i class="bi bi-file-earmark-text me-2"></i> Zur Bachelorarbeit
+                    </a>
+
+                    <a class="btn btn-outline-light btn-lg px-4 rounded-pill" href="#download">
+                        App Download <i class="bi bi-arrow-down-circle ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 6: BACHELOR DOWNLOAD (Mobile: Bild zuerst) -->
+<section class="landing-slot landing-slot-light" id="bachelor-download">
+    <div class="container">
+        <div class="row align-items-center gy-4">
+
+            <div class="col-lg-5 text-center order-1 order-lg-2">
+                <img src="~/images/slot-pdf.png" alt="PDF Vorschau" class="landing-img-float landing-img-hover" />
+            </div>
+
+            <div class="col-lg-7 order-2 order-lg-1">
+                <h2 class="display-6 fw-bold mb-3">Bachelorarbeit herunterladen</h2>
+                <p class="lead mb-4">
+                    Hier können Sie die Ausarbeitung zur „Digitalen Geschichtstour Windeck“ als PDF herunterladen.
+                </p>
+
+                <div class="landing-download-card landing-hover-card p-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="landing-file-icon">
+                            <i class="bi bi-filetype-pdf"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Bachelorarbeit – Digitale Geschichtstour Windeck</div>
+                            <div class="text-muted small">PDF Download</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+                        <a class="btn btn-primary rounded-pill px-4"
+                           href="~/files/Bachelorarbeit_Geschichtstour_Windeck.pdf"
+                           target="_blank" rel="noopener">
+                            <i class="bi bi-download me-2"></i>PDF öffnen / herunterladen
+                        </a>
+
+                        <a class="btn btn-outline-primary rounded-pill px-4" href="#top">
+                            <i class="bi bi-arrow-up me-2"></i>Zurück nach oben
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- SLOT 7: DOWNLOAD -->
+<section class="landing-slot landing-slot-bg" id="download">
+    <div class="landing-slot-bg-overlay"></div>
+
+    <div class="container position-relative">
+        <div class="row align-items-center gy-4">
+
+            <div class="col-lg-7 text-light">
+                <h2 class="display-6 fw-bold mb-3">Bereit für die Geschichtstour?</h2>
+                <p class="lead text-light-50 mb-4">
+                    Installieren Sie die App und scannen Sie danach einfach einen QR-Code im Ort –
+                    die passende Station öffnet sich direkt.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="https://play.google.com/store/apps/details?id=DEIN.PACKAGE.NAME"
+                       class="btn btn-store btn-store-play btn-lg px-4"
+                       target="_blank" rel="noopener">
+                        <i class="bi bi-google-play me-2"></i>Google Play
+                    </a>
+
+                    <a href="https://apps.apple.com"
+                       class="btn btn-store btn-store-apple btn-lg px-4" target="_blank" rel="noopener">
+                        <i class="bi bi-apple me-2"></i>App Store
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="landing-glass-card p-4 landing-hover-card">
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <div class="landing-glass-icon">
+                            <i class="bi bi-info-circle"></i>
+                        </div>
+                        <div>
+                            <div class="fw-bold">Hinweis</div>
+                            <div class="small text-muted">Für QR-Code Besucher ohne App</div>
+                        </div>
+                    </div>
+
+                    <p class="small text-muted mb-0">
+                        Wenn Sie über einen QR-Code hier gelandet sind: App installieren und den QR-Code
+                        einfach nochmal scannen, dann öffnet sich die Station automatisch in der App.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

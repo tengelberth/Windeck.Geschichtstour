@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>@ViewData["Title"] - Geschichtstour Windeck</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <!-- FavIcon setzen -->
+    <link rel="icon" type="image/png" sizes="32x32" href="~/images/tourismusverein-logo.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="~/images/tourismusverein-logo.png" />
+</head>
+
+<body>
+
+    <!-- LANDING HEADER -->
+    <header class="landing-header fixed-top">
+        <nav class="navbar navbar-expand-lg navbar-dark landing-navbar">
+            <div class="container">
+
+                <!-- Brand / Logo -->
+                <a class="navbar-brand d-flex align-items-center gap-2" href="#top">
+                    <img src="~/images/tourismusverein-logo.png" class="landing-logo" alt="Tourismusverein Windeck Logo" />
+                    <span class="fw-bold">Geschichtstour Windeck</span>
+                </a>
+
+                <!-- Mobile Toggle -->
+                <button class="navbar-toggler border-0" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#landingNav"
+                        aria-controls="landingNav" aria-expanded="false"
+                        aria-label="Navigation öffnen">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Nav -->
+                <div class="collapse navbar-collapse" id="landingNav">
+                    <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1 mt-3 mt-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link landing-navlink" href="#info">Info</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link landing-navlink" href="#funktion">So funktioniert’s</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link landing-navlink" href="#code">Code</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link landing-navlink" href="#bachelor">Bachelorarbeit</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link landing-navlink" href="#download">Download</a>
+                        </li>
+
+                        <li class="nav-item ms-lg-2">
+                            <a class="btn btn-sm btn-primary rounded-pill px-3 landing-admin-btn" href="/Admin" target="_blank">
+                                <i class="bi bi-shield-lock me-1"></i> Admin
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="landing-footer">
+        <div class="container py-4">
+            <div class="row gy-3 align-items-center">
+                <div class="col-md-6 text-center text-md-start small text-muted">
+                    © @DateTime.Now.Year Engelberth Developing
+                </div>
+                <div class="col-md-6 text-center text-md-end small text-muted">
+                    In Kooperation mit der Gemeinde Windeck &amp; Tourismus Windecker Ländchen e.V.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Header Shadow + Mobile Menu Auto-Close -->
+    <script>
+        (function () {
+            // Header bekommt Shadow beim Scroll
+            const header = document.querySelector('.landing-header');
+            const onScroll = () => {
+                if (window.scrollY > 10) header.classList.add('is-scrolled');
+                else header.classList.remove('is-scrolled');
+            };
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            // Mobile Menü nach Klick schließen (nur auf # Links)
+            document.addEventListener('click', (e) => {
+                const a = e.target.closest('a[href^="#"]');
+                if (!a) return;
+
+                const navCollapse = document.querySelector('#landingNav');
+                if (navCollapse && navCollapse.classList.contains("show")) {
+                    bootstrap.Collapse.getOrCreateInstance(navCollapse).hide();
+                }
+            });
+        })();
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

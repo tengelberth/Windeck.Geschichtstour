@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.AboutPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Über die App">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <Label Text="Die Idee"
+                   FontSize="22"
+                   FontAttributes="Bold" />
+
+            <Label Text="Die „Digitale Geschichtstour Windeck“ macht Geschichte dort erlebbar, wo sie passiert ist: an Burgen, Plätzen, Gebäuden und anderen besonderen Orten im Gemeindegebiet."
+                   FontSize="14" />
+
+            <Label Text="Du sollst Windeck entdecken können, ohne lange zu recherchieren – direkt vor Ort, im passenden Moment. So wird aus einem Spaziergang schnell eine kleine Entdeckungsreise."
+                   FontSize="14" />
+
+            <Label Text="An ausgewählten Stationen findest du QR-Codes. Nach dem Scannen bekommst du Informationen, Bilder und kleine Geschichten zur jeweiligen Station."
+                   FontSize="14" />
+
+            <Label Text="Bachelorarbeit &amp; Zusammenarbeit"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <Label Text="Das Projekt ist im Rahmen einer Bachelorarbeit von Tobias Engelberth an der Universität der Bundeswehr in München entstanden und wird gemeinsam mit der Gemeinde Windeck und dem Tourismus Windecker Ländchen e. V. umgesetzt."
+                   FontSize="14" />
+
+            <Label Text="Ziel des Projekts ist es, lokale Geschichte und Kultur niedrigschwellig zugänglich zu machen – für Einheimische, Familien, Schulklassen und natürlich auch für Gäste der Region."
+                   FontSize="14" />
+
+            <Label Text="Der Umfang wird nach und nach erweitert: Neue Stationen und Touren können dazukommen, Inhalte werden ergänzt und bei Bedarf aktualisiert. Wenn dir etwas auffällt oder du Ideen hast, freuen wir uns über Feedback."
+                   FontSize="14" />
+
+            <Label Text="Hinter den Kulissen"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   Margin="0,10,0,0" />
+
+            <Label Text="Damit Inhalte dauerhaft gut gepflegt werden können, werden die Informationen zentral in einer Azure SQL-Datenbank verwaltet und über eine API für die App verfügbar gemacht. Das sorgt dafür, dass neue Stationen leichter ergänzt und Inhalte aktuell gehalten werden können."
+                   FontSize="14" />
+
+            <Label Text="Technisch basiert das Projekt auf .NET MAUI (App) und ASP.NET Core (Server) und wird in Microsoft Azure gehostet."
+                   FontSize="14" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Geschichtstour Windeck">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="16"
+            Spacing="15">
+            <Image Source="windeckwappen.png" HeightRequest="180" HorizontalOptions="Center" />
+
+            <Label Text="Geben Sie den Code der Station ein oder scannen Sie den QR-Code, um die Inhalte zu sehen."
+                   FontSize="14"
+                   LineBreakMode="WordWrap" />
+
+            <Entry Placeholder="Code eingeben (z. B. RATHAUS)" Text="{Binding Code}"
+                   Keyboard="Text" />
+
+            <Button Text="Station suchen" ImageSource="searchwhite.png" HeightRequest="41"
+                    Command="{Binding ShowStationCommand}" />
+
+            <Button Text="QR-Code scannen" ImageSource="qrwhite.png" HeightRequest="41"
+                    Command="{Binding ScanQrCommand}" />
+
+            <Label Text="Entdecken"
+                   FontAttributes="Bold"
+                   Margin="0,24,0,0" />
+
+            <Button Text="Alle Stationen anzeigen"
+                    Command="{Binding ShowAllStationsCommand}" ImageSource="markerwhite.png" HeightRequest="41"/>
+
+            <Button Text="Alle Touren anzeigen" ImageSource="mapwhite.png" HeightRequest="41" Command="{Binding ShowAllToursCommand}"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

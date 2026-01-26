@@ -1,0 +1,499 @@
+/* =========================================================
+   Bootstrap Theme Overrides (Primary Color)
+   ========================================================= */
+:root {
+    --bs-primary: #1953c6;
+    --bs-primary-rgb: 25, 83, 198;
+    --bs-link-color: #1953c6;
+    --bs-link-hover-color: #1647a8;
+    --bs-focus-ring-color: rgba(25, 83, 198, 0.25);
+}
+
+/* Smooth scroll (Anchor Offset macht dein JS / Browser) */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Base */
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+/* Fokus */
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem rgba(25, 83, 198, 0.35);
+}
+
+/* =========================================================
+   Header / Navbar (Dunkel, nicht transparent)
+   ========================================================= */
+.landing-navbar {
+    background: rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+/* Shadow wenn gescrolled */
+.landing-header.is-scrolled .landing-navbar {
+    background: rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0.8rem 2rem rgba(0, 0, 0, 0.25);
+}
+
+/* Logo im Header */
+.landing-logo {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    object-fit: contain;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    padding: 5px;
+}
+
+/* Hover Effekt im Menü (wieder da!) */
+.landing-navlink {
+    color: rgba(255, 255, 255, 0.85) !important;
+    border-radius: 999px;
+    padding: 0.5rem 0.8rem !important;
+    transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+
+    .landing-navlink:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-1px);
+        color: #fff !important;
+    }
+
+/* Mobile Menü (nicht transparent!) */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        margin-top: 0.75rem;
+        padding: 0.75rem;
+        border-radius: 1rem;
+        background: rgba(15, 23, 42, 0.95); /* dunkelblau */
+        border: 1px solid rgba(255,255,255,0.08);
+    }
+}
+
+/* =========================================================
+   Slots: Fullscreen Sections (mobile-safe)
+   ========================================================= */
+.landing-slot {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 6rem 0 4rem 0;
+}
+
+/* Mobile: Content nicht abschneiden */
+@media (max-width: 991px) {
+    .landing-slot {
+        align-items: flex-start;
+        padding: 6.5rem 0 5rem 0;
+    }
+}
+
+.landing-slot-light {
+    background: #f8f9fa; /* hellgrau */
+}
+
+.landing-slot-dark {
+    background: #0f172a; /* dunkelblau */
+}
+
+/* =========================================================
+   HERO
+   ========================================================= */
+.landing-hero {
+    position: relative;
+    background-image: url('/images/burg-windeck.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.landing-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.landing-hero-content {
+    position: relative;
+    z-index: 1;
+    padding-top: 7rem;
+    padding-bottom: 3.5rem;
+}
+
+@media (max-width: 991px) {
+    .landing-hero-content {
+        padding-top: 7.5rem;
+        padding-bottom: 5rem;
+    }
+}
+
+/* =========================================================
+   Store Buttons (weiß + Hover Store-Farben)
+   ========================================================= */
+.btn-store {
+    background: rgba(255, 255, 255, 0.95);
+    color: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    font-weight: 700;
+    border-radius: 999px;
+    transition: transform 0.12s ease, background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+}
+
+    .btn-store:hover {
+        transform: translateY(-1px);
+        color: #fff;
+    }
+
+/* Google Play Hover: Grün */
+.btn-store-play:hover {
+    background: #34A853;
+    border-color: #34A853;
+}
+
+/* App Store Hover: Blau */
+.btn-store-apple:hover {
+    background: #0D96F6;
+    border-color: #0D96F6;
+}
+
+/* =========================================================
+   Split Layout (Desktop nebeneinander, Mobile untereinander)
+   ========================================================= */
+.landing-split {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 3rem;
+    align-items: center;
+}
+
+.landing-split-reverse {
+    grid-template-columns: 1.3fr 1fr;
+}
+
+/* Mobile: untereinander */
+@media (max-width: 991px) {
+    .landing-split,
+    .landing-split-reverse {
+        grid-template-columns: 1fr !important;
+        gap: 1.6rem;
+    }
+}
+
+.landing-split-image img {
+    width: 100%;
+    height: 68vh;
+    object-fit: cover;
+    border-radius: 1.25rem;
+    box-shadow: 0 1.2rem 2rem rgba(0, 0, 0, 0.12);
+}
+
+@media (max-width: 991px) {
+    .landing-split-image img {
+        height: 32vh;
+    }
+}
+
+/* =========================================================
+   Icon List
+   ========================================================= */
+.landing-iconlist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+}
+
+    .landing-iconlist li {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        background: rgba(25, 83, 198, 0.06);
+        border: 1px solid rgba(25, 83, 198, 0.12);
+        border-radius: 1rem;
+        padding: 0.9rem 1rem;
+    }
+
+    .landing-iconlist i {
+        font-size: 1.25rem;
+        color: var(--bs-primary);
+    }
+
+/* =========================================================
+   Step Cards
+   ========================================================= */
+.landing-stepcards {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.landing-stepcard {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.landing-step-number {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(25, 83, 198, 0.25);
+    border: 1px solid rgba(25, 83, 198, 0.35);
+    color: #fff;
+    font-weight: 800;
+}
+
+/* =========================================================
+   Download Slot Background (dunkel + farblicher Glow)
+   ========================================================= */
+.landing-slot-bg {
+    background-image: url('/images/slot-map.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #0f172a; /* fallback */
+}
+
+.landing-slot-bg-overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 20% 20%, rgba(25,83,198,0.35), transparent 55%), radial-gradient(circle at 80% 70%, rgba(13,150,246,0.22), transparent 55%), rgba(0,0,0,0.60);
+}
+
+/* Glass Card */
+.landing-glass-card {
+    background: rgba(255, 255, 255, 0.94);
+    border-radius: 1.25rem;
+    border: 1px solid rgba(25, 83, 198, 0.18);
+    box-shadow: 0 1.2rem 2.2rem rgba(0, 0, 0, 0.18);
+}
+
+.landing-glass-icon {
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(25, 83, 198, 0.12);
+    color: var(--bs-primary);
+}
+
+/* =========================================================
+   Hover Effekte + kleine Animationen
+   ========================================================= */
+.landing-hover-card {
+    transition: transform 0.15s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+    .landing-hover-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.10);
+    }
+
+.landing-img-hover {
+    transition: transform 0.18s ease, box-shadow 0.2s ease;
+}
+
+    .landing-img-hover:hover {
+        transform: scale(1.015);
+        box-shadow: 0 1.5rem 2.4rem rgba(0, 0, 0, 0.14);
+    }
+
+/* Hero Fade-In */
+.landing-fade-up {
+    animation: landingFadeUp .7s ease both;
+}
+
+@keyframes landingFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+        filter: blur(2px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes floaty {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+
+/* Scroll Pill */
+.landing-scroll-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 1rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.22);
+    color: rgba(255,255,255,0.92);
+    text-decoration: none;
+    transition: transform .15s ease, background .15s ease, border-color .15s ease;
+}
+
+    .landing-scroll-pill:hover {
+        transform: translateY(-2px);
+        background: rgba(255,255,255,0.16);
+        border-color: rgba(255,255,255,0.35);
+        color: #fff;
+    }
+
+/* =========================================================
+   Technik Section
+   ========================================================= */
+.landing-tech-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 768px) {
+    .landing-tech-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.landing-tech-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1.2rem;
+    background: rgba(25, 83, 198, 0.05);
+    border: 1px solid rgba(25, 83, 198, 0.12);
+}
+
+.landing-tech-icon {
+    width: 2.7rem;
+    height: 2.7rem;
+    border-radius: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(25, 83, 198, 0.12);
+    color: var(--bs-primary);
+    font-size: 1.2rem;
+}
+
+.landing-code-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1rem;
+    border-radius: 999px;
+    background: rgba(25, 83, 198, 0.10);
+    border: 1px solid rgba(25, 83, 198, 0.18);
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* =========================================================
+   Bachelor Section Cards
+   ========================================================= */
+.landing-highlight-cards {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.landing-highlight-card {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    border-radius: 1.2rem;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+    .landing-highlight-card i {
+        font-size: 1.25rem;
+        color: rgba(255,255,255,0.85);
+    }
+
+/* =========================================================
+   Bachelor Download Card
+   ========================================================= */
+.landing-download-card {
+    border-radius: 1.25rem;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.06);
+}
+
+.landing-img-float {
+    width: 100%;
+    max-width: 420px;
+    border-radius: 1.25rem;
+    box-shadow: 0 1.2rem 2rem rgba(0,0,0,0.12);
+    animation: floaty 4s ease-in-out infinite;
+    will-change: transform;
+}
+
+
+.landing-file-icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(25, 83, 198, 0.12);
+    color: var(--bs-primary);
+    font-size: 1.4rem;
+}
+
+/* =========================================================
+   Footer (dunkelblau + helle Schrift)
+   ========================================================= */
+.landing-footer {
+    background: #0b1222;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+    .landing-footer .text-muted {
+        color: rgba(255,255,255,0.65) !important;
+    }

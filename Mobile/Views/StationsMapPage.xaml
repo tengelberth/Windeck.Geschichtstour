@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.StationsMapPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Stationen">
+
+    <Grid>
+        <!-- Hier wird die MapView aus dem CodeBehind reingesteckt -->
+        <ContentView x:Name="MapHost" />
+
+        <!-- Loading Overlay -->
+        <Grid IsVisible="{Binding IsOverlayVisible}"
+              InputTransparent="True">
+            <BoxView Opacity="0.35" BackgroundColor="Black" />
+            <VerticalStackLayout
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                Spacing="10"
+                Padding="20">
+                <ActivityIndicator IsRunning="True" />
+                <Label Text="{Binding BusyText}"
+                       TextColor="White"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </Grid>
+</ContentPage>

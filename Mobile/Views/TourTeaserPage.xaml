@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.TourTeaserPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Tour.Title}">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+                <StackLayout IsVisible="{Binding HasTour}" Spacing="8">
+                    <Label Text="{Binding Tour.Title}"
+                           FontSize="24"
+                           FontAttributes="Bold" />
+
+                    <Label Text="{Binding Tour.Description}"
+                           FontSize="14"
+                           LineBreakMode="WordWrap" />
+
+                    <Label Text="{Binding Tour.Stops.Count, StringFormat='Stationen in der Tour: {0}'}"
+                           FontSize="12"
+                           TextColor="Gray" />
+
+                    <Button Text="In Google Maps öffnen" ImageSource="naviwhite.png" HeightRequest="41"
+                            Command="{Binding StartTourNavigationCommand}" />
+
+                    <StackLayout Spacing="8" Margin="0,16,0,0"
+             IsVisible="{Binding HasTour}">
+                        <Label Text="Stationen in dieser Tour"
+           FontAttributes="Bold"
+           FontSize="18" />
+
+                        <CollectionView ItemsSource="{Binding OrderedStops}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,8,0,0"
+Padding="10"
+Stroke="{StaticResource Primary}"
+StrokeThickness="1">
+                                        <Border.StrokeShape>
+                                            <RoundRectangle CornerRadius="12" />
+                                        </Border.StrokeShape>
+                                        <VerticalStackLayout Spacing="2">
+                                            <Label Text="{Binding Order, Mode=OneTime, StringFormat='Station {0}'}"
+FontAttributes="Bold"
+FontSize="14" />
+                                            <Label Text="{Binding StationTitle, Mode=OneTime}"
+FontSize="14"
+LineBreakMode="WordWrap" />
+                                        </VerticalStackLayout>
+                                    </Border>
+                                    
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+
+                </StackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

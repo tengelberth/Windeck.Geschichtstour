@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.StationContentPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,20,0">
+            <Label
+        Text="{Binding Station.Title}"
+        VerticalOptions="Center"
+        FontAttributes="Bold"
+        FontSize="18"
+        LineBreakMode="TailTruncation"
+MaxLines="1" />
+
+            <ImageButton
+                IsVisible="{Binding HasStation}"
+        Grid.Column="1"
+        Source="sharewhite.png"
+        WidthRequest="24"
+        HeightRequest="24"
+        BackgroundColor="Transparent"
+        Command="{Binding ShareStationCommand}" />
+        </Grid>
+    </Shell.TitleView>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="16"
+                Spacing="12">
+
+                <!-- Ladeindikator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   HorizontalOptions="Center" />
+
+                <Label Text="Bitte warten. Station lädt..."
+       HorizontalOptions="Center"
+       IsVisible="{Binding IsBusy}" />
+
+                <!-- Inhalt nur anzeigen, wenn eine Station geladen ist -->
+                <StackLayout IsVisible="{Binding HasStation}"
+                             Spacing="20">
+
+                    <!-- Medienliste -->
+                    <StackLayout Spacing="8"
+                                 Margin="0,8,0,0"
+                                 IsVisible="{Binding ImageMediaItems.Any}">
+
+                        <HorizontalStackLayout Spacing="5">
+                            <Image Source="imgblue.png" HeightRequest="20" />
+                            <Label Text="Medien"
+                                   FontAttributes="Bold"
+                                   FontSize="18" />
+                        </HorizontalStackLayout>
+
+                        <Grid Grid.Row="1"
+                              ColumnDefinitions="Auto,*,Auto"
+                              VerticalOptions="Start">
+
+                            <!-- Pfeil links -->
+                            <Button ImageSource="arrowleftwhite.png"
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    Command="{Binding PrevMediaCommand}"
+                                    VerticalOptions="Center" />
+
+                            <!-- Carousel -->
+                            <CarouselView Grid.Column="1"
+                                          ItemsSource="{Binding ImageMediaItems}"
+                                          Position="{Binding MediaPosition, Mode=TwoWay}"
+                                          Loop="False"
+                                          IsSwipeEnabled="True"
+                                          HorizontalOptions="Fill"
+                                          VerticalOptions="Start">
+
+                                <CarouselView.ItemTemplate>
+                                    <DataTemplate>
+                                        <VerticalStackLayout Spacing="6" Padding="8">
+
+                                            <!-- TAP -> Overlay öffnen -->
+                                            <Image Source="{Binding FullUrl}"
+                                                   HeightRequest="220"
+                                                   Aspect="AspectFill">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer
+            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                             Path=BindingContext.OpenMediaOverlayCommand}"
+            CommandParameter="{Binding .}" />
+                                                </Image.GestureRecognizers>
+                                            </Image>
+
+                                            <Label Text="{Binding Caption}"
+                                                   FontSize="12"
+                                                   LineBreakMode="WordWrap" />
+                                        </VerticalStackLayout>
+                                    </DataTemplate>
+                                </CarouselView.ItemTemplate>
+                            </CarouselView>
+
+                            <!-- Pfeil rechts -->
+                            <Button Grid.Column="2"
+                                    ImageSource="arrowrightwhite.png"
+                                    WidthRequest="44"
+                                    HeightRequest="44"
+                                    Command="{Binding NextMediaCommand}"
+                                    VerticalOptions="Center" />
+
+                        </Grid>
+                    </StackLayout>
+
+                    <!-- Adresse -->
+                    <Frame Padding="10"
+           BackgroundColor="Transparent"
+                        BorderColor="{StaticResource Primary}"
+                        CornerRadius="10"
+                        HasShadow="True"
+           VerticalOptions="Center">
+                        <StackLayout Spacing="2" >
+                            <HorizontalStackLayout Spacing="2">
+                                <Image Source="markerblue.png" HeightRequest="20" />
+
+                                <Label Text="Adresse"
+FontAttributes="Bold"
+FontSize="16"
+IsVisible="{Binding Station.Street}" />
+                            </HorizontalStackLayout>
+
+
+                            <HorizontalStackLayout Spacing="3">
+                                <Label Text="{Binding Station.Street}"
+       IsVisible="{Binding Station.Street}" />
+                                <Label Text="{Binding Station.HouseNumber}"
+       IsVisible="{Binding Station.HouseNumber}" />
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout Spacing="3">
+                                <Label Text="{Binding Station.ZipCode}"
+       IsVisible="{Binding Station.ZipCode}" />
+                                <Label Text="{Binding Station.City}"
+       IsVisible="{Binding Station.City}" />
+                            </HorizontalStackLayout>
+                            <Button Text="In Google Maps öffnen" Margin="0,10,0,0" ImageSource="naviwhite.png" HeightRequest="41"
+Command="{Binding OpenInMapsCommand}" />
+                            <Button Text="In Komoot Tour planen" Margin="0,5,0,0" ImageSource="trekkingwhite.png" HeightRequest="41"
+Command="{Binding OpenInKomootCommand}" />
+                        </StackLayout>
+                    </Frame>
+
+                    <Label TextType="Html" FontSize="16" LineBreakMode="WordWrap"
+               Text="{Binding Station.LongDescription}" />
+
+                </StackLayout>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

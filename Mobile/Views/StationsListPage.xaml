@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Windeck.Geschichtstour.Mobile.Views.StationsListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Stationen">
+
+   <ContentPage.Content>
+        <Grid Padding="16">
+            <RefreshView
+                IsRefreshing="{Binding IsBusy, Mode=TwoWay}"
+                Command="{Binding RefreshCommand}">
+
+                <CollectionView
+                    ItemsSource="{Binding Stations}"
+                    SelectionMode="Single"
+                    SelectedItem="{Binding SelectedStation}">
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource CollectionItem}">
+                                <VerticalStackLayout CompressedLayout.IsHeadless="true">
+                                    <Label Text="{Binding Title, Mode=OneTime}"
+                                           FontAttributes="Bold"
+                                           FontSize="18" />
+                                    <Label Text="{Binding ShortDescription, Mode=OneTime}"
+                                           FontSize="13"
+                                           LineBreakMode="WordWrap" />
+                                    <Label Text="{Binding City, Mode=OneTime}"
+                                           FontSize="12"
+                                           TextColor="Gray" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+
+                </CollectionView>
+            </RefreshView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

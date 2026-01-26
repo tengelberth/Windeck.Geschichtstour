@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+    x:Class="Windeck.Geschichtstour.Mobile.Views.MediaPreviewPopup"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:controls="clr-namespace:Windeck.Geschichtstour.Mobile.Controls">
+
+    <Grid BackgroundColor="#CC000000"
+          HorizontalOptions="Fill"
+          VerticalOptions="Fill">
+
+        <!-- Bildbereich -->
+        <Grid Padding="10"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill">
+
+            <controls:ZoomContainer>
+                <Image x:Name="PreviewImage"
+                       Aspect="AspectFit"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </controls:ZoomContainer>
+
+        </Grid>
+
+        <!-- Close Button -->
+        <Button Text="✕"
+                ZIndex="10"
+                BackgroundColor="#66000000"
+                TextColor="White"
+                WidthRequest="44"
+                HeightRequest="44"
+                CornerRadius="22"
+                HorizontalOptions="End"
+                VerticalOptions="Start"
+                Margin="16"
+                Clicked="OnCloseClicked" />
+
+        <!-- Hinweis unten -->
+        <Frame BackgroundColor="#66000000"
+               Padding="10,6"
+               CornerRadius="16"
+               HasShadow="False"
+               HorizontalOptions="Center"
+               VerticalOptions="End"
+               Margin="0,0,0,24">
+
+            <Label Text="Doppeltippen zum Zoomen"
+                   TextColor="White"
+                   FontSize="12"
+                   Opacity="0.9" />
+        </Frame>
+
+    </Grid>
+</toolkit:Popup>
