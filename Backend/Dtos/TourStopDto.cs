@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Backend.Dtos
+namespace Windeck.Geschichtstour.Backend.Dtos
 {
     /// <summary>
     /// Repräsentiert einen Haltepunkt innerhalb einer Tour

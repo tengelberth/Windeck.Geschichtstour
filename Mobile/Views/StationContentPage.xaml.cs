@@ -5,12 +5,15 @@ namespace Windeck.Geschichtstour.Mobile.Views;
 
 /// <summary>
 /// Content-Seite einer Station.
-/// Wird ausschließlich über einen Code (z. B. QR-Code) geöffnet.
+/// Wird ausschlieÃŸlich Ã¼ber einen Code (z. B. QR-Code) geÃ¶ffnet.
 /// </summary>
 public partial class StationContentPage : ContentPage, IQueryAttributable
 {
     private readonly StationContentViewModel _viewModel;
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von StationContentPage.
+    /// </summary>
     public StationContentPage(StationContentViewModel viewModel)
     {
         InitializeComponent();
@@ -18,12 +21,15 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
         BindingContext = _viewModel;
     }
 
-    // Wird von Shell aufgerufen, wenn die Seite über GoToAsync mit Query-Param geöffnet wird
+    // Wird von Shell aufgerufen, wenn die Seite Ã¼ber GoToAsync mit Query-Param geÃ¶ffnet wird
+    /// <summary>
+    /// Uebernimmt Navigationsparameter und laedt die dazugehoerigen Inhalte.
+    /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (!query.TryGetValue("code", out var codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
         {
-            await UiNotify.ToastAsync("Kein gültiger Code übergeben.");
+            await UiNotify.ToastAsync("Kein gÃ¼ltiger Code Ã¼bergeben.");
 
             await Shell.Current.GoToAsync("..");
             return;

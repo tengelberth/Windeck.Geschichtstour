@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Data

@@ -7,12 +7,15 @@ using Windeck.Geschichtstour.Backend.Models;
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
 {
     /// <summary>
-    /// Übersicht und Verwaltung der Kategorien.
+    /// Ãœbersicht und Verwaltung der Kategorien.
     /// </summary>
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von IndexModel.
+        /// </summary>
         public IndexModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -20,6 +23,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
 
         public IList<Category> Categories { get; set; } = new List<Category>();
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task OnGetAsync()
         {
             Categories = await _dbContext.Categories
@@ -27,6 +33,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Loescht den angeforderten Datensatz und aktualisiert die Uebersicht.
+        /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var category = await _dbContext.Categories
@@ -36,14 +45,14 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
             if (category == null)
                 return NotFound();
 
-            // Stationen sollen nicht mit gelöscht werden, daher Kategorie-Referenz entfernen
+            // Stationen sollen nicht mit gelÃ¶scht werden, daher Kategorie-Referenz entfernen
             foreach (var station in category.Stations)
             {
                 station.CategoryId = null;
             }
 
             _dbContext.Categories.Remove(category);
-            TempData["SuccessMessage"] = "Kategorie wurde gelöscht.";
+            TempData["SuccessMessage"] = "Kategorie wurde gelÃ¶scht.";
             await _dbContext.SaveChangesAsync();
 
             return RedirectToPage();

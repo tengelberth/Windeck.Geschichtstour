@@ -1,14 +1,20 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels
 {
+    /// <summary>
+    /// Basisklasse fuer Property-Change-Benachrichtigung und gemeinsame ViewModel-Funktionen.
+    /// </summary>
     public class BaseViewModel : INotifyPropertyChanged
     {
         // Event, das ausgelöst wird, wenn eine Property geändert wird
         public event PropertyChangedEventHandler PropertyChanged;
 
         // Hilfsmethode zum Auslösen des PropertyChanged-Events
+        /// <summary>
+        /// Meldet Eigenschaftsaenderungen an gebundene UI-Elemente.
+        /// </summary>
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -40,3 +46,5 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
     }
 
 }
+
+

@@ -6,10 +6,16 @@ using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 {
+    /// <summary>
+    /// Laedt und verwaltet die Tourenuebersicht im Adminbereich.
+    /// </summary>
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von IndexModel.
+        /// </summary>
         public IndexModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -17,6 +23,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
         public IList<Tour> Tours { get; set; } = new List<Tour>();
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task OnGetAsync()
         {
             Tours = await _dbContext.Tours
@@ -25,6 +34,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Loescht den angeforderten Datensatz und aktualisiert die Uebersicht.
+        /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
             var tour = await _dbContext.Tours
@@ -40,10 +52,12 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
             }
 
             _dbContext.Tours.Remove(tour);
-            TempData["SuccessMessage"] = "Tour wurde gelöscht.";
+            TempData["SuccessMessage"] = "Tour wurde gelÃ¶scht.";
             await _dbContext.SaveChangesAsync();
 
             return RedirectToPage();
         }
     }
 }
+
+

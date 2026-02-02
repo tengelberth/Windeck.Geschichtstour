@@ -1,9 +1,11 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 using Windeck.Geschichtstour.Mobile.Models;
 
 namespace Windeck.Geschichtstour.Mobile.Services;
 
-
+/// <summary>
+/// Definiert Source-Generator-Metadaten fuer die JSON-Serialisierung der API-Daten.
+/// </summary>
 [JsonSourceGenerationOptions(
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     PropertyNameCaseInsensitive = true
@@ -23,3 +25,5 @@ namespace Windeck.Geschichtstour.Mobile.Services;
 public partial class ApiJsonContext : JsonSerializerContext
 {
 }
+
+

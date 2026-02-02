@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+ï»¿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Windeck.Geschichtstour.Backend.Data;
@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Razor Pages mit Admin-Ordner absichern
 builder.Services.AddRazorPages(options =>
 {
-    // Ganzen /Admin-Ordner nur für angemeldete Nutzer freigeben
+    // Ganzen /Admin-Ordner nur fÃ¼r angemeldete Nutzer freigeben
     options.Conventions.AuthorizeFolder("/Admin");
 
     // Login-Seite explizit anonym erlauben
@@ -32,11 +32,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         errorNumbersToAdd: null)));
 
 
-// Web-API-Controller für die mobile App.
-// (Die Controller fügen wir später hinzu.)
+// Web-API-Controller fÃ¼r die mobile App.
 builder.Services.AddControllers();
 
-// Cookie-Authentifizierung hinzufügen
+// Cookie-Authentifizierung hinzufÃ¼gen
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -54,10 +53,10 @@ builder.Services.AddSwaggerGen(options =>
     {
         Title = "Windeck Geschichtstour API",
         Version = "v1",
-        Description = "API für Stationen und Touren der digitalen Geschichtstour Windeck."
+        Description = "API fÃ¼r Stationen und Touren der digitalen Geschichtstour Windeck."
     });
 
-    // XML-Kommentare (wenn aktiviert, s. csproj unten)
+    // XML-Kommentare (wenn aktiviert, siehe csproj)
     var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (System.IO.File.Exists(xmlPath))
@@ -69,7 +68,7 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // ----------------------------------------
-// Datenbank migrieren & Seed-Daten anlegen
+// Datenbank migrieren und Startinhalte anlegen
 // ----------------------------------------
 using (var scope = app.Services.CreateScope())
 {
@@ -78,7 +77,7 @@ using (var scope = app.Services.CreateScope())
     // Stellt sicher, dass alle Migrationen angewendet sind.
     dbContext.Database.Migrate();
 
-    // Beispiel-Daten einspielen, falls noch keine Stationen existieren.
+    // Startinhalte einspielen, falls noch keine Stationen existieren.
     SeedData.Initialize(dbContext);
 }
 
@@ -104,7 +103,7 @@ app.MapGet("/.well-known/apple-app-site-association", (IWebHostEnvironment env) 
 {
     var filePath = Path.Combine(env.WebRootPath, ".well-known", "apple-app-site-association");
     return Results.File(filePath, "application/json");
-});
+}).ExcludeFromDescription(); // nicht in Swagger anzeigen
 
 // Routing aktivieren.
 app.UseRouting();
@@ -113,28 +112,44 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Fallback für Deeplink-URLs im Browser:
-// Wenn jemand /station?code=XYZ öffnet, leite auf /Index weiter (optional: Query behalten)
+// Fallback fÃ¼r Deeplink-URLs im Browser:
+// Wenn jemand /station?code=XYZ Ã¶ffnet, leite auf /Index weiter (optional: Query behalten)
 app.MapGet("/station", (HttpContext ctx) =>
 {
-    // Optional: Code mitgeben, falls du später auf Index etwas damit machen willst
+    // Optional: Code mitgeben, falls der Wert auf der Startseite weiterverarbeitet werden soll
     //var code = ctx.Request.Query["code"].ToString();
 
-    // Wenn du den Code NICHT brauchst:
+    // Variante ohne Query-Weitergabe:
     // return Results.Redirect("/Index", permanent: false);
 
-    // Wenn du den Code behalten willst:
+    // Variante mit Query-Weitergabe:
     //if (!string.IsNullOrWhiteSpace(code))
     //    return Results.Redirect($"/Index?code={Uri.EscapeDataString(code)}", permanent: false);
 
     return Results.Redirect("/Index", permanent: false);
-});
+}).ExcludeFromDescription(); // nicht in Swagger anzeigen
 
-// Razor Pages (Adminoberfläche) unter Standardrouten verfügbar machen.
+app.MapGet("/share/station", (HttpContext ctx) =>
+{
+    // Optional: Code mitgeben, falls der Wert auf der Startseite weiterverarbeitet werden soll
+    //var code = ctx.Request.Query["code"].ToString();
+
+    // Variante ohne Query-Weitergabe:
+    // return Results.Redirect("/Index", permanent: false);
+
+    // Variante mit Query-Weitergabe:
+    //if (!string.IsNullOrWhiteSpace(code))
+    //    return Results.Redirect($"/Index?code={Uri.EscapeDataString(code)}", permanent: false);
+
+    return Results.Redirect("/Index", permanent: false);
+}).ExcludeFromDescription(); // nicht in Swagger anzeigen
+
+// Razor Pages (AdminoberflÃ¤che) unter Standardrouten verfÃ¼gbar machen.
 app.MapRazorPages();
 
-// API-Controller unter /api/... verfügbar machen.
+// API-Controller unter /api/... verfÃ¼gbar machen.
 app.MapControllers();
 
 // Anwendung starten.
 app.Run();
+

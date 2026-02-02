@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Laedt und verwaltet die Stationsliste fuer die Listenansicht.
+/// </summary>
 public class StationsListViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
@@ -26,12 +29,18 @@ public class StationsListViewModel : BaseViewModel
     public Command RefreshCommand { get; }
 
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von StationsListViewModel.
+    /// </summary>
     public StationsListViewModel(ApiClient apiClient)
     {
         _apiClient = apiClient;
         RefreshCommand = new Command(async () => await LoadStationsAsync());
     }
 
+    /// <summary>
+    /// Laedt Stationsdaten aus dem Backend und aktualisiert den ViewModel-Zustand.
+    /// </summary>
     public async Task LoadStationsAsync()
     {
         if (IsBusy) return;
@@ -58,6 +67,9 @@ public class StationsListViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Reagiert auf die Stationsauswahl und navigiert zur Detailansicht.
+    /// </summary>
     private async void OnStationSelected()
     {
         if (SelectedStation == null)
@@ -67,3 +79,5 @@ public class StationsListViewModel : BaseViewModel
         SelectedStation = null;
     }
 }
+
+

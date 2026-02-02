@@ -3,10 +3,16 @@ using Windeck.Geschichtstour.Mobile.ViewModels;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 
+/// <summary>
+/// Code-Behind fuer den Stations-Teaser mit Deeplink-Parameterverarbeitung.
+/// </summary>
 public partial class StationTeaserPage : ContentPage, IQueryAttributable
 {
     private readonly StationTeaserViewModel _viewModel;
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von StationTeaserPage.
+    /// </summary>
     public StationTeaserPage(StationTeaserViewModel viewModel)
     {
         InitializeComponent();
@@ -14,11 +20,14 @@ public partial class StationTeaserPage : ContentPage, IQueryAttributable
         BindingContext = _viewModel;
     }
 
+    /// <summary>
+    /// Uebernimmt Navigationsparameter und laedt die dazugehoerigen Inhalte.
+    /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (!query.TryGetValue("code", out var codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
         {
-            await UiNotify.ToastAsync("Kein gültiger Code übergeben.");
+            await UiNotify.ToastAsync("Kein gÃ¼ltiger Code Ã¼bergeben.");
             await Shell.Current.GoToAsync("..");
             return;
         }
@@ -32,4 +41,6 @@ public partial class StationTeaserPage : ContentPage, IQueryAttributable
         }
     }
 }
+
+
 

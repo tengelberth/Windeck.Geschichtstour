@@ -1,10 +1,13 @@
-﻿using Mapsui.UI.Maui;
+using Mapsui.UI.Maui;
 using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Laedt Stationsdaten fuer die Karte und koordiniert Pin-Auswahl sowie Overlay-Status.
+/// </summary>
 public class StationsMapViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
@@ -64,7 +67,6 @@ public class StationsMapViewModel : BaseViewModel
         }
     }
 
-    // IsBusy kommt sehr wahrscheinlich aus BaseViewModel (nutzt du schon für API Load)
     public bool IsOverlayVisible => !IsViewportInitialized || IsBusy || IsMapBusy;
 
     public string BusyText =>
@@ -73,11 +75,17 @@ public class StationsMapViewModel : BaseViewModel
         IsMapBusy ? "Karte lädt…" :
         string.Empty;
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von StationsMapViewModel.
+    /// </summary>
     public StationsMapViewModel(ApiClient apiClient)
     {
         _apiClient = apiClient;
     }
 
+    /// <summary>
+    /// Laedt Stationsdaten aus dem Backend und aktualisiert den ViewModel-Zustand.
+    /// </summary>
     public async Task LoadStationsAsync()
     {
         if (IsBusy) return;
@@ -118,6 +126,9 @@ public class StationsMapViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Reagiert auf die Stationsauswahl und navigiert zur Detailansicht.
+    /// </summary>
     private async Task OnStationSelected()
     {
         if (SelectedStation == null) return;
@@ -133,3 +144,5 @@ public class StationsMapViewModel : BaseViewModel
     }
 
 }
+
+

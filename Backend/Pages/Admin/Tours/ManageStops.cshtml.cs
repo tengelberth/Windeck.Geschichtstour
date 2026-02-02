@@ -9,13 +9,16 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 {
     /// <summary>
     /// Verwaltung der Stops (Stationszuordnung) einer Tour.
-    /// Hier können Stationen zur Tour hinzugefügt, entfernt und
+    /// Hier kÃ¶nnen Stationen zur Tour hinzugefÃ¼gt, entfernt und
     /// ihre Reihenfolge festgelegt werden.
     /// </summary>
     public class ManageStopsModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von ManageStopsModel.
+        /// </summary>
         public ManageStopsModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -32,26 +35,26 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         public List<TourStop> Stops { get; set; } = new();
 
         /// <summary>
-        /// Dropdown-Liste mit allen Stationen, die als Stop hinzugefügt werden können.
+        /// Dropdown-Liste mit allen Stationen, die als Stop hinzugefÃ¼gt werden kÃ¶nnen.
         /// </summary>
         public List<SelectListItem> StationOptions { get; set; } = new();
 
-        // Diese Properties werden für das "Add Stop"-Formular gebunden:
+        // Diese Properties werden fÃ¼r das "Add Stop"-Formular gebunden:
 
         /// <summary>
-        /// ID der Station, die als neuer Stop hinzugefügt werden soll.
+        /// ID der Station, die als neuer Stop hinzugefÃ¼gt werden soll.
         /// </summary>
         [BindProperty]
         public int SelectedStationId { get; set; }
 
         /// <summary>
-        /// Reihenfolge, an der der neue Stop in der Tour eingefügt werden soll.
+        /// Reihenfolge, an der der neue Stop in der Tour eingefÃ¼gt werden soll.
         /// </summary>
         [BindProperty]
         public int? NewStopOrder { get; set; }
 
         /// <summary>
-        /// Lädt Tour, Stops und die verfügbaren Stationen.
+        /// LÃ¤dt Tour, Stops und die verfÃ¼gbaren Stationen.
         /// </summary>
         public async Task<IActionResult> OnGetAsync(int id)
         {
@@ -76,7 +79,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         }
 
         /// <summary>
-        /// Fügt der Tour einen neuen Stop hinzu.
+        /// FÃ¼gt der Tour einen neuen Stop hinzu.
         /// </summary>
         public async Task<IActionResult> OnPostAddStopAsync(int id)
         {
@@ -100,11 +103,11 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
                 return Page();
             }
 
-            // Station prüfen
+            // Station prÃ¼fen
             var station = await _dbContext.Stations.FindAsync(SelectedStationId);
             if (station == null)
             {
-                ModelState.AddModelError(string.Empty, "Die ausgewählte Station existiert nicht.");
+                ModelState.AddModelError(string.Empty, "Die ausgewÃ¤hlte Station existiert nicht.");
                 Stops = Tour.Stops.OrderBy(s => s.Order).ToList();
                 return Page();
             }
@@ -120,11 +123,11 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
                 order = (Tour.Stops.Any() ? Tour.Stops.Max(s => s.Order) : 0) + 1;
             }
 
-            // Prüfen, ob die Order bereits verwendet wird
+            // PrÃ¼fen, ob die Order bereits verwendet wird
             if (Tour.Stops.Any(s => s.Order == order))
             {
                 ModelState.AddModelError(string.Empty,
-                    $"Die Reihenfolge {order} wird bereits von einem anderen Stop verwendet. Bitte eine andere Zahl wählen.");
+                    $"Die Reihenfolge {order} wird bereits von einem anderen Stop verwendet. Bitte eine andere Zahl wÃ¤hlen.");
 
                 Stops = Tour.Stops.OrderBy(s => s.Order).ToList();
                 return Page();
@@ -146,7 +149,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
 
         /// <summary>
-        /// Löscht einen Stop aus der Tour.
+        /// LÃ¶scht einen Stop aus der Tour.
         /// </summary>
         public async Task<IActionResult> OnPostDeleteStopAsync(int id, int stopId)
         {
@@ -160,7 +163,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
             _dbContext.TourStops.Remove(stop);
             await _dbContext.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Tour-Stop wurde gelöscht.";
+            TempData["SuccessMessage"] = "Tour-Stop wurde gelÃ¶scht.";
 
             return RedirectToPage(new { id });
         }
@@ -193,16 +196,16 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
             if (newOrder <= 0)
             {
                 ModelState.AddModelError(string.Empty,
-                    "Die Reihenfolge muss eine positive Zahl größer oder gleich 1 sein.");
+                    "Die Reihenfolge muss eine positive Zahl grÃ¶ÃŸer oder gleich 1 sein.");
                 Stops = Tour.Stops.OrderBy(s => s.Order).ToList();
                 return Page();
             }
 
-            // Prüfen, ob ein anderer Stop bereits diese Order hat
+            // PrÃ¼fen, ob ein anderer Stop bereits diese Order hat
             if (Tour.Stops.Any(s => s.Id != stopId && s.Order == newOrder))
             {
                 ModelState.AddModelError(string.Empty,
-                    $"Die Reihenfolge {newOrder} wird bereits von einem anderen Stop verwendet. Bitte eine andere Zahl wählen.");
+                    $"Die Reihenfolge {newOrder} wird bereits von einem anderen Stop verwendet. Bitte eine andere Zahl wÃ¤hlen.");
                 Stops = Tour.Stops.OrderBy(s => s.Order).ToList();
                 return Page();
             }
@@ -216,7 +219,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
 
         /// <summary>
-        /// Lädt alle Stationen aus der Datenbank für das Dropdown.
+        /// LÃ¤dt alle Stationen aus der Datenbank fÃ¼r das Dropdown.
         /// </summary>
         private async Task LoadStationOptionsAsync()
         {

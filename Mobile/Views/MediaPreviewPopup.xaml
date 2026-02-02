@@ -6,6 +6,9 @@
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:controls="clr-namespace:Windeck.Geschichtstour.Mobile.Controls">
 
+    <!-- Zweck: Popup zur vergroesserten Anzeige einzelner Medien. -->
+
+
     <Grid BackgroundColor="#CC000000"
           HorizontalOptions="Fill"
           VerticalOptions="Fill">
@@ -25,7 +28,7 @@
         </Grid>
 
         <!-- Close Button -->
-        <Button Text="✕"
+        <Button Text="âœ•"
                 ZIndex="10"
                 BackgroundColor="#66000000"
                 TextColor="White"

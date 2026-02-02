@@ -4,10 +4,16 @@ using Windeck.Geschichtstour.Backend.Data;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin
 {
+    /// <summary>
+    /// Liefert Kennzahlen und Schnellzugriffe fuer das Admin-Dashboard.
+    /// </summary>
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von IndexModel.
+        /// </summary>
         public IndexModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -18,6 +24,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
         public int CategoryCount { get; set; }
         public int MediaCount { get; set; }
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task OnGetAsync()
         {
             StationCount = await _dbContext.Stations.CountAsync();
@@ -27,3 +36,5 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
         }
     }
 }
+
+

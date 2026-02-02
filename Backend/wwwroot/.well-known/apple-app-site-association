@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "ABCDE12345.de.engelberth_developing.windeck.geschichtstour",
+        "appID": "ABCDE12345.de.tobias.engelberth.windeck.geschichtstour",
         "paths": [ "/station*", "/share/station*" ]
       }
     ]

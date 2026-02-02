@@ -1,9 +1,12 @@
-﻿using Windeck.Geschichtstour.Mobile.Helper;
+using Windeck.Geschichtstour.Mobile.Helper;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Steuert den QR-Scanner-Workflow und die Weiterleitung zur passenden Station.
+/// </summary>
 public class QrScannerViewModel : BaseViewModel
 {
     private bool _isDetecting;
@@ -19,6 +22,9 @@ public class QrScannerViewModel : BaseViewModel
     public Command DisappearingCommand { get; }
     public Command<string> BarcodeDetectedCommand { get; }
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von QrScannerViewModel.
+    /// </summary>
     public QrScannerViewModel()
     {
         AppearingCommand = new Command(async () => await OnAppearingAsync());
@@ -26,6 +32,9 @@ public class QrScannerViewModel : BaseViewModel
         BarcodeDetectedCommand = new Command<string>(async raw => await OnBarcodeDetectedAsync(raw));
     }
 
+    /// <summary>
+    /// Wird beim Anzeigen aufgerufen und laedt asynchron die benoetigten Daten.
+    /// </summary>
     private async Task OnAppearingAsync()
     {
         Interlocked.Exchange(ref _handling, 0);
@@ -45,11 +54,17 @@ public class QrScannerViewModel : BaseViewModel
         IsDetecting = true;
     }
 
+    /// <summary>
+    /// Wird beim Verlassen der Seite aufgerufen und beendet laufende Aktionen.
+    /// </summary>
     private void OnDisappearing()
     {
         IsDetecting = false;
     }
 
+    /// <summary>
+    /// Verarbeitet einen erkannten Barcode und startet die Folgelogik.
+    /// </summary>
     private async Task OnBarcodeDetectedAsync(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
@@ -80,3 +95,5 @@ public class QrScannerViewModel : BaseViewModel
         });
     }
 }
+
+

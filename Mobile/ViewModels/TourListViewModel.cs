@@ -1,10 +1,13 @@
-﻿using System.Collections.ObjectModel;
+using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Laedt und verwaltet die Tourenuebersicht fuer die Listenansicht.
+/// </summary>
 public class ToursListViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
@@ -26,12 +29,18 @@ public class ToursListViewModel : BaseViewModel
     public Command RefreshCommand { get; }
 
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von ToursListViewModel.
+    /// </summary>
     public ToursListViewModel(ApiClient apiClient)
     {
         _apiClient = apiClient;
         RefreshCommand = new Command(async () => await LoadToursAsync());
     }
 
+    /// <summary>
+    /// Laedt Tourdaten aus dem Backend und aktualisiert den ViewModel-Zustand.
+    /// </summary>
     public async Task LoadToursAsync()
     {
         if (IsBusy) return;
@@ -58,6 +67,9 @@ public class ToursListViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Reagiert auf die Tourauswahl und navigiert zur Detailansicht.
+    /// </summary>
     private async void OnTourSelected()
     {
         if (SelectedTour == null)
@@ -67,3 +79,5 @@ public class ToursListViewModel : BaseViewModel
         SelectedTour = null;
     }
 }
+
+

@@ -3,7 +3,7 @@
 namespace Windeck.Geschichtstour.Backend.Data
 {
     /// <summary>
-    /// Enthält Logik zum Initialbefüllen der Datenbank mit Beispiel-Daten
+    /// Enthält Logik zum Initialbefüllen der Datenbank mit Startinhalten
     /// (Stationen, Kategorien, Medien, Touren).
     /// Wird beim Start der Anwendung einmalig ausgeführt.
     /// </summary>
@@ -41,7 +41,7 @@ namespace Windeck.Geschichtstour.Backend.Data
 
             // ----------------------------
             // Stationen anlegen
-            // (Koordinaten sind beispielhaft, du kannst sie später anpassen)
+            // (Koordinaten sind initiale Referenzwerte und können später präzisiert werden)
             // ----------------------------
 
             var rathausRosbach = new Station
@@ -56,8 +56,8 @@ namespace Windeck.Geschichtstour.Backend.Data
                 HouseNumber = "1",
                 ZipCode = "51570",
                 City = "Windeck-Rosbach",
-                Latitude = 50.8,     // Platzhalter
-                Longitude = 7.58,    // Platzhalter
+                Latitude = 50.8,
+                Longitude = 7.58,
                 Category = ortsGeschichte
             };
 
@@ -70,8 +70,8 @@ namespace Windeck.Geschichtstour.Backend.Data
                     + "für Handel, Begegnung und Veranstaltungen. Märkte, Feste und politische "
                     + "Veranstaltungen fanden hier statt und prägten das gesellschaftliche Leben.",
                 City = "Windeck-Rosbach",
-                Latitude = 50.8005,  // Platzhalter
-                Longitude = 7.581,   // Platzhalter
+                Latitude = 50.8005,
+                Longitude = 7.581,
                 Category = ortsGeschichte
             };
 
@@ -84,8 +84,8 @@ namespace Windeck.Geschichtstour.Backend.Data
                     + "Punkt zur Kontrolle des Siegtals. Heute ist sie ein beliebtes Ausflugsziel "
                     + "und bietet einen eindrucksvollen Blick über die Region.",
                 City = "Windeck",
-                Latitude = 50.79,    // Platzhalter
-                Longitude = 7.56,    // Platzhalter
+                Latitude = 50.79,
+                Longitude = 7.56,
                 Category = ortsGeschichte
             };
 
@@ -98,8 +98,8 @@ namespace Windeck.Geschichtstour.Backend.Data
                     + "für die Region. Heute wird das Gebäude kulturell genutzt und zeigt, wie historische "
                     + "Infrastruktur neu belebt werden kann.",
                 City = "Windeck-Schladern",
-                Latitude = 50.79,    // Platzhalter
-                Longitude = 7.57,    // Platzhalter
+                Latitude = 50.79,
+                Longitude = 7.57,
                 Category = industrieGeschichte
             };
 
@@ -107,9 +107,9 @@ namespace Windeck.Geschichtstour.Backend.Data
             context.SaveChanges();
 
             // ----------------------------
-            // Medien anlegen (Beispielbilder)
-            // Die URLs sind erst einmal Platzhalter und können später auf
-            // echte Dateien im Webspace zeigen.
+            // Medien anlegen
+            // Die URLs zeigen auf erwartete Zielpfade und sollten bei Bedarf
+            // durch reale Dateien im Deployment ersetzt werden.
             // ----------------------------
 
             var mediaItems = new[]
@@ -198,7 +198,7 @@ namespace Windeck.Geschichtstour.Backend.Data
                 new TourStop
                 {
                     Tour = industrieTourSieg,
-                    Station = burgWindeck, // z. B. als Abschluss mit Blick ins Tal
+                    Station = burgWindeck, // Als Abschluss mit Blick ins Tal
                     Order = 2
                 }
             };
@@ -208,3 +208,4 @@ namespace Windeck.Geschichtstour.Backend.Data
         }
     }
 }
+

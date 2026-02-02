@@ -8,6 +8,9 @@
     xmlns:helper="clr-namespace:Windeck.Geschichtstour.Mobile.Helper"
     Title="QR-Code scannen">
 
+    <!-- Zweck: Scanner-Oberflaeche zum Erfassen von QR-Codes. -->
+
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <helper:BarcodeEventToStringConverter x:Key="BarcodeEventToStringConverter" />

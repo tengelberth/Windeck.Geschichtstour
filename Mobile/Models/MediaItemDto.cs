@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Mobile.Models;
+namespace Windeck.Geschichtstour.Mobile.Models;
 
 /// <summary>
 /// Medienobjekt zu einer Station (Bild, Audio, Video).
@@ -9,7 +9,7 @@ public class MediaItemDto
 
     public int StationId { get; set; }
 
-    public string MediaType { get; set; } = string.Empty; // z. B. "Image", "Audio", "Video"
+    public string MediaType { get; set; } = string.Empty;
 
     public string Url { get; set; } = string.Empty;
 
@@ -17,6 +17,8 @@ public class MediaItemDto
 
     public int SortOrder { get; set; }
 
-    // Für jetzt: dieselbe BaseUrl wie im ApiClient
-    public string FullUrl => $"https://geschichtstour-backend.azurewebsites.net/{Url.TrimStart('/')}";
+    /// <summary>
+    /// Vollstaendige URL fuer die Medienanzeige in der UI.
+    /// </summary>
+    public string FullUrl { get; set; } = string.Empty;
 }

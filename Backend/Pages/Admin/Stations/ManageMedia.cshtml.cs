@@ -13,13 +13,16 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von ManageMediaModel.
+        /// </summary>
         public ManageMediaModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
         /// <summary>
-        /// Station, zu der die Medien gehören.
+        /// Station, zu der die Medien gehÃ¶ren.
         /// </summary>
         public Station Station { get; set; } = default!;
 
@@ -28,6 +31,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public List<MediaItem> MediaItems { get; set; } = new();
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync(int stationId)
         {
             Station = await _dbContext.Stations
@@ -48,7 +54,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         }
 
         /// <summary>
-        /// Löscht ein Medium anhand seiner ID.
+        /// LÃ¶scht ein Medium anhand seiner ID.
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int stationId, int mediaId)
         {
@@ -61,7 +67,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             }
 
             _dbContext.MediaItems.Remove(media);
-            TempData["SuccessMessage"] = "Medium wurde gelöscht.";
+            TempData["SuccessMessage"] = "Medium wurde gelÃ¶scht.";
             await _dbContext.SaveChangesAsync();
 
             return RedirectToPage(new { stationId });

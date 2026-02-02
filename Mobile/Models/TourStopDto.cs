@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Mobile.Models
+namespace Windeck.Geschichtstour.Mobile.Models
 {
     /// <summary>
     /// Repräsentiert einen Haltepunkt innerhalb einer Tour

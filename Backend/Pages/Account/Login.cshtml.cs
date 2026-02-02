@@ -7,21 +7,24 @@ using System.Security.Claims;
 namespace Windeck.Geschichtstour.Backend.Pages.Account
 {
     /// <summary>
-    /// Einfache Login-Seite für den Adminbereich.
-    /// Prüft die Zugangsdaten gegen die Konfiguration (appsettings.json)
+    /// Einfache Login-Seite fÃ¼r den Adminbereich.
+    /// PrÃ¼ft die Zugangsdaten gegen die Konfiguration (appsettings.json)
     /// und legt bei Erfolg ein Auth-Cookie an.
     /// </summary>
     public class LoginModel : PageModel
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von LoginModel.
+        /// </summary>
         public LoginModel(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         /// <summary>
-        /// ViewModel für die Login-Eingaben (Benutzername/Passwort).
+        /// ViewModel fÃ¼r die Login-Eingaben (Benutzername/Passwort).
         /// </summary>
         public class LoginInputModel
         {
@@ -34,16 +37,22 @@ namespace Windeck.Geschichtstour.Backend.Pages.Account
 
         /// <summary>
         /// Optional: ReturnUrl, damit man nach dem Login wieder dahin kommt,
-        /// wo man ursprünglich hin wollte (z. B. /Admin/Stations).
+        /// wo man ursprÃ¼nglich hin wollte (z. B. /Admin/Stations).
         /// </summary>
         [FromQuery]
         public string? ReturnUrl { get; set; }
 
+        /// <summary>
+        /// Bereitet die Seite fuer eine GET-Anfrage vor.
+        /// </summary>
         public void OnGet()
         {
             // Wird einfach nur angezeigt. ReturnUrl kann aus der Query kommen.
         }
 
+        /// <summary>
+        /// Verarbeitet das Absenden des Formulars und speichert Aenderungen.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -53,10 +62,10 @@ namespace Windeck.Geschichtstour.Backend.Pages.Account
             var adminUser = _configuration["AdminAuth:Username"];
             var adminPassword = _configuration["AdminAuth:Password"];
 
-            // Einfache Prüfung: Benutzername + Passwort müssen exakt übereinstimmen.
+            // Einfache PrÃ¼fung: Benutzername + Passwort mÃ¼ssen exakt Ã¼bereinstimmen.
             if (Input.Username == adminUser && Input.Password == adminPassword)
             {
-                // Claims für den angemeldeten Benutzer
+                // Claims fÃ¼r den angemeldeten Benutzer
                 var claims = new[]
                 {
                     new Claim(ClaimTypes.Name, Input.Username),
@@ -71,7 +80,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Account
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     principal);
 
-                // Nach erfolgreichem Login zur ursprünglichen Seite oder Admin-Startseite
+                // Nach erfolgreichem Login zur ursprÃ¼nglichen Seite oder Admin-Startseite
                 if (!string.IsNullOrEmpty(ReturnUrl) && Url.IsLocalUrl(ReturnUrl))
                 {
                     return Redirect(ReturnUrl);
@@ -81,7 +90,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Account
             }
 
             // Falls falsche Daten: Fehlermeldung anzeigen
-            ModelState.AddModelError(string.Empty, "Benutzername oder Passwort ist ungültig.");
+            ModelState.AddModelError(string.Empty, "Benutzername oder Passwort ist ungÃ¼ltig.");
             return Page();
         }
     }

@@ -5,6 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Über die App">
 
+    <!-- Zweck: Informationsseite mit Projekt- und Organisationshinweisen. -->
+
+
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
 

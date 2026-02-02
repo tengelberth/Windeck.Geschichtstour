@@ -1,10 +1,13 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Laedt und praesentiert Detailinformationen zu einer ausgewaehlten Tour.
+/// </summary>
 public class TourTeaserViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
@@ -33,12 +36,18 @@ public class TourTeaserViewModel : BaseViewModel
 
     public Command StartTourNavigationCommand { get; }
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von TourTeaserViewModel.
+    /// </summary>
     public TourTeaserViewModel(ApiClient apiClient)
     {
         _apiClient = apiClient;
         StartTourNavigationCommand = new Command(async () => await OpenTourInMapsAsync());
     }
 
+    /// <summary>
+    /// Laedt einen Datensatz anhand der uebergebenen ID.
+    /// </summary>
     public async Task LoadByIdAsync(int id)
     {
         if (IsBusy) return;
@@ -62,6 +71,9 @@ public class TourTeaserViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Oeffnet die ausgewaehlte Tour in der Karten-App.
+    /// </summary>
     private async Task OpenTourInMapsAsync()
     {
         if (Tour == null)
@@ -97,3 +109,5 @@ public class TourTeaserViewModel : BaseViewModel
         await Launcher.OpenAsync(url);
     }
 }
+
+

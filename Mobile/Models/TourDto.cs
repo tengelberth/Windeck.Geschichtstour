@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Mobile.Models
+namespace Windeck.Geschichtstour.Mobile.Models
 {
     /// <summary>
     /// Datenübertragungsobjekt für eine Tour, inklusive der

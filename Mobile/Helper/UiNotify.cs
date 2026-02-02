@@ -1,8 +1,11 @@
-﻿using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 
 namespace Windeck.Geschichtstour.Mobile.Helpers;
 
+/// <summary>
+/// Stellt zentrale UI-Benachrichtigungen wie Toasts und Snackbars bereit.
+/// </summary>
 public static class UiNotify
 {
     //Branding
@@ -79,3 +82,5 @@ public static class UiNotify
         return finished == tcs.Task && tcs.Task.Result;
     }
 }
+
+

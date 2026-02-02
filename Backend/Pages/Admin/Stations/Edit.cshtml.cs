@@ -15,6 +15,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von EditModel.
+        /// </summary>
         public EditModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -22,14 +25,14 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
         /// <summary>
         /// Station, die im Formular bearbeitet wird.
-        /// [BindProperty] sorgt dafür, dass Formulareingaben automatisch
+        /// [BindProperty] sorgt dafÃ¼r, dass Formulareingaben automatisch
         /// in diese Eigenschaft gemappt werden.
         /// </summary>
         [BindProperty]
         public Station Station { get; set; } = default!;
 
         /// <summary>
-        /// Liste der Kategorien für das Dropdown im Formular.
+        /// Liste der Kategorien fÃ¼r das Dropdown im Formular.
         /// </summary>
         public List<SelectListItem> CategoryOptions { get; set; } = new();
 
@@ -39,12 +42,12 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         public bool IsNew => Station.Id == 0;
 
         /// <summary>
-        /// Lädt eine bestehende Station oder bereitet das Formular für eine neue Station vor.
+        /// LÃ¤dt eine bestehende Station oder bereitet das Formular fÃ¼r eine neue Station vor.
         /// </summary>
         /// <param name="id">Optional: ID der zu bearbeitenden Station.</param>
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            // Kategorien für das Dropdown vorbereiten
+            // Kategorien fÃ¼r das Dropdown vorbereiten
             await LoadCategoriesAsync();
 
             if (id == null)
@@ -77,7 +80,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             // Kategorien wieder laden, falls Validierungsfehler auftreten
             await LoadCategoriesAsync();
 
-            // Prüfen, ob der Code bereits von einer anderen Station verwendet wird
+            // PrÃ¼fen, ob der Code bereits von einer anderen Station verwendet wird
             var codeExists = await _dbContext.Stations
                 .AnyAsync(s => s.Code == Station.Code && s.Id != Station.Id);
 
@@ -110,12 +113,12 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
             await _dbContext.SaveChangesAsync();
 
-            // Nach dem Speichern zurück zur Übersichtsseite
+            // Nach dem Speichern zurÃ¼ck zur Ãœbersichtsseite
             return RedirectToPage("Index");
         }
 
         /// <summary>
-        /// Lädt alle Kategorien aus der Datenbank und befüllt das Dropdown.
+        /// LÃ¤dt alle Kategorien aus der Datenbank und befÃ¼llt das Dropdown.
         /// </summary>
         private async Task LoadCategoriesAsync()
         {
@@ -128,7 +131,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 })
                 .ToListAsync();
 
-            // Option "keine Kategorie" ergänzen
+            // Option "keine Kategorie" ergÃ¤nzen
             CategoryOptions.Insert(0, new SelectListItem
             {
                 Value = "",

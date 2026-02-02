@@ -8,6 +8,9 @@ using System.Collections.Specialized;
 
 namespace Windeck.Geschichtstour.Mobile.Behaviors;
 
+/// <summary>
+/// Synchronisiert Pins, Auswahl und Busy-Status zwischen MapView und ViewModel.
+/// </summary>
 public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
 {
     public static readonly BindableProperty ItemsSourceProperty =
@@ -82,6 +85,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     private bool _didInitialFit;
     private bool _pendingFit;
 
+    /// <summary>
+    /// Initialisiert die Behavior beim Anhaengen an die MapView.
+    /// </summary>
     protected override void OnAttachedTo(MapView bindable)
     {
         base.OnAttachedTo(bindable);
@@ -103,6 +109,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     }
 
 
+    /// <summary>
+    /// Raeumt Ressourcen auf, wenn die Behavior von der MapView getrennt wird.
+    /// </summary>
     protected override void OnDetachingFrom(MapView bindable)
     {
         base.OnDetachingFrom(bindable);
@@ -121,12 +130,18 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
 
     }
 
+    /// <summary>
+    /// Verarbeitet Eigenschaftsaenderungen der MapView.
+    /// </summary>
     private void MapView_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MapView.Map))
             AttachMap(_mapView?.Map);
     }
 
+    /// <summary>
+    /// Reagiert auf Aenderungen der Pin-Datenquelle.
+    /// </summary>
     private void OnItemsSourceChanged(IEnumerable<Pin>? oldValue, IEnumerable<Pin>? newValue)
     {
         DetachPinsCollection();
@@ -134,6 +149,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         _ = DebouncedSyncPinsAsync();
     }
 
+    /// <summary>
+    /// Verknuepft die aktuelle Pin-Sammlung mit der Behavior und abonniert Aenderungen.
+    /// </summary>
     private void AttachPinsCollection(IEnumerable<Pin>? source)
     {
         if (source is INotifyCollectionChanged incc)
@@ -143,6 +161,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         }
     }
 
+    /// <summary>
+    /// Entfernt die Verknuepfung zur Pin-Sammlung und beendet Ereignisabonnements.
+    /// </summary>
     private void DetachPinsCollection()
     {
         if (_notifyPins != null)
@@ -151,12 +172,18 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         _notifyPins = null;
     }
 
+    /// <summary>
+    /// Reagiert auf Aenderungen der Pin-Sammlung und startet die Synchronisierung.
+    /// </summary>
     private void Pins_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         // Debounce: verhindert 100x Clear/Add bei Bulk-Load
         _ = DebouncedSyncPinsAsync();
     }
 
+    /// <summary>
+    /// Synchronisiert Pins zeitlich entkoppelt, um haeufige Updates zu buendeln.
+    /// </summary>
     private async Task DebouncedSyncPinsAsync()
     {
         _syncCts?.Cancel();
@@ -202,6 +229,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     }
 
 
+    /// <summary>
+    /// Reagiert auf eine geaenderte Pin-Auswahl im ViewModel.
+    /// </summary>
     private void OnSelectedPinVmChanged(Pin? oldPin, Pin? newPin)
     {
         if (_mapView == null) return;
@@ -215,6 +245,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         });
     }
 
+    /// <summary>
+    /// Synchronisiert die Pin-Auswahl der MapView mit dem ViewModel.
+    /// </summary>
     private void MapView_SelectedPinChanged(object? sender, SelectedPinChangedEventArgs e)
     {
         if (_mapView == null) return;
@@ -231,6 +264,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         }
     }
 
+    /// <summary>
+    /// Verknuepft die Behavior mit der Karteninstanz und registriert erforderliche Ereignisse.
+    /// </summary>
     private void AttachMap(Mapsui.Map? map)
     {
         if (ReferenceEquals(_map, map)) return;
@@ -249,6 +285,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     }
 
 
+    /// <summary>
+    /// Loest die Verknuepfung zur Karteninstanz und entfernt Ereignisabonnements.
+    /// </summary>
     private void DetachMap()
     {
         if (_map == null) return;
@@ -258,6 +297,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         _map = null;
     }
 
+    /// <summary>
+    /// Reagiert auf die Initialisierung des Karten-Viewports.
+    /// </summary>
     private void Map_ViewportInitialized(object? sender, EventArgs e)
     {
         MainThread.BeginInvokeOnMainThread(() =>
@@ -272,12 +314,18 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         });
     }
 
+    /// <summary>
+    /// Reagiert auf Datenaenderungen der Karte und aktualisiert die Darstellung.
+    /// </summary>
     private void Map_DataChanged(object? sender, DataChangedEventArgs e)
     {
         // Wird häufig gefeuert -> nur Busy neu ausrechnen
         UpdateMapBusy();
     }
 
+    /// <summary>
+    /// Aktualisiert den Busy-Status der Karte fuer die UI.
+    /// </summary>
     private void UpdateMapBusy()
     {
         var map = _map;
@@ -289,6 +337,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         MainThread.BeginInvokeOnMainThread(() => IsMapBusy = busy);
     }
 
+    /// <summary>
+    /// Passt den Kartenausschnitt so an, dass alle relevanten Pins sichtbar sind.
+    /// </summary>
     private void FitToPins()
     {
         if (_mapView?.Map == null) return;
@@ -325,11 +376,17 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         _didInitialFit = true;
     }
 
+    /// <summary>
+    /// Reagiert auf Groessenaenderungen der MapView und aktualisiert den Ausschnitt.
+    /// </summary>
     private void MapView_SizeChanged(object? sender, EventArgs e)
     {
         TryMarkViewportInitialized();
     }
 
+    /// <summary>
+    /// Markiert den Viewport als initialisiert, sobald die Voraussetzungen erfuellt sind.
+    /// </summary>
     private void TryMarkViewportInitialized()
     {
         if (_mapView?.Map == null) return;
@@ -348,7 +405,7 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
             return;
         }
 
-        // Optional zusätzlich: Mapsui Viewport HasSize (falls bei dir sauber läuft)
+        // Optional zusätzlich: Mapsui Viewport HasSize (falls stabil verfügbar)
         var vp = _mapView.Map.Navigator.Viewport;
         if (vp.HasSize())
             IsViewportInitialized = true;
@@ -356,3 +413,7 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
 
 
 }
+
+
+
+

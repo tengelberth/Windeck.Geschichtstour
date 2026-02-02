@@ -4,12 +4,17 @@ using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
+using Windeck.Geschichtstour.Mobile.Configuration;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
+/// <summary>
+/// Verwaltet Stationsdetails, Medienanzeige und externe Aktionen wie Teilen oder Navigation.
+/// </summary>
 public class StationContentViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
+    private readonly AppUrlOptions _appUrlOptions;
 
     private StationDto? _station;
 
@@ -66,9 +71,15 @@ public class StationContentViewModel : BaseViewModel
     public Command<MediaItemDto> OpenMediaOverlayCommand { get; }
 
 
-    public StationContentViewModel(ApiClient apiClient)
+    /// <summary>
+    /// Initialisiert das ViewModel fuer Stationsdetails inkl. Mediensteuerung.
+    /// </summary>
+    /// <param name="apiClient">API-Service zum Laden von Stationsdaten.</param>
+    /// <param name="appUrlOptions">URL-Konfiguration fuer Share-Links.</param>
+    public StationContentViewModel(ApiClient apiClient, AppUrlOptions appUrlOptions)
     {
         _apiClient = apiClient;
+        _appUrlOptions = appUrlOptions;
 
         NextMediaCommand = new Command(
             execute: () => MediaPosition = Math.Min(MediaPosition + 1, _imageMediaItems.Count - 1),
@@ -95,8 +106,10 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Lädt die Station anhand eines Codes von der API.
+    /// Laedt Stationsdetails fuer den uebergebenen Code und aktualisiert die Medienliste.
     /// </summary>
+    /// <param name="code">Stationscode aus QR-Code oder Deeplink.</param>
+    /// <returns>Asynchroner Vorgang zum Laden und Aktualisieren des Zustands.</returns>
     public async Task LoadByCodeAsync(string code)
     {
         if (IsBusy) return;
@@ -120,12 +133,16 @@ public class StationContentViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Erstellt einen oeffentlichen Share-Link zur aktuellen Station.
+    /// </summary>
+    /// <returns>Asynchroner Vorgang zum Oeffnen des systemweiten Share-Dialogs.</returns>
     public async Task ShareStationAsync()
     {
         if (Station == null)
             return;
 
-        var url = $"https://geschichtstour-backend.azurewebsites.net/share/station?code={Uri.EscapeDataString(Station.Code)}";
+        var url = new Uri(_appUrlOptions.PublicBaseUri, $"share/station?code={Uri.EscapeDataString(Station.Code)}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {
@@ -135,6 +152,9 @@ public class StationContentViewModel : BaseViewModel
         });
     }
 
+    /// <summary>
+    /// Filtert, sortiert und publiziert die Bildmedien fuer das Carousel.
+    /// </summary>
     private void RebuildImageMediaItems()
     {
         _imageMediaItems =
@@ -153,12 +173,19 @@ public class StationContentViewModel : BaseViewModel
         RefreshMediaCommands();
     }
 
+    /// <summary>
+    /// Aktualisiert die CanExecute-Zustaende der Mediennavigation.
+    /// </summary>
     private void RefreshMediaCommands()
     {
         (NextMediaCommand as Command)?.ChangeCanExecute();
         (PrevMediaCommand as Command)?.ChangeCanExecute();
     }
 
+    /// <summary>
+    /// Oeffnet die aktuelle Station mit Koordinaten in Komoot.
+    /// </summary>
+    /// <returns>Asynchroner Vorgang zum Starten der externen App bzw. Website.</returns>
     private async Task OpenInKomootAsync()
     {
         if (Station == null)
@@ -173,8 +200,8 @@ public class StationContentViewModel : BaseViewModel
         var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
         var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
 
-        // Der "Ortsname"-Teil ist vor allem ein Label. Du kannst dort z.B. Station.Title verwenden,
-        // oder ein fixes Label wie "Ort" / "Selected" etc. (URL-encoden!).
+        // Der "Ortsname"-Teil dient als Label und kann aus Station.Title erzeugt werden,
+        // alternativ auch aus einem festen Begriff wie "Ort" (URL-encodiert).
         var slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
 
         var sport = "hike";
@@ -188,8 +215,9 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Öffnet die Station in einer Karten-/Navigations-App (z. B. Google Maps).
+    /// Oeffnet die Station in einer Karten-App per Koordinaten oder Adresse.
     /// </summary>
+    /// <returns>Asynchroner Vorgang zum Starten der Karten-App.</returns>
     private async Task OpenInMapsAsync()
     {
         if (Station == null)
@@ -234,3 +262,9 @@ public class StationContentViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
+
+
+
+
+
+

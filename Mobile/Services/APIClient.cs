@@ -1,48 +1,38 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Http.Json;
+using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 
 namespace Windeck.Geschichtstour.Mobile.Services;
 
 /// <summary>
-/// ApiClient kapselt alle HTTP-Aufrufe an dein Backend.
-///
-/// Features:
-/// ✅ Zentraler Internet-Check (Offline-Erkennung)
-/// ✅ Nutzerhinweis bei fehlendem Internet
-/// ✅ "Wiederholen / Abbrechen" direkt im API-Layer
-/// ✅ Release-sichere JSON-Deserialisierung via SourceGenerator (ApiJsonContext)
+/// Kapselt alle HTTP-Aufrufe zur Backend-API inkl. Retry- und Offline-Handling.
 /// </summary>
 public class ApiClient
 {
     private readonly HttpClient _httpClient;
+    private readonly AppUrlOptions _appUrlOptions;
 
     /// <summary>
-    /// Basis-URL deines Backends (Produktivsystem).
+    /// Initialisiert den API-Client mit der zentralen URL-Konfiguration.
     /// </summary>
-    private const string BaseUrl = "https://geschichtstour-backend.azurewebsites.net/";
-
-    /// <summary>
-    /// Erstellt einen ApiClient mit HttpClient und setzt die BaseAddress.
-    /// </summary>
-    public ApiClient()
+    /// <param name="appUrlOptions">Konfigurierte Backend- und Public-URLs.</param>
+    public ApiClient(AppUrlOptions appUrlOptions)
     {
+        _appUrlOptions = appUrlOptions;
         _httpClient = new HttpClient
         {
-            BaseAddress = new Uri(BaseUrl),
+            BaseAddress = _appUrlOptions.BackendBaseUri,
             Timeout = TimeSpan.FromSeconds(20)
         };
     }
 
     /// <summary>
-    /// Lädt alle Stationen vom Backend.
-    /// GET /api/stations
-    ///
-    /// Rückgabe:
-    /// - Liste von StationDto
-    /// - bei Abbruch/Fehler: leere Liste
+    /// Laedt alle Stationen und normalisiert enthaltene Medien-URLs.
     /// </summary>
+    /// <param name="cancellationToken">Token zum Abbrechen der laufenden Anfrage.</param>
+    /// <returns>Liste mit Stationen; bei Fehlern eine leere Liste.</returns>
     public async Task<List<StationDto>> GetStationsAsync(CancellationToken cancellationToken = default)
     {
         var result = await GetWithRetryAsync(
@@ -50,17 +40,19 @@ public class ApiClient
             typeInfo: ApiJsonContext.Default.ListStationDto,
             cancellationToken: cancellationToken);
 
-        return result ?? new List<StationDto>();
+        var stations = result ?? new List<StationDto>();
+        foreach (var station in stations)
+            NormalizeStationMediaUrls(station);
+
+        return stations;
     }
 
     /// <summary>
-    /// Lädt eine Station anhand ihres Codes.
-    /// GET /api/stations/by-code/{code}
-    ///
-    /// Rückgabe:
-    /// - StationDto wenn gefunden
-    /// - null bei Abbruch/Fehler/nicht gefunden
+    /// Laedt eine Station ueber ihren Stationcode.
     /// </summary>
+    /// <param name="code">Stationcode aus QR-Code oder Deeplink.</param>
+    /// <param name="cancellationToken">Token zum Abbrechen der laufenden Anfrage.</param>
+    /// <returns>Gefundene Station oder <c>null</c>, wenn keine Daten vorliegen.</returns>
     public async Task<StationDto?> GetStationByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(code))
@@ -68,20 +60,22 @@ public class ApiClient
 
         var endpoint = $"api/stations/by-code/{Uri.EscapeDataString(code.Trim())}";
 
-        return await GetWithRetryAsync(
+        var station = await GetWithRetryAsync(
             endpoint: endpoint,
             typeInfo: ApiJsonContext.Default.StationDto,
             cancellationToken: cancellationToken);
+
+        if (station != null)
+            NormalizeStationMediaUrls(station);
+
+        return station;
     }
 
     /// <summary>
-    /// Lädt alle Touren vom Backend.
-    /// GET /api/tours
-    ///
-    /// Rückgabe:
-    /// - Liste von TourDto
-    /// - bei Abbruch/Fehler: leere Liste
+    /// Laedt alle Touren aus dem Backend.
     /// </summary>
+    /// <param name="cancellationToken">Token zum Abbrechen der laufenden Anfrage.</param>
+    /// <returns>Liste mit Touren; bei Fehlern eine leere Liste.</returns>
     public async Task<List<TourDto>> GetToursAsync(CancellationToken cancellationToken = default)
     {
         var result = await GetWithRetryAsync(
@@ -93,13 +87,11 @@ public class ApiClient
     }
 
     /// <summary>
-    /// Lädt eine Tour anhand ihrer ID.
-    /// GET /api/tours/{id}
-    ///
-    /// Rückgabe:
-    /// - TourDto wenn gefunden
-    /// - null bei Abbruch/Fehler/nicht gefunden
+    /// Laedt eine Tour ueber ihre ID.
     /// </summary>
+    /// <param name="id">ID der Tour.</param>
+    /// <param name="cancellationToken">Token zum Abbrechen der laufenden Anfrage.</param>
+    /// <returns>Geladene Tour oder <c>null</c>, wenn sie nicht verfuegbar ist.</returns>
     public async Task<TourDto?> GetTourByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var endpoint = $"api/tours/{id}";
@@ -110,18 +102,14 @@ public class ApiClient
             cancellationToken: cancellationToken);
     }
 
-    // ------------------------------------------------------------------------
-    // ZENTRALE HELPER (Internet-Check + Retry + JSON parse)
-    // ------------------------------------------------------------------------
-
     /// <summary>
-    /// Führt einen GET Request aus, prüft vorher Internet und bietet Wiederholen/Abbrechen an.
-    /// Deserialisiert Release-safe über SourceGenerator typeInfo.
-    ///
-    /// Rückgabe:
-    /// - Objekt T wenn erfolgreich
-    /// - null wenn abgebrochen oder nicht möglich
+    /// Fuehrt einen GET-Request mit Retry-Dialogen und robuster Fehlerbehandlung aus.
     /// </summary>
+    /// <typeparam name="T">Erwarteter Rueckgabetyp der API-Antwort.</typeparam>
+    /// <param name="endpoint">Relativer API-Endpunkt.</param>
+    /// <param name="typeInfo">JSON-TypeInfo aus dem Source Generator.</param>
+    /// <param name="cancellationToken">Token zum Abbrechen der laufenden Anfrage.</param>
+    /// <returns>Deserialisiertes Ergebnis oder <c>null</c> bei Fehlern/Abbruch.</returns>
     private async Task<T?> GetWithRetryAsync<T>(
         string endpoint,
         System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> typeInfo,
@@ -129,12 +117,11 @@ public class ApiClient
     {
         while (true)
         {
-            // 1) Offline-Check
             if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
             {
                 var retry = await ShowRetryDialogAsync(
                     title: "Kein Internet",
-                    message: "Du bist offline. Bitte überprüfe deine Verbindung und versuche es erneut.",
+                    message: "Du bist offline. Bitte pruefe deine Verbindung und versuche es erneut.",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
@@ -148,14 +135,9 @@ public class ApiClient
             {
                 using var response = await _httpClient.GetAsync(endpoint, cancellationToken);
 
-                // 2) 404 sauber behandeln (kein Retry notwendig, aber möglich)
                 if (response.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // Optional: Du könntest hier auch ohne Dialog einfach null zurückgeben.
                     return default;
-                }
 
-                // 3) Falls Fehlercodes: Nutzer kann Wiederholen
                 if (!response.IsSuccessStatusCode)
                 {
                     var retry = await ShowRetryDialogAsync(
@@ -170,16 +152,13 @@ public class ApiClient
                     continue;
                 }
 
-                // 4) JSON lesen (Release-safe via SourceGenerator)
-                var data = await response.Content.ReadFromJsonAsync(typeInfo, cancellationToken);
-                return data;
+                return await response.Content.ReadFromJsonAsync(typeInfo, cancellationToken);
             }
             catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
             {
-                // Timeout (HttpClient Timeout) -> Wiederholen anbieten
                 var retry = await ShowRetryDialogAsync(
-                    title: "Zeitüberschreitung",
-                    message: "Die Anfrage hat zu lange gedauert. Möchtest du es erneut versuchen?",
+                    title: "Zeitueberschreitung",
+                    message: "Die Anfrage hat zu lange gedauert. Moechtest du es erneut versuchen?",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
@@ -188,10 +167,9 @@ public class ApiClient
             }
             catch (HttpRequestException)
             {
-                // Verbindung/SSL/DNS/Server nicht erreichbar
                 var retry = await ShowRetryDialogAsync(
                     title: "Verbindung fehlgeschlagen",
-                    message: "Der Server ist momentan nicht erreichbar. Bitte versuche es später erneut.",
+                    message: "Der Server ist momentan nicht erreichbar. Bitte versuche es spaeter erneut.",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
@@ -200,7 +178,6 @@ public class ApiClient
             }
             catch (Exception)
             {
-                // Unbekannter Fehler -> Wiederholen anbieten
                 var retry = await ShowRetryDialogAsync(
                     title: "Fehler",
                     message: "Es ist ein unerwarteter Fehler aufgetreten.",
@@ -214,12 +191,15 @@ public class ApiClient
     }
 
     /// <summary>
-    /// Zeigt einen Dialog an, der dem Nutzer Wiederholen/Abbrechen anbietet.
-    /// Gibt true zurück, wenn Wiederholen gewählt wurde.
+    /// Zeigt einen Retry-Hinweis mit Wiederholen/Abbrechen an.
     /// </summary>
+    /// <param name="title">Titel des Hinweises.</param>
+    /// <param name="message">Fehlermeldung fuer den Nutzer.</param>
+    /// <param name="accept">Text der Aktion zum Wiederholen.</param>
+    /// <param name="cancel">Text der Aktion zum Abbrechen.</param>
+    /// <returns><c>true</c>, wenn erneut versucht werden soll; sonst <c>false</c>.</returns>
     private static Task<bool> ShowRetryDialogAsync(string title, string message, string accept, string cancel)
     {
-        // Accept wird als Button benutzt, Cancel passiert durch "auslaufen".
         return UiNotify.SnackbarRetryAsync(
             message,
             accept,
@@ -227,4 +207,27 @@ public class ApiClient
         );
     }
 
+    /// <summary>
+    /// Ergaenzt relative Medien-URLs einer Station um die konfigurierte Backend-Basis-URL.
+    /// </summary>
+    /// <param name="station">Station mit zu normalisierenden Medien.</param>
+    private void NormalizeStationMediaUrls(StationDto station)
+    {
+        foreach (var mediaItem in station.MediaItems)
+        {
+            if (string.IsNullOrWhiteSpace(mediaItem.Url))
+            {
+                mediaItem.FullUrl = string.Empty;
+                continue;
+            }
+
+            if (Uri.TryCreate(mediaItem.Url, UriKind.Absolute, out var absoluteUri))
+            {
+                mediaItem.FullUrl = absoluteUri.ToString();
+                continue;
+            }
+
+            mediaItem.FullUrl = new Uri(_appUrlOptions.BackendBaseUri, mediaItem.Url.TrimStart('/')).ToString();
+        }
+    }
 }

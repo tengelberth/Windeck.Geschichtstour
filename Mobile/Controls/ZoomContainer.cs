@@ -1,5 +1,8 @@
-﻿namespace Windeck.Geschichtstour.Mobile.Controls;
+namespace Windeck.Geschichtstour.Mobile.Controls;
 
+/// <summary>
+/// Ermoeglicht Zoomen und Verschieben von eingebettetem Seiteninhalt.
+/// </summary>
 public class ZoomContainer : ContentView
 {
     const double MIN_SCALE = 1;
@@ -16,6 +19,9 @@ public class ZoomContainer : ContentView
     double _containerWidth = 0;
     double _containerHeight = 0;
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von ZoomContainer.
+    /// </summary>
     public ZoomContainer()
     {
         SizeChanged += (_, __) =>
@@ -122,3 +128,5 @@ public class ZoomContainer : ContentView
         y = Math.Max(-maxY, Math.Min(maxY, y));
     }
 }
+
+

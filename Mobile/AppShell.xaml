@@ -9,6 +9,9 @@
     Shell.TabBarTitleColor="{StaticResource Primary}"
     Shell.TabBarForegroundColor="{StaticResource Primary}">
 
+    <!-- Zweck: Shell-Struktur mit Hauptnavigation der mobilen Anwendung. -->
+
+
     <!-- Flyout Header (Logo oben im Menü) -->
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>

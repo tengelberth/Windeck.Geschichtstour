@@ -6,4 +6,7 @@
     xmlns:viewmodels="clr-namespace:Windeck.Geschichtstour.Mobile.ViewModels"
     Title="Stationen">
 
+    <!-- Zweck: Container-Seite fuer Umschaltung zwischen Liste und Karte. -->
+
+
 </ContentPage>

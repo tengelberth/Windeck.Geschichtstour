@@ -6,10 +6,16 @@ using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 {
+    /// <summary>
+    /// Verarbeitet Erstellen und Bearbeiten von Datensaetzen in Formularseiten.
+    /// </summary>
     public class EditModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von EditModel.
+        /// </summary>
         public EditModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -20,6 +26,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
         public bool IsNew => Tour.Id == 0;
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -39,6 +48,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
             return Page();
         }
 
+        /// <summary>
+        /// Verarbeitet das Absenden des Formulars und speichert Aenderungen.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -61,3 +73,5 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         }
     }
 }
+
+

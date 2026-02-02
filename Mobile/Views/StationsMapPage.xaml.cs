@@ -10,12 +10,18 @@ using Windeck.Geschichtstour.Mobile.ViewModels;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 
+/// <summary>
+/// Code-Behind fuer die Kartenansicht aller Stationen.
+/// </summary>
 public partial class StationsMapPage : ContentPage
 {
     private readonly StationsMapViewModel _viewModel;
     private readonly MapView _mapView;
     private bool _initialized;
 
+    /// <summary>
+    /// Initialisiert eine neue Instanz von StationsMapPage.
+    /// </summary>
     public StationsMapPage(StationsMapViewModel viewModel)
     {
         InitializeComponent();
@@ -37,7 +43,7 @@ public partial class StationsMapPage : ContentPage
         // ? MapView in XAML hosten (NICHT Content = _mapView)
         MapHost.Content = _mapView;
 
-        // ? Behavior sicher an diese MapView h‰ngen
+        // ? Behavior sicher an diese MapView h√§ngen
         var bridge = new MapsuiMapViewBridgeBehavior
         {
             FitPinsOnFirstLoad = true,
@@ -74,6 +80,9 @@ public partial class StationsMapPage : ContentPage
         _mapView.Map = map;
     }
 
+    /// <summary>
+    /// Wird beim Anzeigen der Seite aufgerufen und startet Initialisierungslogik.
+    /// </summary>
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -84,3 +93,5 @@ public partial class StationsMapPage : ContentPage
         await _viewModel.LoadStationsAsync();
     }
 }
+
+

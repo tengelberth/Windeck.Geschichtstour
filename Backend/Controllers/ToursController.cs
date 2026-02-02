@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
@@ -16,13 +16,16 @@ namespace Windeck.Geschichtstour.Backend.Controllers
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von ToursController.
+        /// </summary>
         public ToursController(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
         /// <summary>
-        /// Liefert eine einfache Liste aller Touren (ohne Stops).
+        /// Liefert eine Liste aller Touren
         /// GET: /api/tours
         /// </summary>
         [HttpGet]

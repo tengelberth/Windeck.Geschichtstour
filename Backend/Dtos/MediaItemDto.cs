@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Backend.Dtos
+namespace Windeck.Geschichtstour.Backend.Dtos
 {
     /// <summary>
     /// Datenübertragungsobjekt für Medien (Bild, Audio, Video),

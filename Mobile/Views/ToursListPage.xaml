@@ -5,6 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Touren">
 
+    <!-- Zweck: Uebersicht aller Touren mit Auswahlmoeglichkeit. -->
+
+
     <ContentPage.Content>
         <Grid Padding="16">
             <RefreshView

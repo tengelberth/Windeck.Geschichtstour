@@ -1,10 +1,16 @@
-﻿namespace Windeck.Geschichtstour.Mobile.Helper;
+namespace Windeck.Geschichtstour.Mobile.Helper;
 
+/// <summary>
+/// Extrahiert Stationscodes aus QR-Inhalten und Deeplink-URLs.
+/// </summary>
 public static class QrCodeParser
 {
     // Akzeptiert z.B.
     // https://geschichtstour-backend.azurewebsites.net/station?code=BURG_WINDECK
     // oder auch direkt "BURG_WINDECK"
+    /// <summary>
+    /// Extrahiert, falls moeglich, einen Stationscode aus dem QR-Inhalt.
+    /// </summary>
     public static string? TryExtractCode(string raw)
     {
         raw = raw?.Trim() ?? "";
@@ -31,3 +37,4 @@ public static class QrCodeParser
         return null;
     }
 }
+

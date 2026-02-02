@@ -1,4 +1,6 @@
-﻿@page "/Admin/Stations/Edit/{id?}"
+﻿@* Zweck: Formularseite zum Erstellen oder Bearbeiten von Datenobjekten. *@
+
+@page "/Admin/Stations/Edit/{id?}"
 @model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.EditModel
 @{
     Layout = "_AdminLayout";
@@ -129,7 +131,7 @@
 
     <script>
         function openGoogleMapsForStation() {
-            // IDs werden von asp-for="Station.XYZ" generiert (Station_Title, Station_Street, ...)
+            // IDs werden von asp-for="Station.XYZ" erstellt (Station_Title, Station_Street, ...)
             const title = document.getElementById("Station_Title")?.value ?? "";
             const street = document.getElementById("Station_Street")?.value ?? "";
             const houseNumber = document.getElementById("Station_HouseNumber")?.value ?? "";
@@ -182,7 +184,7 @@
 
             // Bestehenden Inhalt aus dem Hidden-Feld in den Editor laden (falls vorhanden)
             if (hiddenField.value) {
-                // Wenn du HTML gespeichert hast:
+                // Falls HTML gespeichert wurde:
                 quill.clipboard.dangerouslyPasteHTML(hiddenField.value);
             }
 
@@ -196,3 +198,4 @@
         });
     </script>
 }
+

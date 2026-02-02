@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+ï»¿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
@@ -6,10 +6,16 @@ using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 {
+    /// <summary>
+    /// Laedt und verwaltet die Stationsuebersicht im Adminbereich.
+    /// </summary>
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _dbContext;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von IndexModel.
+        /// </summary>
         public IndexModel(AppDbContext dbContext)
         {
             _dbContext = dbContext;
@@ -21,6 +27,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
         public IList<Station> Stations { get; set; } = new List<Station>();
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task OnGetAsync()
         {
             var query = _dbContext.Stations
@@ -43,8 +52,8 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
 
         /// <summary>
-        /// Löscht eine Station anhand der ID.
-        /// Wird über ein POST-Formular mit Handler "Delete" aufgerufen.
+        /// LÃ¶scht eine Station anhand der ID.
+        /// Wird Ã¼ber ein POST-Formular mit Handler "Delete" aufgerufen.
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
@@ -58,24 +67,27 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 return NotFound();
             }
 
-            // Zunächst abhängige TourStops löschen
+            // ZunÃ¤chst abhÃ¤ngige TourStops lÃ¶schen
             if (station.TourStops.Any())
             {
                 _dbContext.TourStops.RemoveRange(station.TourStops);
             }
 
-            // Medienobjekte löschen (Metadaten; Dateien im Storage musst du separat behandeln)
+            // Medienobjekte lÃ¶schen (Metadaten; Dateien im Storage muessen separat behandelt werden)
             if (station.MediaItems.Any())
             {
                 _dbContext.MediaItems.RemoveRange(station.MediaItems);
             }
 
             _dbContext.Stations.Remove(station);
-            TempData["SuccessMessage"] = "Station wurde gelöscht.";
+            TempData["SuccessMessage"] = "Station wurde gelÃ¶scht.";
             await _dbContext.SaveChangesAsync();
 
-            // Nach dem Löschen wieder auf die Übersicht
+            // Nach dem LÃ¶schen wieder auf die Ãœbersicht
             return RedirectToPage();
         }
     }
 }
+
+
+

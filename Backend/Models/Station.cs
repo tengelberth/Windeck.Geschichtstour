@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace Windeck.Geschichtstour.Backend.Models
@@ -16,7 +16,7 @@ namespace Windeck.Geschichtstour.Backend.Models
 
         /// <summary>
         /// Eindeutiger Code, der mit einem QR-Code verknüpft werden kann.
-        /// Beispiel: "RATHAUS_ROSBACH_01".
+        /// Erwartetes Format: "RATHAUS_ROSBACH_01".
         /// </summary>
         [Required(ErrorMessage = "Der Code ist erforderlich.")]
         [StringLength(100, ErrorMessage = "Der Code darf maximal {1} Zeichen lang sein.")]
@@ -24,7 +24,7 @@ namespace Windeck.Geschichtstour.Backend.Models
 
         /// <summary>
         /// Titel der Station, der in der App angezeigt wird.
-        /// Beispiel: "Rathaus Rosbach".
+        /// Typischer Wert: "Rathaus Rosbach".
         /// </summary>
         [Required(ErrorMessage = "Der Titel ist erforderlich.")]
         [StringLength(200, ErrorMessage = "Der Titel darf maximal {1} Zeichen lang sein.")]

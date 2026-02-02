@@ -1,22 +1,30 @@
-﻿using Windeck.Geschichtstour.Mobile.Views;
+using Windeck.Geschichtstour.Mobile.Configuration;
+using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile;
 
+/// <summary>
+/// Definiert die globale Navigation der App und registriert Routen.
+/// </summary>
 public partial class AppShell : Shell
 {
     public Command OpenWebsiteCommand { get; }
-    public AppShell()
+
+    /// <summary>
+    /// Initialisiert Shell-Routen und Kommandos.
+    /// </summary>
+    /// <param name="appUrlOptions">URL-Konfiguration fuer externe Website-Navigation.</param>
+    public AppShell(AppUrlOptions appUrlOptions)
     {
         InitializeComponent();
 
-        // Route für die Content-Seite, damit wir per Code navigieren können
         Routing.RegisterRoute(nameof(StationContentPage), typeof(StationContentPage));
         Routing.RegisterRoute(nameof(StationTeaserPage), typeof(StationTeaserPage));
         Routing.RegisterRoute(nameof(TourTeaserPage), typeof(TourTeaserPage));
         Routing.RegisterRoute(nameof(QrScannerPage), typeof(QrScannerPage));
 
         OpenWebsiteCommand = new Command(async () =>
-            await Launcher.Default.OpenAsync("https://geschichtstour-backend.azurewebsites.net"));
+            await Launcher.Default.OpenAsync(appUrlOptions.PublicBaseUri));
 
         BindingContext = this;
     }

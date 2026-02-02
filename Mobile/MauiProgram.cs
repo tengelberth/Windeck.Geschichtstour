@@ -1,7 +1,8 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using SkiaSharp.Views.Maui.Controls.Hosting;
+using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.ViewModels;
 using Windeck.Geschichtstour.Mobile.Views;
@@ -10,8 +11,15 @@ using ZXing.Net.Maui.Controls;
 
 namespace Windeck.Geschichtstour.Mobile
 {
+    /// <summary>
+    /// Konfiguriert den App-Start, den DI-Container und den Plattform-Lifecycle der MAUI-Anwendung.
+    /// </summary>
     public static class MauiProgram
     {
+        /// <summary>
+        /// Konfiguriert und erstellt die MAUI-Anwendung inklusive Services und Navigation.
+        /// </summary>
+        /// <returns>Vollstaendig konfigurierte Instanz der MAUI-Anwendung.</returns>
         public static MauiApp CreateMauiApp()
         {
             AppContext.SetSwitch("System.Reflection.NullabilityInfoContext.IsSupported", true);
@@ -88,6 +96,9 @@ namespace Windeck.Geschichtstour.Mobile
             builder.Logging.AddDebug();
 #endif
 
+            var appUrlOptions = AppUrlOptionsLoader.Load();
+            builder.Services.AddSingleton(appUrlOptions);
+
             // Konfigurieren der DI-Container und der App
             builder.Services.AddSingleton<AppShell>();
 
@@ -127,3 +138,4 @@ namespace Windeck.Geschichtstour.Mobile
         }
     }
 }
+

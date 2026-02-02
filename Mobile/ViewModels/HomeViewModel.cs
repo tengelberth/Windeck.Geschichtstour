@@ -1,8 +1,11 @@
-﻿using Windeck.Geschichtstour.Mobile.Helpers;
+using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels
 {
+    /// <summary>
+    /// Steuert die Startseite inklusive Codesuche und Hauptnavigation.
+    /// </summary>
     public class HomeViewModel : BaseViewModel
     {
         private string _code;
@@ -21,6 +24,9 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         public Command ScanQrCommand { get; }
 
         // Konstruktor des ViewModels
+        /// <summary>
+        /// Initialisiert eine neue Instanz von HomeViewModel.
+        /// </summary>
         public HomeViewModel()
         {
             // Initialisiere die Commands und weise ihnen die entsprechenden Methoden zu
@@ -34,6 +40,9 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         }
 
         // Methode zum Anzeigen der Station (wird aufgerufen, wenn der Benutzer den "Station anzeigen"-Button klickt)
+        /// <summary>
+        /// Validiert den eingegebenen Code und oeffnet die passende Station.
+        /// </summary>
         private async void OnShowStationClicked()
         {
             // Überprüfe, ob der Code eingegeben wurde
@@ -49,6 +58,9 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         }
 
         // Methode zum Anzeigen aller Stationen (wird aufgerufen, wenn der Benutzer den "Alle Stationen anzeigen"-Button klickt)
+        /// <summary>
+        /// Navigiert zur Uebersicht aller Stationen.
+        /// </summary>
         private async void OnShowAllStationsClicked()
         {
             // Navigiere zur Stations-Seite
@@ -56,6 +68,9 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         }
 
         // Methode zum Anzeigen aller Touren (wird aufgerufen, wenn der Benutzer den "Alle Touren anzeigen"-Button klickt)
+        /// <summary>
+        /// Navigiert zur Uebersicht aller Touren.
+        /// </summary>
         private async void OnShowAllToursClicked()
         {
             // Navigiere zur Touren-Seite
@@ -63,3 +78,5 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         }
     }
 }
+
+

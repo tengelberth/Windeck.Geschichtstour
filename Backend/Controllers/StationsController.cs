@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
@@ -25,7 +25,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
 
         /// <summary>
         /// Liefert eine Liste aller Stationen mit Basisinformationen.
-        /// Dieser Endpunkt kann z. B. für die Stationsliste in der App genutzt werden.
+        /// Dieser Endpunkt wird für die Stationsliste in der App genutzt.
         /// GET: /api/stations
         /// </summary>
         [HttpGet]
@@ -69,7 +69,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         }
 
         /// <summary>
-        /// Liefert eine einzelne Station anhand des Codes (z. B. QR-Code).
+        /// Liefert eine einzelne Station anhand des Codes mit den zugehörigen MediaItems.
         /// GET: /api/stations/by-code/{code}
         /// </summary>
         [HttpGet("by-code/{code}")]

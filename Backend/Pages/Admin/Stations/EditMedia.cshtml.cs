@@ -14,6 +14,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         private readonly AppDbContext _dbContext;
         private readonly IWebHostEnvironment _env;
 
+        /// <summary>
+        /// Initialisiert eine neue Instanz von EditMediaModel.
+        /// </summary>
         public EditMediaModel(AppDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
@@ -22,7 +25,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
 
         /// <summary>
-        /// Station, zu der das Medium gehört.
+        /// Station, zu der das Medium gehÃ¶rt.
         /// </summary>
         public Station Station { get; set; } = default!;
 
@@ -45,6 +48,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public bool IsNew => Media.Id == 0;
 
+        /// <summary>
+        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// </summary>
         public async Task<IActionResult> OnGetAsync(int stationId, int? mediaId)
         {
             // Station laden
@@ -78,6 +84,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             return Page();
         }
 
+        /// <summary>
+        /// Verarbeitet das Absenden des Formulars und speichert Aenderungen.
+        /// </summary>
         public async Task<IActionResult> OnPostAsync(int stationId, int? mediaId)
         {
             // Station laden
@@ -90,13 +99,13 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             // Wenn eine Datei hochgeladen wurde, speichern wir sie und setzen die Url automatisch
             if (UploadFile != null && UploadFile.Length > 0)
             {
-                // Dateiendung prüfen (einfache Whitelist)
+                // Dateiendung prÃ¼fen (einfache Whitelist)
                 var extension = Path.GetExtension(UploadFile.FileName);
                 var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp3", ".wav", ".mp4" };
 
                 if (!allowedExtensions.Contains(extension.ToLower()))
                 {
-                    ModelState.AddModelError("UploadFile", "Der gewählte Dateityp ist nicht erlaubt.");
+                    ModelState.AddModelError("UploadFile", "Der gewÃ¤hlte Dateityp ist nicht erlaubt.");
                 }
                 else
                 {
@@ -119,14 +128,14 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                         await UploadFile.CopyToAsync(stream);
                     }
 
-                    // Relative URL, die von außen aufrufbar ist
+                    // Relative URL, die von auÃŸen aufrufbar ist
                     var relativePath = $"/uploads/stations/{stationId}/{fileName}";
 
                     // Url-Feld aus dem Formular ist dann nicht mehr "wirklich" required,
                     // deshalb ersetzen wir es durch die automatisch gesetzte URL
                     Media.Url = relativePath;
 
-                    // Validation-Eintrag für Media.Url entfernen, falls der leer war
+                    // Validation-Eintrag fÃ¼r Media.Url entfernen, falls der leer war
                     ModelState.Remove("Media.Url");
                 }
             }

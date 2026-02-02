@@ -5,6 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Geschichtstour Windeck">
 
+    <!-- Zweck: Startseite mit Codesuche, QR-Einstieg und Schnellnavigation. -->
+
+
     <ScrollView>
         <VerticalStackLayout
             Padding="16"

@@ -1,4 +1,4 @@
-﻿namespace Windeck.Geschichtstour.Backend.Models
+namespace Windeck.Geschichtstour.Backend.Models
 {
     /// <summary>
     /// Verbindet eine Tour mit einer Station und legt die Reihenfolge fest,
