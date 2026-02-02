@@ -29,7 +29,7 @@ public sealed class AppUrlOptions
 public static class AppUrlOptionsLoader
 {
     private const string DefaultBaseUrl = "https://geschichtstour-backend.azurewebsites.net/";
-
+    
     /// <summary>
     /// Laedt die URL-Konfiguration synchron fuer den App-Start.
     /// </summary>

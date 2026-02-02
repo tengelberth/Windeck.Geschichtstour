@@ -28,7 +28,7 @@
         </Grid>
 
         <!-- Close Button -->
-        <Button Text="âœ•"
+        <Button Text="X"
                 ZIndex="10"
                 BackgroundColor="#66000000"
                 TextColor="White"

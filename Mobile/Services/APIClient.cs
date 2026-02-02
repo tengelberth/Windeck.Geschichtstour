@@ -221,12 +221,6 @@ public class ApiClient
                 continue;
             }
 
-            if (Uri.TryCreate(mediaItem.Url, UriKind.Absolute, out var absoluteUri))
-            {
-                mediaItem.FullUrl = absoluteUri.ToString();
-                continue;
-            }
-
             mediaItem.FullUrl = new Uri(_appUrlOptions.BackendBaseUri, mediaItem.Url.TrimStart('/')).ToString();
         }
     }

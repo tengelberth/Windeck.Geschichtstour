@@ -24,7 +24,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(QrScannerPage), typeof(QrScannerPage));
 
         OpenWebsiteCommand = new Command(async () =>
-            await Launcher.Default.OpenAsync(appUrlOptions.PublicBaseUri));
+            await Launcher.OpenAsync("https://geschichtstour-backend.azurewebsites.net"));
 
         BindingContext = this;
     }
