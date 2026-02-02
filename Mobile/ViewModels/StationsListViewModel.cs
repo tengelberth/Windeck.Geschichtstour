@@ -1,8 +1,7 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows.Input;
 using Windeck.Geschichtstour.Mobile.Models;
-using Windeck.Geschichtstour.Mobile.Views;
 using Windeck.Geschichtstour.Mobile.Services;
+using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 

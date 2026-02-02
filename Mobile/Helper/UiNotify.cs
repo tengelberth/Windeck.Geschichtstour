@@ -27,7 +27,7 @@ public static class UiNotify
     /// <summary>
     /// Snackbar mit Button (Action)
     /// </summary>
-    public static Task SnackbarAsync(string message, string actionText, Action action, int seconds = 4)
+    public static Task SnackbarAsync(string message, string actionText, Action action, int seconds = 5)
     {
         var snackbarOptions = new SnackbarOptions
         {

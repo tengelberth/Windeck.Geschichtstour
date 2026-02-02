@@ -46,11 +46,11 @@ namespace Windeck.Geschichtstour.Mobile
 #endif
 
 #if IOS || MACCATALYST
-    lifecycle.AddiOS(ios =>
-    {
-        ios.FinishedLaunching((app, data) => HandleAppLink(app.UserActivity));
-        ios.ContinueUserActivity((app, userActivity, handler) => HandleAppLink(userActivity));
-    });
+                lifecycle.AddiOS(ios =>
+                {
+                    ios.FinishedLaunching((app, data) => HandleAppLink(app.UserActivity));
+                    ios.ContinueUserActivity((app, userActivity, handler) => HandleAppLink(userActivity));
+                });
 #endif
             });
 

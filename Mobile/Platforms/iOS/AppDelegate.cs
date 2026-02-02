@@ -1,13 +1,29 @@
 ﻿using Foundation;
-using Microsoft.Maui;
-using Microsoft.Maui.Hosting;
+using UIKit;
 
+namespace Windeck.Geschichtstour.Mobile;
 
-namespace Windeck.Geschichtstour.Mobile
+[Register("AppDelegate")]
+public class AppDelegate : MauiUIApplicationDelegate
 {
-    [Register("AppDelegate")]
-    public class AppDelegate : MauiUIApplicationDelegate
+    protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+
+    public override bool ContinueUserActivity(UIApplication application, NSUserActivity userActivity, UIApplicationRestorationHandler completionHandler)
     {
-        protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
+        // Universal Links kommen hier rein
+        if (userActivity.ActivityType == NSUserActivityType.BrowsingWeb && userActivity.WebPageUrl != null)
+        {
+            var nsUrl = userActivity.WebPageUrl;
+
+            // Damit MAUI OnAppLinkRequestReceived(Uri) triggert:
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                UIApplication.SharedApplication.OpenUrl(nsUrl);
+            });
+
+            return true;
+        }
+
+        return base.ContinueUserActivity(application, userActivity, completionHandler);
     }
 }

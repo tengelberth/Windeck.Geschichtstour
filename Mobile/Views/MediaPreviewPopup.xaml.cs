@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Devices;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 

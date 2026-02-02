@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Windeck.Geschichtstour.Backend.Dtos
+﻿namespace Windeck.Geschichtstour.Backend.Dtos
 {
     /// <summary>
     /// Datenübertragungsobjekt für eine Tour, inklusive der

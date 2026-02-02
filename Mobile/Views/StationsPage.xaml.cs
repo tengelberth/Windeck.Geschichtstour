@@ -1,4 +1,3 @@
-using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.ViewModels;
 
 namespace Windeck.Geschichtstour.Mobile.Views;

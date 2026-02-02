@@ -113,6 +113,23 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Fallback für Deeplink-URLs im Browser:
+// Wenn jemand /station?code=XYZ öffnet, leite auf /Index weiter (optional: Query behalten)
+app.MapGet("/station", (HttpContext ctx) =>
+{
+    // Optional: Code mitgeben, falls du später auf Index etwas damit machen willst
+    //var code = ctx.Request.Query["code"].ToString();
+
+    // Wenn du den Code NICHT brauchst:
+    // return Results.Redirect("/Index", permanent: false);
+
+    // Wenn du den Code behalten willst:
+    //if (!string.IsNullOrWhiteSpace(code))
+    //    return Results.Redirect($"/Index?code={Uri.EscapeDataString(code)}", permanent: false);
+
+    return Results.Redirect("/Index", permanent: false);
+});
+
 // Razor Pages (Adminoberfläche) unter Standardrouten verfügbar machen.
 app.MapRazorPages();
 

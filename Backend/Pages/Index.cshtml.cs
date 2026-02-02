@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Windeck.Geschichtstour.Backend.Pages
@@ -8,6 +7,6 @@ namespace Windeck.Geschichtstour.Backend.Pages
     /// </summary>
     public class IndexModel : PageModel
     {
-        
+
     }
 }

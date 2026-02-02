@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "TEAMID.de.engelberth-developing.windeck.geschichtstour",
+        "appID": "ABCDE12345.de.engelberth_developing.windeck.geschichtstour",
         "paths": [ "/station*", "/share/station*" ]
       }
     ]

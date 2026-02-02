@@ -1,9 +1,7 @@
 ﻿using System.Globalization;
-using System.Windows.Input;
+using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
-using Microsoft.Maui.ApplicationModel.DataTransfer;
-using Windeck.Geschichtstour.Mobile.Helpers;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
@@ -65,23 +63,23 @@ public class StationTeaserViewModel : BaseViewModel
     }
 
 
-public async Task ShareStationAsync()
-{
+    public async Task ShareStationAsync()
+    {
         if (Station == null)
             return;
 
         var url = $"https://geschichtstour-backend.azurewebsites.net/share/station?code={Uri.EscapeDataString(Station.Code)}";
 
-    await Share.RequestAsync(new ShareTextRequest
-    {
-        Title = Station.Title,
-        Text = "Schau dir diese Station an:",
-        Uri = url
-    });
-}
+        await Share.RequestAsync(new ShareTextRequest
+        {
+            Title = Station.Title,
+            Text = "Schau dir diese Station an:",
+            Uri = url
+        });
+    }
 
 
-private async Task OpenInKomootAsync()
+    private async Task OpenInKomootAsync()
     {
         if (Station == null)
             return;

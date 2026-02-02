@@ -31,7 +31,7 @@ namespace Windeck.Geschichtstour.Mobile
                 if (path == "/station")
                 {
                     await Shell.Current.GoToAsync(
-                        $"{nameof(StationTeaserPage)}?code={Uri.EscapeDataString(code)}");
+                        $"{nameof(StationContentPage)}?code={Uri.EscapeDataString(code)}");
                 }
                 else if (path == "/share/station")
                 {

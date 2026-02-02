@@ -7,8 +7,8 @@ public partial class QrScannerPage : ContentPage
 {
     private readonly QrScannerViewModel _viewModel;
     public QrScannerPage(QrScannerViewModel viewModel)
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
         _viewModel = viewModel;
         BindingContext = _viewModel;
 

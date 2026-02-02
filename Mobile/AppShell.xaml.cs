@@ -4,6 +4,7 @@ namespace Windeck.Geschichtstour.Mobile;
 
 public partial class AppShell : Shell
 {
+    public Command OpenWebsiteCommand { get; }
     public AppShell()
     {
         InitializeComponent();
@@ -14,5 +15,9 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(TourTeaserPage), typeof(TourTeaserPage));
         Routing.RegisterRoute(nameof(QrScannerPage), typeof(QrScannerPage));
 
+        OpenWebsiteCommand = new Command(async () =>
+            await Launcher.Default.OpenAsync("https://geschichtstour-backend.azurewebsites.net"));
+
+        BindingContext = this;
     }
 }

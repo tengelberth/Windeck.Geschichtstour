@@ -26,7 +26,7 @@
                    FontAttributes="Bold"
                    Margin="0,10,0,0" />
 
-            <Label Text="Das Projekt ist im Rahmen einer Bachelorarbeit von Tobias Engelberth an der Universität der Bundeswehr in München entstanden und wird gemeinsam mit der Gemeinde Windeck und dem Tourismus Windecker Ländchen e. V. umgesetzt."
+            <Label Text="Das Projekt ist im Rahmen einer Bachelorarbeit von Tobias Engelberth an der Universität der Bundeswehr in München entstanden und wird gemeinsam mit der Gemeinde Windeck und dem Tourismus Windecker Ländchen e.V. umgesetzt."
                    FontSize="14" />
 
             <Label Text="Ziel des Projekts ist es, lokale Geschichte und Kultur niedrigschwellig zugänglich zu machen – für Einheimische, Familien, Schulklassen und natürlich auch für Gäste der Region."

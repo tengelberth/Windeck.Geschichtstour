@@ -25,7 +25,7 @@
 		<ApplicationTitle>Geschichtstour Windeck</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>de.engelberth-developing.windeck.geschichtstour</ApplicationId>
+		<ApplicationId>de.engelberth_developing.windeck.geschichtstour</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -42,18 +42,18 @@
 		
 	</PropertyGroup>
 
-	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">
-		<CustomEntitlements Condition="$(Configuration) == 'Debug'" Include="com.apple.developer.associated-domains" Type="StringArray" Value="applinks:geschichtstour-backend.azurewebsites.net?mode=developer" />
-		<CustomEntitlements Condition="$(Configuration) != 'Debug'" Include="com.apple.developer.associated-domains" Type="StringArray" Value="applinks:geschichtstour-backend.azurewebsites.net" />
-	</ItemGroup>
+	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
+		<CodesignEntitlements>Platforms/iOS/Entitlements.plist</CodesignEntitlements>
+	</PropertyGroup>
+
 
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.png" Color="#1953c6" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#1953c6" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splashscreen.png" Color="#1953c6" />
+		<MauiSplashScreen Include="Resources\Splash\splashscreen.svg" Color="#1953c6" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -64,6 +64,7 @@
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\*" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
 	</ItemGroup>
+
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="8.0.1" />

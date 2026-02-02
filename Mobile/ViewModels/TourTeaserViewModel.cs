@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Windows.Input;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;

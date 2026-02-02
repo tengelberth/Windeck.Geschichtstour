@@ -3,10 +3,9 @@
     "relation": [ "delegate_permission/common.handle_all_urls" ],
     "target": {
       "namespace": "android_app",
-      "package_name": "de.engelberth-developing.windeck.geschichtstour",
+      "package_name": "de.engelberth_developing.windeck.geschichtstour",
       "sha256_cert_fingerprints": [
-        "DEBUG_SHA256_HIER",
-        "RELEASE_SHA256_HIER"
+        "6E:DF:76:80:C7:4A:C1:69:E5:67:BE:9B:F2:CD:86:1A:4F:C3:86:94:4D:1D:9B:31:22:FE:67:DE:A3:24:15:13"
       ]
     }
   }

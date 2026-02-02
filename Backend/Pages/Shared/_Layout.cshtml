@@ -29,7 +29,7 @@
 
                 <!-- Brand / Logo -->
                 <a class="navbar-brand d-flex align-items-center gap-2" href="#top">
-                    <img src="~/images/tourismusverein-logo.png" class="landing-logo" alt="Tourismusverein Windeck Logo" />
+                    <img src="~/images/appiconwhite.svg" class="landing-logo" alt="Digitale Geschichtstour Windeck Logo" />
                     <span class="fw-bold">Geschichtstour Windeck</span>
                 </a>
 
@@ -81,14 +81,126 @@
         <div class="container py-4">
             <div class="row gy-3 align-items-center">
                 <div class="col-md-6 text-center text-md-start small text-muted">
-                    © @DateTime.Now.Year Engelberth Developing
+                    <div class="footer-left">
+                        <div class="footer-copy">
+                            © @DateTime.Now.Year Tourismus Windecker Ländchen e.V.
+                        </div>
+
+                        <div class="footer-links">
+                            <a href="#"
+                               class="footer-link"
+                               data-bs-toggle="modal"
+                               data-bs-target="#impressumModal">
+                                Impressum
+                            </a>
+
+                            <span class="footer-sep">|</span>
+
+                            <a href="#"
+                               class="footer-link"
+                               data-bs-toggle="modal"
+                               data-bs-target="#kontaktModal">
+                                Kontakt
+                            </a>
+
+                            <span class="footer-sep">|</span>
+
+                            <a class="footer-link" href="/swagger" target="_blank" rel="noopener">
+                                API (Swagger)
+                            </a>
+                        </div>
+                    </div>
                 </div>
+
                 <div class="col-md-6 text-center text-md-end small text-muted">
-                    In Kooperation mit der Gemeinde Windeck &amp; Tourismus Windecker Ländchen e.V.
+                    Technische Umsetzung: Tobias Engelberth
                 </div>
             </div>
         </div>
     </footer>
+
+    <!-- ===================== Impressum Modal ===================== -->
+    <div class="modal fade" id="impressumModal" tabindex="-1" aria-labelledby="impressumModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg landing-modal-dialog">
+            <div class="modal-content landing-modal-content">
+                <div class="modal-header landing-modal-header">
+                    <h5 class="modal-title" id="impressumModalLabel">Impressum</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+
+                <div class="modal-body landing-modal-header">
+                    <p class="mb-2"><strong>Angaben gemäß § 5 DDG</strong></p>
+                    <p class="mb-3">
+                        <strong>Tourismus Windecker Ländchen e.V.</strong><br />
+                        Rathausstraße 12<br />
+                        51570 Windeck<br />
+                        Deutschland<br />
+                        <span class="d-inline-block mt-2">Vertreten durch: Frau Martina Schneider</span>
+                    </p>
+
+                    <p class="mb-2"><strong>Kontakt (Betreiber)</strong></p>
+                    <p class="mb-3">
+                        Telefon: <a href="tel:+4922929562023">+49 2292 9562023</a><br />
+                        Telefax: <a href="tel:+4922929562025">+49 2292 9562025</a><br />
+                        E-Mail: <a href="mailto:tourismus@gemeinde-windeck.de">tourismus@gemeinde-windeck.de</a>
+                    </p>
+
+                    <hr class="my-4" />
+
+                    <p class="mb-2"><strong>Technische Umsetzung</strong></p>
+                    <p class="mb-3">
+                        Tobias Engelberth<br />
+                        E-Mail: <a href="mailto:tobias.engelberth@gmail.com">tobias.engelberth@gmail.com</a>
+                    </p>
+
+                    <p class="small text-muted mb-0">
+                        Hinweis: Die Urheberrechte an der Software/technischen Umsetzung verbleiben beim Entwickler. Dem Betreiber wird ein einfaches Nutzungsrecht eingeräumt. Für Inhalte und Betrieb ist der Betreiber verantwortlich.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== Kontakt Modal ===================== -->
+    <div class="modal fade" id="kontaktModal" tabindex="-1" aria-labelledby="kontaktModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg landing-modal-dialog">
+            <div class="modal-content landing-modal-content">
+                <div class="modal-header landing-modal-header">
+                    <h5 class="modal-title" id="kontaktModalLabel">Kontakt aufnehmen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+
+                <div class="modal-body landing-modal-header">
+                    <p class="text-muted small mb-3">
+                        Sie können uns direkt per E-Mail kontaktieren:
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <a class="btn btn-primary"
+                           href="mailto:tourismus@gemeinde-windeck.de?subject=Anfrage%20Geschichtstour%20Windeck&body=Hallo%20Tourismus%20Windecker%20L%C3%A4ndchen%2C%0A%0A">
+                            E-Mail an Tourismus Windeck
+                        </a>
+
+                        <a class="btn btn-outline-primary"
+                           href="mailto:tobias.engelberth@gmail.com?subject=Technisches%20Feedback%20Geschichtstour&body=Hallo%20Herr%20Engelberth%2C%0A%0A">
+                            E-Mail an Tobias Engelberth
+                        </a>
+                    </div>
+
+                    <hr class="my-4" />
+
+                    <p class="mb-2"><strong>Tourismus Windecker Ländchen e.V.</strong></p>
+                    <p class="mb-0">
+                        Rathausstraße 12, 51570 Windeck<br />
+                        Telefon: <a href="tel:+4922929562023">+49 2292 9562023</a><br />
+                        Telefax: <a href="tel:+4922929562025">+49 2292 9562025</a><br />
+                        E-Mail: <a href="mailto:tourismus@gemeinde-windeck.de">tourismus@gemeinde-windeck.de</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 

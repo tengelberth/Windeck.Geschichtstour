@@ -13,6 +13,20 @@ namespace Windeck.Geschichtstour.Mobile
     DataHost = "geschichtstour-backend.azurewebsites.net",
     DataPathPrefix = "/",
     AutoVerify = true)]
+    [IntentFilter(
+    new[] { Intent.ActionView },
+    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+    DataScheme = "https",
+    DataHost = "geschichtstour.windecker-laendchen.com",
+    DataPathPrefix = "/",
+    AutoVerify = true)]
+    [IntentFilter(
+    new[] { Intent.ActionView },
+    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+    DataScheme = "https",
+    DataHost = "geschichtstour.gemeinde-windeck.de",
+    DataPathPrefix = "/",
+    AutoVerify = true)]
     public class MainActivity : MauiAppCompatActivity
     {
     }

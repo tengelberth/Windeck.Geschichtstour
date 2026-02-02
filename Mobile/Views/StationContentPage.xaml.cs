@@ -1,4 +1,3 @@
-using Windeck.Geschichtstour.Mobile.Helper;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.ViewModels;
 

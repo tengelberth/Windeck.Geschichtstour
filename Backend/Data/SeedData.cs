@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Windeck.Geschichtstour.Backend.Models;
+﻿using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Data
 {

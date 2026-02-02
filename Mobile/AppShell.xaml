@@ -5,8 +5,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:views="clr-namespace:Windeck.Geschichtstour.Mobile.Views"
     Shell.FlyoutBehavior="Flyout"
+    Shell.FlyoutWidth="270"
     Shell.TabBarTitleColor="{StaticResource Primary}"
     Shell.TabBarForegroundColor="{StaticResource Primary}">
+
+    <!-- Flyout Header (Logo oben im Menü) -->
+    <Shell.FlyoutHeaderTemplate>
+        <DataTemplate>
+            <Grid Padding="20">
+                <Image Source="appiconblue.svg"
+                       HeightRequest="100"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Aspect="AspectFit" />
+            </Grid>
+        </DataTemplate>
+    </Shell.FlyoutHeaderTemplate>
 
     <!-- Start / Home -->
     <FlyoutItem Title="Start" Route="home" Icon="qrblue.png">
@@ -24,7 +38,7 @@
                 Title="Karte"
                 ContentTemplate="{DataTemplate views:StationsMapPage}" />
         </Tab>
-        
+
         <Tab Title="Liste" Icon="listblue.png">
             <ShellContent
                 Title="Liste"
@@ -35,25 +49,32 @@
     <FlyoutItem Title="Touren" Route="tours" Icon="mapblue.png">
         <Tab>
             <ShellContent
-            Title="Touren"
-            ContentTemplate="{DataTemplate views:ToursListPage}" />
+                Title="Touren"
+                ContentTemplate="{DataTemplate views:ToursListPage}" />
         </Tab>
     </FlyoutItem>
 
     <FlyoutItem Title="Über die App" Route="about" Icon="infoblue.png">
         <Tab>
             <ShellContent
-            Title="Über"
-            ContentTemplate="{DataTemplate views:AboutPage}" />
+                Title="Über"
+                ContentTemplate="{DataTemplate views:AboutPage}" />
         </Tab>
     </FlyoutItem>
+
+    <!-- NEU: Menü-Aktionen (öffnen externen Browser, keine App/WebView) -->
+    <MenuItem Text="Website &amp; Impressum"
+              IconImageSource="webblue.png"
+              Command="{Binding OpenWebsiteCommand}" />
+
     <Shell.FlyoutFooterTemplate>
         <DataTemplate>
-            <StackLayout>
-                <Label Text="Engelberth Developing ©" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
-                <Label Text="30 März 2026" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8"/>
+            <VerticalStackLayout>
+                <Label Text="Tourismus Windecker Ländchen e.V. ©" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
+                <Label Text="Created by Tobias Engelberth" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
+                <Label Text="01 Mai 2026" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8"/>
                 <Label Text="Version 1.0 (1)" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8" Margin="0,0,0,10"/>
-            </StackLayout>
+            </VerticalStackLayout>
         </DataTemplate>
     </Shell.FlyoutFooterTemplate>
 

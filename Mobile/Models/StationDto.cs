@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Windeck.Geschichtstour.Mobile.Models;
+﻿namespace Windeck.Geschichtstour.Mobile.Models;
 
 /// <summary>
 /// Station, wie sie von der Web-API geliefert wird.

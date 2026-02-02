@@ -1,10 +1,10 @@
-﻿using System.Collections.Specialized;
-using Mapsui;
+﻿using Mapsui;
+using Mapsui.Extensions;
 using Mapsui.Fetcher;
 using Mapsui.Layers;
 using Mapsui.Projections;
 using Mapsui.UI.Maui;
-using Mapsui.Extensions;
+using System.Collections.Specialized;
 
 namespace Windeck.Geschichtstour.Mobile.Behaviors;
 
