@@ -60,6 +60,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 return NotFound();
             }
 
+            // Aktuell werden in der Admin-Oberflaeche nur Bilder unterstuetzt.
+            Media.MediaType = "Image";
+
             if (mediaId == null)
             {
                 // Neues Medium
@@ -101,7 +104,11 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             {
                 // Dateiendung prüfen (einfache Whitelist)
                 var extension = Path.GetExtension(UploadFile.FileName);
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp3", ".wav", ".mp4" };
+                var allowedExtensions = new[]
+                {
+                    ".jpg", ".jpeg", ".png", ".gif"
+                    // ".mp3", ".wav", ".mp4"
+                };
 
                 if (!allowedExtensions.Contains(extension.ToLower()))
                 {

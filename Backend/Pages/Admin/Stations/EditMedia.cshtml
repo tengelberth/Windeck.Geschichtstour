@@ -19,8 +19,8 @@
         <label asp-for="Media.MediaType" class="form-label">Medientyp</label>
         <select asp-for="Media.MediaType" class="form-select">
             <option value="Image">Bild</option>
-            <option value="Audio">Audio</option>
-            <option value="Video">Video</option>
+            @* <option value="Audio">Audio</option> *@
+            @* <option value="Video">Video</option> *@
         </select>
         <span asp-validation-for="Media.MediaType" class="text-danger"></span>
     </div>
