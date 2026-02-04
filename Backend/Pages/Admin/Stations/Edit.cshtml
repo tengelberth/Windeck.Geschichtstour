@@ -29,6 +29,44 @@
         <span asp-validation-for="Station.Code" class="text-danger"></span>
     </div>
 
+    <div class="mb-4 border rounded-3 p-3 p-md-4 bg-light-subtle">
+        <h4 class="mb-1">Station-Link und QR-Code</h4>
+        <p class="text-muted mb-3">
+            Der Link wird aus dem Station-Code erzeugt. Vorschau und Download aktualisierenm sich automatisch.
+        </p>
+
+        <div class="row g-4 align-items-start">
+            <div class="col-lg-6">
+                <label class="form-label">Station-Link</label>
+                <div class="input-group">
+                    <input id="StationLinkOutput" class="form-control" readonly />
+                    <button type="button" id="CopyStationLinkBtn" class="btn btn-outline-primary">
+                        <i class="bi bi-clipboard me-1"></i>Kopieren
+                    </button>
+                </div>
+                <div class="mt-2 d-flex gap-2 flex-wrap">
+                    <a id="OpenStationLinkBtn" href="#" target="_blank" rel="noopener" class="btn btn-sm btn-outline-primary disabled">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>Öffnen
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <label class="form-label">QR-Vorschau (Station-Link)</label>
+                <div class="border rounded-3 p-3 bg-white">
+                    <div class="d-flex justify-content-center">
+                        <div id="QrPreview" style="width:380px;height:380px;max-width:100%;"></div>
+                    </div>
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+                        <a id="DownloadQrBtn" href="#" class="btn btn-sm btn-primary disabled" download>
+                            <i class="bi bi-download me-1"></i>QR als PNG herunterladen
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="mb-3">
         <label asp-for="Station.CategoryId" class="form-label">Kategorie</label>
         <select asp-for="Station.CategoryId" asp-items="Model.CategoryOptions" class="form-select"></select>
@@ -128,8 +166,246 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/qr-code-styling@1.8.2/lib/qr-code-styling.js"></script>
 
     <script>
+        const stationInput = document.getElementById("Station_Code");
+        const stationLinkOutput = document.getElementById("StationLinkOutput");
+        const openStationLinkBtn = document.getElementById("OpenStationLinkBtn");
+        const copyStationLinkBtn = document.getElementById("CopyStationLinkBtn");
+        const downloadQrBtn = document.getElementById("DownloadQrBtn");
+        const qrPreview = document.getElementById("QrPreview");
+
+        const stationPath = "@Url.Content("~/station")";
+        const qrLogoUrl = "@Url.Content("~/images/appiconblue.png")";
+        const qrPreviewSize = 420;
+        const qrExportSize = 1500;
+
+        let qrDownloadObjectUrl = null;
+        let qrPreparedLogoDataUrlPromise = null;
+        let qrRenderToken = 0;
+
+        function toggleActionElement(element, enabled, href) {
+            if (!element) return;
+
+            if (href) element.href = href;
+            element.classList.toggle("disabled", !enabled);
+            if (element.tagName === "A") {
+                element.setAttribute("aria-disabled", enabled ? "false" : "true");
+                element.tabIndex = enabled ? 0 : -1;
+            }
+        }
+
+        function buildStationLink(code) {
+            const url = new URL(stationPath, window.location.origin);
+            if (code) url.searchParams.set("code", code);
+            return url.toString();
+        }
+
+        function clearQrDownloadObjectUrl() {
+            if (!qrDownloadObjectUrl) return;
+            URL.revokeObjectURL(qrDownloadObjectUrl);
+            qrDownloadObjectUrl = null;
+        }
+
+        async function getPreparedQrLogoDataUrl() {
+            if (qrPreparedLogoDataUrlPromise) return qrPreparedLogoDataUrlPromise;
+
+            qrPreparedLogoDataUrlPromise = (async function () {
+                const img = new Image();
+                img.src = qrLogoUrl;
+                await img.decode();
+
+                const sourceWidth = img.naturalWidth || img.width;
+                const sourceHeight = img.naturalHeight || img.height;
+                const scanCanvas = document.createElement("canvas");
+                scanCanvas.width = sourceWidth;
+                scanCanvas.height = sourceHeight;
+                const scanCtx = scanCanvas.getContext("2d", { willReadFrequently: true });
+                if (!scanCtx) return qrLogoUrl;
+
+                scanCtx.clearRect(0, 0, sourceWidth, sourceHeight);
+                scanCtx.drawImage(img, 0, 0, sourceWidth, sourceHeight);
+
+                const { data, width, height } = scanCtx.getImageData(0, 0, sourceWidth, sourceHeight);
+
+                let minX = width;
+                let minY = height;
+                let maxX = -1;
+                let maxY = -1;
+
+                for (let y = 0; y < height; y++) {
+                    for (let x = 0; x < width; x++) {
+                        const alpha = data[(y * width + x) * 4 + 3];
+                        if (alpha > 10) {
+                            if (x < minX) minX = x;
+                            if (y < minY) minY = y;
+                            if (x > maxX) maxX = x;
+                            if (y > maxY) maxY = y;
+                        }
+                    }
+                }
+
+                if (maxX < minX || maxY < minY) return qrLogoUrl;
+
+                const contentWidth = maxX - minX + 1;
+                const contentHeight = maxY - minY + 1;
+                const logoTargetLongEdge = 1500;
+                const contentScale = Math.min(logoTargetLongEdge / contentWidth, logoTargetLongEdge / contentHeight);
+                const drawWidth = Math.max(1, Math.round(contentWidth * contentScale));
+                const drawHeight = Math.max(1, Math.round(contentHeight * contentScale));
+
+                const padding = Math.round(Math.max(drawWidth, drawHeight) * 0.08);
+                const outCanvas = document.createElement("canvas");
+                outCanvas.width = drawWidth + padding * 2;
+                outCanvas.height = drawHeight + padding * 2;
+                const outCtx = outCanvas.getContext("2d");
+                if (!outCtx) return qrLogoUrl;
+
+                outCtx.imageSmoothingEnabled = true;
+                outCtx.imageSmoothingQuality = "high";
+                outCtx.clearRect(0, 0, outCanvas.width, outCanvas.height);
+                outCtx.drawImage(
+                    scanCanvas,
+                    minX,
+                    minY,
+                    contentWidth,
+                    contentHeight,
+                    padding,
+                    padding,
+                    drawWidth,
+                    drawHeight
+                );
+
+                return outCanvas.toDataURL("image/png");
+            })();
+
+            return qrPreparedLogoDataUrlPromise;
+        }
+
+        async function copyToClipboard(text) {
+            if (!text) return;
+
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+                return;
+            }
+
+            const tmp = document.createElement("textarea");
+            tmp.value = text;
+            tmp.setAttribute("readonly", "");
+            tmp.style.position = "fixed";
+            tmp.style.left = "-9999px";
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand("copy");
+            document.body.removeChild(tmp);
+        }
+
+        function createQrOptions(targetUrl, size, logoDataUrl) {
+            return {
+                width: size,
+                height: size,
+                type: "canvas",
+                data: targetUrl,
+                image: logoDataUrl || qrLogoUrl,
+                margin: 2,
+                qrOptions: {
+                    errorCorrectionLevel: "H"
+                },
+                imageOptions: {
+                    hideBackgroundDots: true,
+                    imageSize: 0.56,
+                    margin: 0
+                },
+                dotsOptions: {
+                    color: "#1953c6",
+                    // Naeher am "Streifen"-Look als normales QR-Raster
+                    type: "extra-rounded"
+                },
+                cornersSquareOptions: {
+                    color: "#1953c6",
+                    type: "extra-rounded"
+                },
+                cornersDotOptions: {
+                    color: "#1953c6",
+                    type: "dot"
+                },
+                backgroundOptions: {
+                    color: "#ffffff"
+                }
+            };
+        }
+
+        async function setQrDownloadLink(targetUrl, code, logoDataUrl) {
+            clearQrDownloadObjectUrl();
+
+            try {
+                const exportQr = new QRCodeStyling(createQrOptions(targetUrl, qrExportSize, logoDataUrl));
+                const blob = await exportQr.getRawData("png");
+                if (!blob) throw new Error("QR export failed");
+
+                qrDownloadObjectUrl = URL.createObjectURL(blob);
+
+                const fileCode = (code || "station").replace(/[^a-zA-Z0-9_-]/g, "_");
+                downloadQrBtn.download = `station-${fileCode}.png`;
+                toggleActionElement(downloadQrBtn, true, qrDownloadObjectUrl);
+            } catch {
+                toggleActionElement(downloadQrBtn, false, "#");
+            }
+        }
+
+        async function renderQrPreview(targetUrl, code) {
+            if (!qrPreview) return;
+            const currentRenderToken = ++qrRenderToken;
+
+            qrPreview.innerHTML = "";
+            clearQrDownloadObjectUrl();
+            if (!targetUrl) {
+                toggleActionElement(downloadQrBtn, false, "#");
+                return;
+            }
+
+            let logoDataUrl = null;
+            try {
+                logoDataUrl = await getPreparedQrLogoDataUrl();
+            } catch {
+                logoDataUrl = null;
+            }
+            if (currentRenderToken !== qrRenderToken) return;
+
+            const qrCodePreview = new QRCodeStyling({
+                ...createQrOptions(targetUrl, qrPreviewSize, logoDataUrl)
+            });
+
+            qrCodePreview.append(qrPreview);
+
+            if (currentRenderToken !== qrRenderToken) return;
+            await setQrDownloadLink(targetUrl, code, logoDataUrl);
+        }
+
+        function updateGeneratedLinks() {
+            const code = (stationInput?.value || "").trim();
+            const hasCode = code.length > 0;
+
+            const stationLink = buildStationLink(code);
+
+            if (stationLinkOutput) stationLinkOutput.value = hasCode ? stationLink : "";
+
+            toggleActionElement(openStationLinkBtn, hasCode, stationLink);
+
+            void renderQrPreview(hasCode ? stationLink : "", code);
+        }
+
+        copyStationLinkBtn?.addEventListener("click", async function () {
+            await copyToClipboard(stationLinkOutput?.value || "");
+        });
+
+        stationInput?.addEventListener("input", updateGeneratedLinks);
+        updateGeneratedLinks();
+        document.addEventListener("DOMContentLoaded", updateGeneratedLinks);
+        window.addEventListener("beforeunload", clearQrDownloadObjectUrl);
+
         function openGoogleMapsForStation() {
             // IDs werden von asp-for="Station.XYZ" erstellt (Station_Title, Station_Street, ...)
             const title = document.getElementById("Station_Title")?.value ?? "";
@@ -198,4 +474,3 @@
         });
     </script>
 }
-
