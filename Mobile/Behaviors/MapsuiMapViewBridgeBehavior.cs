@@ -70,6 +70,20 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         set => SetValue(IsViewportInitializedProperty, value);
     }
 
+    public static readonly BindableProperty IsPinsSynchronizedProperty =
+        BindableProperty.Create(
+            nameof(IsPinsSynchronized),
+            typeof(bool),
+            typeof(MapsuiMapViewBridgeBehavior),
+            false,
+            BindingMode.TwoWay);
+
+    public bool IsPinsSynchronized
+    {
+        get => (bool)GetValue(IsPinsSynchronizedProperty);
+        set => SetValue(IsPinsSynchronizedProperty, value);
+    }
+
     public bool FitPinsOnFirstLoad { get; set; } = true;
 
     /// <summary>Padding relativ zur Extent-Breite/Höhe (z.B. 0.2 = 20%)</summary>
@@ -186,6 +200,8 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private async Task DebouncedSyncPinsAsync()
     {
+        MainThread.BeginInvokeOnMainThread(() => IsPinsSynchronized = false);
+
         _syncCts?.Cancel();
         var cts = _syncCts = new CancellationTokenSource();
 
@@ -225,6 +241,8 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
                 else
                     _pendingFit = true;
             }
+
+            IsPinsSynchronized = true;
         });
     }
 

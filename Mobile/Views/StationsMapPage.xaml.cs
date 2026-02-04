@@ -57,6 +57,7 @@ public partial class StationsMapPage : ContentPage
         bridge.SetBinding(MapsuiMapViewBridgeBehavior.SelectedPinProperty, new Binding(nameof(StationsMapViewModel.SelectedPin), mode: BindingMode.TwoWay));
         bridge.SetBinding(MapsuiMapViewBridgeBehavior.IsMapBusyProperty, new Binding(nameof(StationsMapViewModel.IsMapBusy), mode: BindingMode.TwoWay));
         bridge.SetBinding(MapsuiMapViewBridgeBehavior.IsViewportInitializedProperty, new Binding(nameof(StationsMapViewModel.IsViewportInitialized), mode: BindingMode.TwoWay));
+        bridge.SetBinding(MapsuiMapViewBridgeBehavior.IsPinsSynchronizedProperty, new Binding(nameof(StationsMapViewModel.IsPinsSynchronized), mode: BindingMode.TwoWay));
 
         _mapView.Behaviors.Add(bridge);
 

@@ -1,4 +1,4 @@
-using Mapsui.UI.Maui;
+﻿using Mapsui.UI.Maui;
 using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
@@ -37,8 +37,6 @@ public class StationsMapViewModel : BaseViewModel
         }
     }
 
-    // -------- Loading / Busy (für Overlay) --------
-
     private bool _isMapBusy;
     public bool IsMapBusy
     {
@@ -67,12 +65,44 @@ public class StationsMapViewModel : BaseViewModel
         }
     }
 
-    public bool IsOverlayVisible => !IsViewportInitialized || IsBusy || IsMapBusy;
+    private bool _isPinsSynchronized;
+    public bool IsPinsSynchronized
+    {
+        get => _isPinsSynchronized;
+        set
+        {
+            if (SetProperty(ref _isPinsSynchronized, value))
+            {
+                OnPropertyChanged(nameof(IsOverlayVisible));
+                OnPropertyChanged(nameof(BusyText));
+            }
+        }
+    }
+
+    private bool _hasCompletedInitialStationsLoad;
+    public bool HasCompletedInitialStationsLoad
+    {
+        get => _hasCompletedInitialStationsLoad;
+        private set
+        {
+            if (SetProperty(ref _hasCompletedInitialStationsLoad, value))
+            {
+                OnPropertyChanged(nameof(IsOverlayVisible));
+                OnPropertyChanged(nameof(BusyText));
+            }
+        }
+    }
+
+    public bool IsOverlayVisible =>
+        !IsViewportInitialized ||
+        IsBusy ||
+        (HasCompletedInitialStationsLoad && !IsPinsSynchronized);
 
     public string BusyText =>
-        !IsViewportInitialized ? "Karte wird initialisiert…" :
-        IsBusy ? "Stationen werden geladen…" :
-        IsMapBusy ? "Karte lädt…" :
+        !IsViewportInitialized ? "Karte wird initialisiert..." :
+        IsBusy ? "Stationen werden geladen..." :
+        (HasCompletedInitialStationsLoad && !IsPinsSynchronized) ? "Pins werden gesetzt..." :
+        IsMapBusy ? "Karte laedt..." :
         string.Empty;
 
     /// <summary>
@@ -92,6 +122,7 @@ public class StationsMapViewModel : BaseViewModel
 
         try
         {
+            HasCompletedInitialStationsLoad = false;
             IsBusy = true;
             OnPropertyChanged(nameof(IsOverlayVisible));
             OnPropertyChanged(nameof(BusyText));
@@ -119,10 +150,10 @@ public class StationsMapViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            HasCompletedInitialStationsLoad = true;
             OnPropertyChanged(nameof(IsOverlayVisible));
             OnPropertyChanged(nameof(BusyText));
             System.Diagnostics.Debug.WriteLine($"Pins: {Pins.Count}");
-
         }
     }
 
@@ -142,7 +173,4 @@ public class StationsMapViewModel : BaseViewModel
         await Shell.Current.GoToAsync(
             $"{nameof(Views.StationTeaserPage)}?code={Uri.EscapeDataString(code)}");
     }
-
 }
-
-
