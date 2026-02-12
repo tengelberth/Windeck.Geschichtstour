@@ -414,13 +414,23 @@
             const zip = document.getElementById("Station_ZipCode")?.value ?? "";
             const city = document.getElementById("Station_City")?.value ?? "";
 
-            // Alles, was nicht leer ist, in einen Suchstring packen
-            const parts = [title, street, houseNumber, zip, city]
+            const hasAddress = street.trim().length > 0 && houseNumber.trim().length > 0;
+
+            let parts = [];
+            if (hasAddress) {
+                // Nur Adresse verwenden, wenn Strasse + Hausnummer vorhanden sind
+                parts = [street, houseNumber, zip, city];
+            } else {
+                // Sonst Titel + Ort verwenden (falls vorhanden)
+                parts = [title, city];
+            }
+
+            parts = parts
                 .map(p => p.trim())
                 .filter(p => p.length > 0);
 
             if (parts.length === 0) {
-                alert("Bitte zuerst mindestens Titel oder Adresse eingeben, bevor Google Maps geöffnet wird.");
+                alert("Bitte zuerst eine Adresse oder einen Titel mit Ort eingeben, bevor Google Maps geöffnet wird.");
                 return;
             }
 

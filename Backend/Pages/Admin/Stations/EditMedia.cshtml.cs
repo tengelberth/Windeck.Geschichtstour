@@ -60,9 +60,6 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 return NotFound();
             }
 
-            // Aktuell werden in der Admin-Oberflaeche nur Bilder unterstuetzt.
-            Media.MediaType = "Image";
-
             if (mediaId == null)
             {
                 // Neues Medium
@@ -84,6 +81,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 }
             }
 
+            // Aktuell werden in der Admin-Oberflaeche nur Bilder unterstuetzt.
+            Media.MediaType = "Image";
+
             return Page();
         }
 
@@ -97,6 +97,10 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             if (Station == null)
             {
                 return NotFound();
+            }
+            if (Media == null)
+            {
+                return BadRequest();
             }
 
             // Wenn eine Datei hochgeladen wurde, speichern wir sie und setzen die Url automatisch

@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Maui.Views;
 using System.Globalization;
+using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
-using Windeck.Geschichtstour.Mobile.Configuration;
 
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
