@@ -1,4 +1,4 @@
-@* Zweck: Formularseite zum Erstellen oder Bearbeiten eines Mediums. *@
+﻿@* Zweck: Formularseite zum Erstellen oder Bearbeiten eines Mediums. *@
 
 @page "/Admin/Stations/EditMedia/{stationId:int}/{mediaId?}"
 @model Windeck.Geschichtstour.Backend.Pages.Admin.Stations.EditMediaModel
@@ -63,7 +63,7 @@
 
 
     <div class="mb-3">
-        <label asp-for="Media.Caption" class="form-label">Caption / Beschreibung</label>
+        <label asp-for="Media.Caption" class="form-label">Bildunterschrift</label>
         <textarea asp-for="Media.Caption" class="form-control" rows="2"></textarea>
         <span asp-validation-for="Media.Caption" class="text-danger"></span>
     </div>
@@ -90,4 +90,5 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
 

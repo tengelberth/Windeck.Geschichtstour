@@ -46,6 +46,8 @@
 
 	<PropertyGroup Condition="'$(TargetFramework)'=='net8.0-ios'">
 		<CodesignEntitlements>Platforms/iOS/Entitlements.plist</CodesignEntitlements>
+		<ProvisioningType>automatic</ProvisioningType>
+		<CodesignKey>iPhone Developer</CodesignKey>
 	</PropertyGroup>
 
 

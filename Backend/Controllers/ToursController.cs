@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
+using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Controllers
 {
@@ -15,13 +16,15 @@ namespace Windeck.Geschichtstour.Backend.Controllers
     public class ToursController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
+        private readonly IAnalyticsService _analyticsService;
 
         /// <summary>
         /// Initialisiert eine neue Instanz von ToursController.
         /// </summary>
-        public ToursController(AppDbContext dbContext)
+        public ToursController(AppDbContext dbContext, IAnalyticsService analyticsService)
         {
             _dbContext = dbContext;
+            _analyticsService = analyticsService;
         }
 
         /// <summary>
@@ -54,6 +57,12 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     .ToList()
             }).ToList();
 
+            await _analyticsService.TrackApiCallAsync(
+                HttpContext,
+                "/api/tours",
+                "api_call",
+                StatusCodes.Status200OK);
+
             return Ok(result);
         }
 
@@ -71,6 +80,13 @@ namespace Windeck.Geschichtstour.Backend.Controllers
 
             if (tour == null)
             {
+                await _analyticsService.TrackApiCallAsync(
+                    HttpContext,
+                    "/api/tours/{id}",
+                    "api_call",
+                    StatusCodes.Status404NotFound,
+                    tourId: id);
+
                 return NotFound();
             }
 
@@ -91,6 +107,13 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     })
                     .ToList()
             };
+
+            await _analyticsService.TrackApiCallAsync(
+                HttpContext,
+                "/api/tours/{id}",
+                "tour_view",
+                StatusCodes.Status200OK,
+                tourId: id);
 
             return Ok(dto);
         }

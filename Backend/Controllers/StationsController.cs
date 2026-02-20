@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
+using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Controllers
 {
@@ -14,13 +15,15 @@ namespace Windeck.Geschichtstour.Backend.Controllers
     public class StationsController : ControllerBase
     {
         private readonly AppDbContext _dbContext;
+        private readonly IAnalyticsService _analyticsService;
 
         /// <summary>
         /// Der DbContext wird per Dependency Injection bereitgestellt.
         /// </summary>
-        public StationsController(AppDbContext dbContext)
+        public StationsController(AppDbContext dbContext, IAnalyticsService analyticsService)
         {
             _dbContext = dbContext;
+            _analyticsService = analyticsService;
         }
 
         /// <summary>
@@ -65,6 +68,12 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     .ToList()
             });
 
+            await _analyticsService.TrackApiCallAsync(
+                HttpContext,
+                "/api/stations",
+                "api_call",
+                StatusCodes.Status200OK);
+
             return Ok(result);
         }
 
@@ -84,6 +93,13 @@ namespace Windeck.Geschichtstour.Backend.Controllers
             if (station == null)
             {
                 // 404, falls der Code keiner Station entspricht.
+                await _analyticsService.TrackApiCallAsync(
+                    HttpContext,
+                    "/api/stations/by-code/{code}",
+                    "api_call",
+                    StatusCodes.Status404NotFound,
+                    stationCode: code);
+
                 return NotFound();
             }
 
@@ -113,6 +129,15 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     })
                     .ToList()
             };
+
+            await _analyticsService.TrackApiCallAsync(
+                HttpContext,
+                "/api/stations/by-code/{code}",
+                "station_view",
+                StatusCodes.Status200OK,
+                station.Id,
+                station.Code,
+                station.Title);
 
             return Ok(dto);
         }

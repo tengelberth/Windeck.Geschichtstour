@@ -42,6 +42,7 @@ namespace Windeck.Geschichtstour.Backend.Data
         /// Tabelle für TourStops (Verknüpfung Tour ↔ Station).
         /// </summary>
         public DbSet<TourStop> TourStops => Set<TourStop>();
+        public DbSet<AnalyticsEvent> AnalyticsEvents => Set<AnalyticsEvent>();
 
         /// <summary>
         /// Feinere Konfiguration des Datenmodells, z. B. Relationen und Indizes.
@@ -70,6 +71,15 @@ namespace Windeck.Geschichtstour.Backend.Data
                 .WithMany(s => s.TourStops)
                 .HasForeignKey(ts => ts.StationId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AnalyticsEvent>()
+                .HasIndex(a => a.CreatedAtUtc);
+
+            modelBuilder.Entity<AnalyticsEvent>()
+                .HasIndex(a => new { a.EventType, a.CreatedAtUtc });
+
+            modelBuilder.Entity<AnalyticsEvent>()
+                .HasIndex(a => new { a.StationId, a.CreatedAtUtc });
         }
     }
 }

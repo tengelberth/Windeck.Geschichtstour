@@ -15,13 +15,13 @@
     <input type="hidden" asp-for="Station.Id" />
 
     <div class="mb-3">
-        <label asp-for="Station.Title" class="form-label"></label>
+        <label asp-for="Station.Title" class="form-label">Titel</label>
         <input asp-for="Station.Title" class="form-control" />
         <span asp-validation-for="Station.Title" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label asp-for="Station.Code" class="form-label"></label>
+        <label asp-for="Station.Code" class="form-label">Station-Code</label>
         <input asp-for="Station.Code" class="form-control" />
         <small class="form-text text-muted">
             Eindeutiger Code, der im QR-Code verwendet wird.
@@ -32,7 +32,7 @@
     <div class="mb-4 border rounded-3 p-3 p-md-4 bg-light-subtle">
         <h4 class="mb-1">Station-Link und QR-Code</h4>
         <p class="text-muted mb-3">
-            Der Link wird aus dem Station-Code erzeugt. Vorschau und Download aktualisierenm sich automatisch.
+            Der Link wird aus dem Station-Code erzeugt. Vorschau und Download aktualisieren sich automatisch.
         </p>
 
         <div class="row g-4 align-items-start">
@@ -79,7 +79,7 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="Station.LongDescription" class="form-label"></label>
+        <label asp-for="Station.LongDescription" class="form-label">Beschreibung</label>
 
         @* Hidden-Textarea für die eigentliche Bindung ans Model *@
         <textarea asp-for="Station.LongDescription"
@@ -96,22 +96,22 @@
 
     <div class="row">
         <div class="col-md-8 mb-3">
-            <label asp-for="Station.Street" class="form-label"></label>
+            <label asp-for="Station.Street" class="form-label">Straße</label>
             <input asp-for="Station.Street" class="form-control" />
         </div>
         <div class="col-md-4 mb-3">
-            <label asp-for="Station.HouseNumber" class="form-label"></label>
+            <label asp-for="Station.HouseNumber" class="form-label">Hausnummer</label>
             <input asp-for="Station.HouseNumber" class="form-control" />
         </div>
     </div>
 
     <div class="row">
         <div class="col-md-4 mb-3">
-            <label asp-for="Station.ZipCode" class="form-label"></label>
+            <label asp-for="Station.ZipCode" class="form-label">Postleitzahl</label>
             <input asp-for="Station.ZipCode" class="form-control" />
         </div>
         <div class="col-md-8 mb-3">
-            <label asp-for="Station.City" class="form-label"></label>
+            <label asp-for="Station.City" class="form-label">Ort</label>
             <input asp-for="Station.City" class="form-control" />
         </div>
     </div>
@@ -136,7 +136,7 @@
 
     <div class="row">
         <div class="col-md-6 mb-3">
-            <label asp-for="Station.Latitude" class="form-label"></label>
+            <label asp-for="Station.Latitude" class="form-label">Breitengrad</label>
             <input asp-for="Station.Latitude" class="form-control" />
             <small class="form-text text-muted">
                 Geografische Breite (z. B. 50.8000).
@@ -144,7 +144,7 @@
             <span asp-validation-for="Station.Latitude" class="text-danger"></span>
         </div>
         <div class="col-md-6 mb-3">
-            <label asp-for="Station.Longitude" class="form-label"></label>
+            <label asp-for="Station.Longitude" class="form-label">Längengrad</label>
             <input asp-for="Station.Longitude" class="form-control" />
             <small class="form-text text-muted">
                 Geografische Länge (z. B. 7.5800).
@@ -343,7 +343,7 @@
             try {
                 const exportQr = new QRCodeStyling(createQrOptions(targetUrl, qrExportSize, logoDataUrl));
                 const blob = await exportQr.getRawData("png");
-                if (!blob) throw new Error("QR export failed");
+                if (!blob) throw new Error("QR-Export fehlgeschlagen");
 
                 qrDownloadObjectUrl = URL.createObjectURL(blob);
 

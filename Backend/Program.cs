@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Windeck.Geschichtstour.Backend.Data;
+using Windeck.Geschichtstour.Backend.Services;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +35,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Web-API-Controller für die mobile App.
 builder.Services.AddControllers();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 // Cookie-Authentifizierung hinzufügen
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -152,4 +154,6 @@ app.MapControllers();
 
 // Anwendung starten.
 app.Run();
+
+
 

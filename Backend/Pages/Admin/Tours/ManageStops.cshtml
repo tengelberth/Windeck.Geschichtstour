@@ -1,13 +1,13 @@
-@* Zweck: Verwaltung der Stationsreihenfolge innerhalb einer Tour. *@
+﻿@* Zweck: Verwaltung der Stationsreihenfolge innerhalb einer Tour. *@
 
 @page "/Admin/Tours/ManageStops/{id}"
 @model Windeck.Geschichtstour.Backend.Pages.Admin.Tours.ManageStopsModel
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "Stops verwalten";
+    ViewData["Title"] = "Stationen in Tour verwalten";
 }
 
-<h1>Stops für Tour: @Model.Tour.Title</h1>
+<h1>Stationen für Tour: @Model.Tour.Title</h1>
 
 <p>
     <a asp-page="Index" class="btn btn-secondary">
@@ -16,13 +16,13 @@
 </p>
 
 <div class="row">
-    <!-- Linke Spalte: bestehende Stops -->
+    <!-- Linke Spalte: bestehende Stationseinträge -->
     <div class="col-md-8">
-        <h4>Bestehende Stops</h4>
+        <h4>Bestehende Stationseinträge</h4>
 
         @if (!Model.Stops.Any())
         {
-            <p class="text-muted">Für diese Tour sind noch keine Stops hinterlegt.</p>
+            <p class="text-muted">Für diese Tour sind noch keine Stationseinträge hinterlegt.</p>
         }
         else
         {
@@ -73,10 +73,10 @@
                                       asp-route-id="@Model.Tour.Id"
                                       asp-route-stopId="@stop.Id"
                                       style="display:inline"
-                                      onsubmit="return confirm('Diesen Stop wirklich aus der Tour entfernen?');">
+                                      onsubmit="return confirm('Diesen Eintrag wirklich aus der Tour entfernen?');">
                                     <button type="submit"
                                             class="btn btn-sm btn-danger btn-icon"
-                                            title="Stop entfernen">
+                                            title="Eintrag entfernen">
                                         <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
@@ -88,14 +88,14 @@
         }
     </div>
 
-    <!-- Rechte Spalte: neuen Stop hinzufügen -->
+    <!-- Rechte Spalte: neuen Stationseintrag hinzufügen -->
     <div class="col-md-4">
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">Neuen Stop hinzufügen</h5>
+                <h5 class="card-title">Neuen Stationseintrag hinzufügen</h5>
                 <p class="card-text text-muted">
                     Wählen Sie eine Station aus und legen Sie optional die Reihenfolge fest.
-                    Wird keine Reihenfolge angegeben, wird der Stop ans Ende der Tour gesetzt.
+                    Wird keine Reihenfolge angegeben, wird der Eintrag ans Ende der Tour gesetzt.
                 </p>
 
                 <form method="post" asp-page-handler="AddStop" asp-route-id="@Model.Tour.Id">
@@ -128,14 +128,14 @@
 
                     <button type="submit" class="btn btn-primary w-100">
                         <i class="bi bi-plus-circle me-1"></i>
-                        Stop hinzufügen
+                        Eintrag hinzufügen
                     </button>
                 </form>
 
                 @if (!ViewContext.ViewData.ModelState.IsValid)
                 {
                     <div class="mt-3 text-danger">
-                        Bitte Eingaben prüfen.
+                        Bitte Eingaben pr+üen.
                     </div>
                 }
             </div>

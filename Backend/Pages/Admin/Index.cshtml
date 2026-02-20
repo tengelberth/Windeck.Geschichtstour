@@ -1,7 +1,8 @@
-@* Zweck: Admin-Dashboard mit Kennzahlen und Einstiegen in die Verwaltung. *@
+﻿@* Zweck: Admin-Dashboard mit Kennzahlen und Einstiegen in die Verwaltung. *@
 
 @page "/Admin"
 @model Windeck.Geschichtstour.Backend.Pages.Admin.IndexModel
+@using System.Text.Json
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Admin-Übersicht";
@@ -10,67 +11,186 @@
 <h1>Adminbereich – Geschichtstour Windeck</h1>
 
 <div class="d-flex justify-content-center mb-4">
-<img src="~/images/windeck-wappen.png"
-     alt="Geschichtstour Windeck"
-     class="img-fluid"
-     style="max-height: 200px; width: auto;" />
+    <img src="~/images/windeck-wappen.png"
+         alt="Geschichtstour Windeck"
+         class="img-fluid"
+         style="max-height: 200px; width: auto;" />
 </div>
 
 <p>
     Dieser Adminbereich dient der Pflege der Inhalte der digitalen Geschichtstour in Windeck.
     Hier können Sie historische Stationen, Kategorien und geführte Touren anlegen, bearbeiten
-    und mit Medien wie Bildern, Audio- oder Videodateien ergänzen.
-</p>
-
-<p>
-    Die Anwendung ist im Rahmen einer Bachelorarbeit entstanden und soll langfristig als Werkzeug
-    für die Gemeinde und den Tourismusverein dienen, um die Geschichte Windecks für Bürgerinnen
-    und Bürger – insbesondere auch für Jüngere – digital erlebbar zu machen.
+    und mit Medien ergänzen.
 </p>
 
 <div class="row mb-4">
     <div class="col-md-3 mb-2">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
                 <div class="h4 mb-1">@Model.StationCount</div>
-                <div class="text-muted">
-                    <i class="bi bi-geo-alt me-1"></i>
-                    Stationen
-                </div>
+                <div class="text-muted"><i class="bi bi-geo-alt me-1"></i>Stationen</div>
             </div>
         </div>
     </div>
     <div class="col-md-3 mb-2">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
                 <div class="h4 mb-1">@Model.TourCount</div>
-                <div class="text-muted">
-                    <i class="bi bi-map me-1"></i>
-                    Touren
-                </div>
+                <div class="text-muted"><i class="bi bi-map me-1"></i>Touren</div>
             </div>
         </div>
     </div>
     <div class="col-md-3 mb-2">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
                 <div class="h4 mb-1">@Model.CategoryCount</div>
-                <div class="text-muted">
-                    <i class="bi bi-tags me-1"></i>
-                    Kategorien
-                </div>
+                <div class="text-muted"><i class="bi bi-tags me-1"></i>Kategorien</div>
             </div>
         </div>
     </div>
     <div class="col-md-3 mb-2">
-        <div class="card text-center">
+        <div class="card text-center h-100">
             <div class="card-body">
                 <div class="h4 mb-1">@Model.MediaCount</div>
-                <div class="text-muted">
-                    <i class="bi bi-image me-1"></i>
-                    Medien
-                </div>
+                <div class="text-muted"><i class="bi bi-image me-1"></i>Medien</div>
             </div>
         </div>
     </div>
 </div>
+
+<form method="get" class="row g-2 align-items-end mb-3">
+    <div class="col-sm-6 col-md-4 col-lg-3">
+        <label class="form-label" for="zeitraum">Zeitraum</label>
+        <select id="zeitraum" name="zeitraum" class="form-select">
+            <option value="7" selected="@(Model.SelectedPeriod == "7")">Letzte 7 Tage</option>
+            <option value="30" selected="@(Model.SelectedPeriod == "30")">Letzte 30 Tage</option>
+            <option value="90" selected="@(Model.SelectedPeriod == "90")">Letzte 90 Tage</option>
+            <option value="all" selected="@(Model.SelectedPeriod == "all")">Gesamter Zeitraum</option>
+        </select>
+    </div>
+    <div class="col-sm-6 col-md-3 col-lg-2">
+        <button type="submit" class="btn btn-primary w-100">Anwenden</button>
+    </div>
+</form>
+
+<h3 class="mt-4">Nutzung (@Model.SelectedPeriodLabel)</h3>
+<div class="row mb-4">
+    <div class="col-md-6 mb-2">
+        <div class="card text-center h-100 border-primary-subtle">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.ApiCallCount</div>
+                <div class="text-muted">API-Aufrufe</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-2">
+        <div class="card text-center h-100 border-primary-subtle">
+            <div class="card-body">
+                <div class="h4 mb-1">@Model.StationViewCount</div>
+                <div class="text-muted">Stationsaufrufe</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Zeitverlauf</div>
+    <div class="card-body" style="height: 360px;">
+        <canvas id="usageTimelineChart"></canvas>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-header">Top-Stationen (@Model.SelectedPeriodLabel)</div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-striped mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Station</th>
+                        <th>Code</th>
+                        <th class="text-end">Aufrufe</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.TopStations.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="4" class="text-muted p-3">Für den gewählten Zeitraum liegen keine Stationsaufrufe vor.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @for (var i = 0; i < Model.TopStations.Count; i++)
+                        {
+                            var station = Model.TopStations[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@station.StationTitle</td>
+                                <td><code>@station.StationCode</code></td>
+                                <td class="text-end">@station.Views</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script>
+        const timelineLabels = @Html.Raw(JsonSerializer.Serialize(Model.TimelineLabels));
+        const timelineApiCalls = @Html.Raw(JsonSerializer.Serialize(Model.TimelineApiCalls));
+        const timelineStationViews = @Html.Raw(JsonSerializer.Serialize(Model.TimelineStationViews));
+
+        const chartElement = document.getElementById("usageTimelineChart");
+        if (chartElement) {
+            new Chart(chartElement, {
+                type: "line",
+                data: {
+                    labels: timelineLabels,
+                    datasets: [
+                        {
+                            label: "API-Aufrufe",
+                            data: timelineApiCalls,
+                            borderColor: "#1953c6",
+                            backgroundColor: "rgba(25, 83, 198, 0.15)",
+                            borderWidth: 2,
+                            tension: 0.25,
+                            fill: true
+                        },
+                        {
+                            label: "Stationsaufrufe",
+                            data: timelineStationViews,
+                            borderColor: "#0d9488",
+                            backgroundColor: "rgba(13, 148, 136, 0.12)",
+                            borderWidth: 2,
+                            tension: 0.25,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: "top"
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                precision: 0
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}
