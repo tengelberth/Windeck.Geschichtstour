@@ -152,8 +152,14 @@ Command="{Binding OpenInKomootCommand}" />
                         </StackLayout>
                     </Frame>
 
-                    <Label TextType="Html" FontSize="16" LineBreakMode="WordWrap"
-               Text="{Binding Station.LongDescription}" />
+                    <WebView x:Name="DescriptionWebView"
+                             HeightRequest="{Binding LongDescriptionHeight}"
+                             BackgroundColor="Transparent"
+                             Navigating="DescriptionWebView_Navigating">
+                        <WebView.Source>
+                            <HtmlWebViewSource Html="{Binding LongDescriptionHtml}" />
+                        </WebView.Source>
+                    </WebView>
 
                 </StackLayout>
 

@@ -444,6 +444,18 @@
 
     <!-- Quill CSS & JS -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <style>
+        /* Typografie für Überschriften im Editor vereinheitlichen */
+        #LongDescriptionEditor .ql-editor h2 {
+            font-size: 1.35em;
+            line-height: 1.3;
+        }
+
+        #LongDescriptionEditor .ql-editor h3 {
+            font-size: 1.15em;
+            line-height: 1.35;
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.min.js"></script>
 
     <script>
@@ -460,7 +472,7 @@
                 theme: "snow",
                 modules: {
                     toolbar: [
-                        [{ "header": [1, 2, 3, false] }, { "size": ["small", false, "large", "huge"] }],
+                        [{ "header": [2, 3, false] }, { "size": ["small", false, "large", "huge"] }],
                         ["bold", "italic", "underline"],
                         [{ "list": "ordered" }, { "list": "bullet" }],
                         ["link"],

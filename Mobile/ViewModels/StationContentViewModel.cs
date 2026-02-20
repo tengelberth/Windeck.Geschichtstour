@@ -33,6 +33,8 @@ public class StationContentViewModel : BaseViewModel
             {
                 // Abhängige Properties benachrichtigen
                 OnPropertyChanged(nameof(HasStation));
+                LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty);
+                LongDescriptionHeight = 1800;
 
                 // Zusätzliche Logik nach der Änderung
                 RebuildImageMediaItems();
@@ -45,6 +47,20 @@ public class StationContentViewModel : BaseViewModel
 
 
     public bool HasStation => Station != null;
+
+    private string _longDescriptionHtml = BuildLongDescriptionHtml(string.Empty);
+    public string LongDescriptionHtml
+    {
+        get => _longDescriptionHtml;
+        private set => SetProperty(ref _longDescriptionHtml, value);
+    }
+
+    private double _longDescriptionHeight = 1800;
+    public double LongDescriptionHeight
+    {
+        get => _longDescriptionHeight;
+        set => SetProperty(ref _longDescriptionHeight, value);
+    }
 
     // Carousel Position
     private int _mediaPosition;
@@ -180,6 +196,92 @@ public class StationContentViewModel : BaseViewModel
     {
         (NextMediaCommand as Command)?.ChangeCanExecute();
         (PrevMediaCommand as Command)?.ChangeCanExecute();
+    }
+
+    /// <summary>
+    /// Baut ein vollständiges HTML-Dokument für die Beschreibung inklusive Styling,
+    /// Link-Weiterleitung und Höhen-Callback an die WebView.
+    /// </summary>
+    private static string BuildLongDescriptionHtml(string contentHtml)
+    {
+        var content = string.IsNullOrWhiteSpace(contentHtml) ? "<p></p>" : contentHtml;
+
+        return $$"""
+        <!doctype html>
+        <html lang="de">
+        <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+            <style>
+                :root { color-scheme: light dark; }
+                html, body {
+                    background: transparent !important;
+                    overflow: hidden;
+                }
+                body {
+                    margin: 0;
+                    padding: 0;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    font-size: 16px;
+                    line-height: 1.5;
+                    color: #1b1b1b;
+                    background: transparent;
+                    word-wrap: break-word;
+                }
+                a { color: #1953c6; text-decoration: underline; }
+                ul, ol { padding-left: 1.2rem; }
+                /* Quill speichert Listen als <ol><li data-list="..."> */
+                ol li[data-list='bullet'] { list-style-type: disc; }
+                ol li[data-list='ordered'] { list-style-type: decimal; }
+                ol li[data-list='bullet']::marker { content: '• '; }
+                h1, h2, h3 { margin: 0.6rem 0 0.35rem 0; }
+                p { margin: 0 0 0.6rem 0; }
+                @media (prefers-color-scheme: dark) {
+                    body { color: #f2f2f2; }
+                    a { color: #7fb0ff; }
+                }
+            </style>
+            <script>
+                (function() {
+                    function reportHeight() {
+                        var root = document.getElementById('content-root');
+                        if (!root) return;
+                        var h = Math.max(
+                            root.scrollHeight,
+                            root.offsetHeight,
+                            Math.ceil(root.getBoundingClientRect().height)
+                        );
+                        window.location.href = 'height:' + Math.ceil(h);
+                    }
+
+                    document.addEventListener('click', function(ev) {
+                        var node = ev.target;
+                        if (!node) return;
+                        var link = node.closest ? node.closest('a[href]') : null;
+                        if (!link) return;
+
+                        var href = link.getAttribute('href');
+                        if (!href) return;
+
+                        ev.preventDefault();
+                        window.location.href = 'extlink:' + encodeURIComponent(href);
+                    }, true);
+
+                    window.addEventListener('load', function() {
+                        reportHeight();
+                        setTimeout(reportHeight, 120);
+                        setTimeout(reportHeight, 450);
+                        setTimeout(reportHeight, 1100);
+                    });
+                    window.addEventListener('resize', reportHeight);
+                })();
+            </script>
+        </head>
+        <body>
+            <div id="content-root">{{content}}</div>
+        </body>
+        </html>
+        """;
     }
 
     /// <summary>
