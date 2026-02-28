@@ -37,6 +37,7 @@ else
                 <th>Sortierung</th>
                 <th>Typ</th>
                 <th>URL</th>
+                <th>Speicherplatz</th>
                 <th>Caption</th>
                 <th style="width: 180px;"></th>
             </tr>
@@ -48,6 +49,7 @@ else
                     <td>@media.SortOrder</td>
                     <td>@media.MediaType</td>
                     <td>@media.Url</td>
+                    <td>@Model.GetStorageDisplay(media)</td>
                     <td>@media.Caption</td>
                     <td>
                         <a asp-page="EditMedia"

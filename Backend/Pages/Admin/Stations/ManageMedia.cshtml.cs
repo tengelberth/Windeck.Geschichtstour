@@ -12,13 +12,15 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
     public class ManageMediaModel : PageModel
     {
         private readonly AppDbContext _dbContext;
+        private readonly IWebHostEnvironment _env;
 
         /// <summary>
         /// Initialisiert eine neue Instanz von ManageMediaModel.
         /// </summary>
-        public ManageMediaModel(AppDbContext dbContext)
+        public ManageMediaModel(AppDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
+            _env = env;
         }
 
         /// <summary>
@@ -30,6 +32,11 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// Alle Medien der Station, sortiert nach SortOrder.
         /// </summary>
         public List<MediaItem> MediaItems { get; set; } = new();
+
+        /// <summary>
+        /// Enthält die Dateigröße pro Medium (in bereits formatiertem Text).
+        /// </summary>
+        public Dictionary<int, string> MediaStorageById { get; } = new();
 
         /// <summary>
         /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
@@ -49,6 +56,8 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 .OrderBy(m => m.SortOrder)
                 .ThenBy(m => m.Id)
                 .ToList();
+
+            BuildStorageInfo(MediaItems);
 
             return Page();
         }
@@ -71,6 +80,69 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             await _dbContext.SaveChangesAsync();
 
             return RedirectToPage(new { stationId });
+        }
+
+        /// <summary>
+        /// Liefert den anzuzeigenden Speicherplatz für ein Medium.
+        /// </summary>
+        public string GetStorageDisplay(MediaItem media)
+        {
+            return MediaStorageById.TryGetValue(media.Id, out var value)
+                ? value
+                : "-";
+        }
+
+        private void BuildStorageInfo(IEnumerable<MediaItem> mediaItems)
+        {
+            MediaStorageById.Clear();
+
+            foreach (var media in mediaItems)
+            {
+                MediaStorageById[media.Id] = ResolveStorageText(media.Url);
+            }
+        }
+
+        private string ResolveStorageText(string? url)
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return "-";
+            }
+
+            // Nur lokal gespeicherte Dateien können direkt ermittelt werden.
+            if (!url.StartsWith('/'))
+            {
+                return "extern";
+            }
+
+            var relativePath = url.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var absolutePath = Path.Combine(_env.WebRootPath, relativePath);
+
+            if (!System.IO.File.Exists(absolutePath))
+            {
+                return "nicht gefunden";
+            }
+
+            var fileSizeBytes = new FileInfo(absolutePath).Length;
+            return FormatFileSize(fileSizeBytes);
+        }
+
+        private static string FormatFileSize(long bytes)
+        {
+            const double kb = 1024d;
+            const double mb = kb * 1024d;
+
+            if (bytes < kb)
+            {
+                return $"{bytes} B";
+            }
+
+            if (bytes < mb)
+            {
+                return $"ca. {Math.Round(bytes / kb):0} KB";
+            }
+
+            return $"ca. {(bytes / mb):0.0} MB";
         }
     }
 }
