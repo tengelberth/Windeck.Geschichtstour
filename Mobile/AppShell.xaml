@@ -15,7 +15,7 @@
     <!-- Flyout Header (Logo oben im Menü) -->
     <Shell.FlyoutHeaderTemplate>
         <DataTemplate>
-            <Grid Padding="20">
+            <Grid Padding="20" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}">
                 <Image Source="appiconblue.svg"
                        HeightRequest="100"
                        HorizontalOptions="Center"
@@ -74,11 +74,9 @@
         <DataTemplate>
             <VerticalStackLayout>
                 <Label Text="Tourismus Windecker Ländchen e.V. ©" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
-                <Label Text="Created by Tobias Engelberth" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="10"/>
-                <Label Text="01 Mai 2026" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8"/>
+                <Label Text="Created by Tobias Engelberth" HorizontalOptions="Center" FontAttributes="Bold" TextColor="{StaticResource Primary}" FontSize="8"/>
                 <Label Text="Version 1.0 (1)" HorizontalOptions="Center" TextColor="{StaticResource Primary}" FontSize="8" Margin="0,0,0,10"/>
             </VerticalStackLayout>
         </DataTemplate>
     </Shell.FlyoutFooterTemplate>
-
 </Shell>

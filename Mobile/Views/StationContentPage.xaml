@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Windeck.Geschichtstour.Mobile.Views.StationContentPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -21,8 +21,8 @@ MaxLines="1" />
                 IsVisible="{Binding HasStation}"
         Grid.Column="1"
         Source="sharewhite.png"
-        WidthRequest="24"
-        HeightRequest="24"
+                MaximumHeightRequest="24"
+                MaximumWidthRequest="24"
         BackgroundColor="Transparent"
         Command="{Binding ShareStationCommand}" />
         </Grid>
@@ -72,6 +72,7 @@ MaxLines="1" />
 
                             <!-- Carousel -->
                             <CarouselView Grid.Column="1"
+                                          BackgroundColor="Transparent"
                                           ItemsSource="{Binding ImageMediaItems}"
                                           Position="{Binding MediaPosition, Mode=TwoWay}"
                                           Loop="False"
@@ -81,12 +82,13 @@ MaxLines="1" />
 
                                 <CarouselView.ItemTemplate>
                                     <DataTemplate>
-                                        <VerticalStackLayout Spacing="6" Padding="8">
+                                        <VerticalStackLayout Spacing="6" Padding="8" BackgroundColor="Transparent">
 
                                             <!-- TAP -> Overlay öffnen -->
                                             <Image Source="{Binding FullUrl}"
                                                    HeightRequest="220"
-                                                   Aspect="AspectFill">
+                                                   Aspect="AspectFill"
+                                                   BackgroundColor="Transparent">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer
             Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},

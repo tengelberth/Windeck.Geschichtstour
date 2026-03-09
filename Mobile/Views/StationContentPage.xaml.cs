@@ -11,6 +11,7 @@ namespace Windeck.Geschichtstour.Mobile.Views;
 public partial class StationContentPage : ContentPage, IQueryAttributable
 {
     private readonly StationContentViewModel _viewModel;
+    private string? _loadedCode;
 
     /// <summary>
     /// Initialisiert eine neue Instanz von StationContentPage.
@@ -34,7 +35,13 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
             return;
         }
 
+        code = code.Trim();
+
+        if (_viewModel.HasStation && string.Equals(_loadedCode, code, StringComparison.OrdinalIgnoreCase))
+            return;
+
         await _viewModel.LoadByCodeAsync(code);
+        _loadedCode = code;
 
         if (!_viewModel.HasStation)
         {
@@ -95,3 +102,5 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
         _viewModel.LongDescriptionHeight = computedHeight;
     }
 }
+
+

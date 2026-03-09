@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 
@@ -21,16 +21,15 @@ public partial class MediaPreviewPopup : Popup
         var widthDp = info.Width / info.Density;
         var heightDp = info.Height / info.Density;
 
-        Size = new Size(widthDp, heightDp);
+        WidthRequest = widthDp;
+        HeightRequest = heightDp;
     }
 
     /// <summary>
     /// Schliesst das Popup nach einem Klick auf die Schliessen-Aktion.
     /// </summary>
-    private void OnCloseClicked(object sender, EventArgs e)
+    private async void OnCloseClicked(object sender, EventArgs e)
     {
-        Close(null);
+        await CloseAsync();
     }
 }
-
-

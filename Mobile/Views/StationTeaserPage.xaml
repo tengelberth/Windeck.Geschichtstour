@@ -21,8 +21,8 @@
                 IsVisible="{Binding HasStation}"
             Grid.Column="1"
             Source="sharewhite.png"
-            WidthRequest="24"
-            HeightRequest="24"
+            MaximumHeightRequest="24"
+            MaximumWidthRequest="24"
             BackgroundColor="Transparent"
             Command="{Binding ShareStationCommand}" />
         </Grid>

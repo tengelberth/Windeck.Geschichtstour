@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Views;
 using System.Globalization;
+using CommunityToolkit.Maui.Extensions;
 using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
@@ -17,6 +18,7 @@ public class StationContentViewModel : BaseViewModel
     private readonly AppUrlOptions _appUrlOptions;
 
     private StationDto? _station;
+    private string? _loadedStationCode;
 
     // stabile Liste für CarouselView + Count + Index
     private List<MediaItemDto> _imageMediaItems = new();
@@ -130,18 +132,27 @@ public class StationContentViewModel : BaseViewModel
     {
         if (IsBusy) return;
 
+        var normalizedCode = code?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedCode))
+            return;
+
+        if (Station is not null && string.Equals(_loadedStationCode, normalizedCode, StringComparison.OrdinalIgnoreCase))
+            return;
+
         try
         {
             IsBusy = true;
             Station = null;
 
-            var station = await _apiClient.GetStationByCodeAsync(code);
+            var station = await _apiClient.GetStationByCodeAsync(normalizedCode);
             Station = station;
+            _loadedStationCode = station?.Code;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Fehler beim Laden der Station mit Code {code}: {ex}");
+            System.Diagnostics.Debug.WriteLine($"Fehler beim Laden der Station mit Code {normalizedCode}: {ex}");
             Station = null;
+            _loadedStationCode = null;
         }
         finally
         {
@@ -364,6 +375,8 @@ public class StationContentViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
+
+
 
 
 
