@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Windeck.Geschichtstour.Mobile.Views.StationContentPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -50,7 +50,7 @@ MaxLines="1" />
                     <!-- Medienliste -->
                     <StackLayout Spacing="8"
                                  Margin="0,8,0,0"
-                                 IsVisible="{Binding ImageMediaItems.Any}">
+                                 IsVisible="{Binding HasImages}">
 
                         <HorizontalStackLayout Spacing="5">
                             <Image Source="imgblue.png" HeightRequest="20" />
@@ -59,43 +59,40 @@ MaxLines="1" />
                                    FontSize="18" />
                         </HorizontalStackLayout>
 
-                        <Grid Grid.Row="1"
-                              ColumnDefinitions="Auto,*,Auto"
-                              VerticalOptions="Start">
-
-                            <!-- Pfeil links -->
-                            <Button ImageSource="arrowleftwhite.png"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    Command="{Binding PrevMediaCommand}"
-                                    VerticalOptions="Center" />
-
-                            <!-- Carousel -->
-                            <CarouselView Grid.Column="1"
-                                          BackgroundColor="Transparent"
+                        <VerticalStackLayout Spacing="8">
+                            <CarouselView BackgroundColor="Transparent"
                                           ItemsSource="{Binding ImageMediaItems}"
                                           Position="{Binding MediaPosition, Mode=TwoWay}"
                                           Loop="False"
                                           IsSwipeEnabled="True"
+                                          PeekAreaInsets="0"
                                           HorizontalOptions="Fill"
                                           VerticalOptions="Start">
 
                                 <CarouselView.ItemTemplate>
                                     <DataTemplate>
-                                        <VerticalStackLayout Spacing="6" Padding="8" BackgroundColor="Transparent">
+                                        <VerticalStackLayout Spacing="8" BackgroundColor="Transparent">
+                                            <Border StrokeThickness="0"
+                                                    Padding="0"
+                                                    Margin="5,0,5,0"
+                                                    HeightRequest="280">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="18" />
+                                                </Border.StrokeShape>
 
-                                            <!-- TAP -> Overlay öffnen -->
-                                            <Image Source="{Binding FullUrl}"
-                                                   HeightRequest="220"
-                                                   Aspect="AspectFill"
-                                                   BackgroundColor="Transparent">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer
+                                                <Grid>
+                                                    <Image Source="{Binding FullUrl}"
+                                                           Aspect="AspectFill"
+                                                           BackgroundColor="Transparent">
+                                                        <Image.GestureRecognizers>
+                                                            <TapGestureRecognizer
             Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
                              Path=BindingContext.OpenMediaOverlayCommand}"
             CommandParameter="{Binding .}" />
-                                                </Image.GestureRecognizers>
-                                            </Image>
+                                                        </Image.GestureRecognizers>
+                                                    </Image>
+                                                </Grid>
+                                            </Border>
 
                                             <Label Text="{Binding Caption}"
                                                    FontSize="12"
@@ -105,15 +102,27 @@ MaxLines="1" />
                                 </CarouselView.ItemTemplate>
                             </CarouselView>
 
-                            <!-- Pfeil rechts -->
-                            <Button Grid.Column="2"
-                                    ImageSource="arrowrightwhite.png"
-                                    WidthRequest="44"
-                                    HeightRequest="44"
-                                    Command="{Binding NextMediaCommand}"
-                                    VerticalOptions="Center" />
+                            <Grid ColumnDefinitions="Auto,*"
+                                  IsVisible="{Binding HasMultipleImages}">
+                                <Frame Padding="8,3"
+                                       CornerRadius="12"
+                                       HasShadow="False"
+                                       BackgroundColor="{AppThemeBinding Light=#F0F4FA, Dark=#1F2733}"
+                                       HorizontalOptions="Start">
+                                    <Label Text="{Binding CurrentMediaIndicator}"
+                                           FontSize="11"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}" />
+                                </Frame>
 
-                        </Grid>
+                                <Label Grid.Column="1"
+                                       Text="Zum Wechseln wischen"
+                                       FontSize="11"
+                                       VerticalOptions="Center"
+                                       HorizontalOptions="End"
+                                       Opacity="0.7" />
+                            </Grid>
+                        </VerticalStackLayout>
                     </StackLayout>
 
                     <!-- Adresse -->

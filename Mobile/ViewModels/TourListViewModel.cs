@@ -2,17 +2,14 @@ using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
-
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
-
 /// <summary>
 /// Laedt und verwaltet die Tourenuebersicht fuer die Listenansicht.
 /// </summary>
 public class ToursListViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
-    private TourDto _selectedTour;
-
+    private TourDto? _selectedTour;
     public ObservableCollection<TourDto> Tours { get; } = new();
     public TourDto? SelectedTour
     {
@@ -25,11 +22,9 @@ public class ToursListViewModel : BaseViewModel
             }
         }
     }
-
     public Command RefreshCommand { get; }
 
-
-    /// <summary>
+    // <summary>
     /// Initialisiert eine neue Instanz von ToursListViewModel.
     /// </summary>
     public ToursListViewModel(ApiClient apiClient)
@@ -44,14 +39,11 @@ public class ToursListViewModel : BaseViewModel
     public async Task LoadToursAsync()
     {
         if (IsBusy) return;
-
         try
         {
             IsBusy = true;
             Tours.Clear();
-
             var tours = await _apiClient.GetToursAsync();
-
             foreach (var tour in tours.OrderBy(t => t.Title))
             {
                 Tours.Add(tour);
@@ -74,10 +66,7 @@ public class ToursListViewModel : BaseViewModel
     {
         if (SelectedTour == null)
             return;
-
         await Shell.Current.GoToAsync($"{nameof(TourTeaserPage)}?id={SelectedTour.Id}");
         SelectedTour = null;
     }
 }
-
-

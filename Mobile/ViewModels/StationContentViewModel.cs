@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Maui.Views;
-using System.Globalization;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Maui.Extensions;
+using System.Globalization;
 using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
@@ -19,12 +19,17 @@ public class StationContentViewModel : BaseViewModel
 
     private StationDto? _station;
     private string? _loadedStationCode;
-
-    // stabile Liste für CarouselView + Count + Index
     private List<MediaItemDto> _imageMediaItems = new();
-    public IReadOnlyList<MediaItemDto> ImageMediaItems => _imageMediaItems;
+    private int _mediaPosition;
+    private string _longDescriptionHtml = BuildLongDescriptionHtml(string.Empty);
+    private double _longDescriptionHeight = 1800;
 
+    public IReadOnlyList<MediaItemDto> ImageMediaItems => _imageMediaItems;
     public bool HasImages => _imageMediaItems.Count > 0;
+    public bool HasMultipleImages => _imageMediaItems.Count > 1;
+    public string CurrentMediaIndicator => _imageMediaItems.Count == 0
+        ? string.Empty
+        : $"{MediaPosition + 1}/{_imageMediaItems.Count}";
 
     public StationDto? Station
     {
@@ -37,27 +42,22 @@ public class StationContentViewModel : BaseViewModel
                 OnPropertyChanged(nameof(HasStation));
                 LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty);
                 LongDescriptionHeight = 1800;
-
                 // Zusätzliche Logik nach der Änderung
                 RebuildImageMediaItems();
-
                 // Commands neu bewerten
-                (OpenInMapsCommand as Command)?.ChangeCanExecute();
+                OpenInMapsCommand.ChangeCanExecute();
             }
         }
     }
 
-
     public bool HasStation => Station != null;
 
-    private string _longDescriptionHtml = BuildLongDescriptionHtml(string.Empty);
     public string LongDescriptionHtml
     {
         get => _longDescriptionHtml;
         private set => SetProperty(ref _longDescriptionHtml, value);
     }
 
-    private double _longDescriptionHeight = 1800;
     public double LongDescriptionHeight
     {
         get => _longDescriptionHeight;
@@ -65,7 +65,6 @@ public class StationContentViewModel : BaseViewModel
     }
 
     // Carousel Position
-    private int _mediaPosition;
     public int MediaPosition
     {
         get => _mediaPosition;
@@ -73,21 +72,15 @@ public class StationContentViewModel : BaseViewModel
         {
             if (SetProperty(ref _mediaPosition, value))
             {
-                // Zusätzliche Logik nach der Änderung
-                RefreshMediaCommands();
+                OnPropertyChanged(nameof(CurrentMediaIndicator));
             }
         }
     }
-
-    // Pfeil-Commands
-    public Command NextMediaCommand { get; }
-    public Command PrevMediaCommand { get; }
 
     public Command OpenInMapsCommand { get; }
     public Command OpenInKomootCommand { get; }
     public Command ShareStationCommand { get; }
     public Command<MediaItemDto> OpenMediaOverlayCommand { get; }
-
 
     /// <summary>
     /// Initialisiert das ViewModel fuer Stationsdetails inkl. Mediensteuerung.
@@ -99,25 +92,14 @@ public class StationContentViewModel : BaseViewModel
         _apiClient = apiClient;
         _appUrlOptions = appUrlOptions;
 
-        NextMediaCommand = new Command(
-            execute: () => MediaPosition = Math.Min(MediaPosition + 1, _imageMediaItems.Count - 1),
-            canExecute: () => _imageMediaItems.Count > 0 && MediaPosition < _imageMediaItems.Count - 1
-        );
-
-        PrevMediaCommand = new Command(
-            execute: () => MediaPosition = Math.Max(MediaPosition - 1, 0),
-            canExecute: () => _imageMediaItems.Count > 0 && MediaPosition > 0
-        );
-
         OpenInMapsCommand = new Command(async () => await OpenInMapsAsync(), () => Station != null);
         OpenInKomootCommand = new Command(async () => await OpenInKomootAsync());
         ShareStationCommand = new Command(async () => await ShareStationAsync());
 
-        OpenMediaOverlayCommand = new Command<MediaItemDto>(async (item) =>
+        OpenMediaOverlayCommand = new Command<MediaItemDto>(async item =>
         {
             if (item == null || string.IsNullOrWhiteSpace(item.FullUrl))
                 return;
-
             var popup = new MediaPreviewPopup(item.FullUrl);
             await Application.Current.MainPage.ShowPopupAsync(popup);
         });
@@ -193,20 +175,9 @@ public class StationContentViewModel : BaseViewModel
 
         OnPropertyChanged(nameof(ImageMediaItems));
         OnPropertyChanged(nameof(HasImages));
-
-        // Position sauber setzen (z.B. nach neuem Laden)
+        OnPropertyChanged(nameof(HasMultipleImages));
+        OnPropertyChanged(nameof(CurrentMediaIndicator));
         MediaPosition = _imageMediaItems.Count > 0 ? Math.Clamp(MediaPosition, 0, _imageMediaItems.Count - 1) : 0;
-
-        RefreshMediaCommands();
-    }
-
-    /// <summary>
-    /// Aktualisiert die CanExecute-Zustaende der Mediennavigation.
-    /// </summary>
-    private void RefreshMediaCommands()
-    {
-        (NextMediaCommand as Command)?.ChangeCanExecute();
-        (PrevMediaCommand as Command)?.ChangeCanExecute();
     }
 
     /// <summary>
@@ -241,10 +212,9 @@ public class StationContentViewModel : BaseViewModel
                 }
                 a { color: #1953c6; text-decoration: underline; }
                 ul, ol { padding-left: 1.2rem; }
-                /* Quill speichert Listen als <ol><li data-list="..."> */
                 ol li[data-list='bullet'] { list-style-type: disc; }
                 ol li[data-list='ordered'] { list-style-type: decimal; }
-                ol li[data-list='bullet']::marker { content: '• '; }
+                ol li[data-list='bullet']::marker { content: '\2022 '; }
                 h1, h2, h3 { margin: 0.6rem 0 0.35rem 0; }
                 p { margin: 0 0 0.6rem 0; }
                 @media (prefers-color-scheme: dark) {
@@ -306,13 +276,12 @@ public class StationContentViewModel : BaseViewModel
 
         if (!Station.Latitude.HasValue || !Station.Longitude.HasValue)
         {
-            await UiNotify.ToastAsync("Keine Adresse oder Koordinaten  hinterlegt.");
+            await UiNotify.ToastAsync("Keine Adresse oder Koordinaten hinterlegt.");
             return;
         }
 
         var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
         var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
-
         // Der "Ortsname"-Teil dient als Label und kann aus Station.Title erzeugt werden,
         // alternativ auch aus einem festen Begriff wie "Ort" (URL-encodiert).
         var slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
@@ -368,18 +337,11 @@ public class StationContentViewModel : BaseViewModel
 
         if (uri == null)
         {
-            await UiNotify.ToastAsync("Keine Adresse oder Koordinaten  hinterlegt.");
+            await UiNotify.ToastAsync("Keine Adresse oder Koordinaten hinterlegt.");
             return;
         }
 
         await Launcher.OpenAsync(uri);
     }
 }
-
-
-
-
-
-
-
 

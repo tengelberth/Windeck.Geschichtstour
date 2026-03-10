@@ -103,8 +103,8 @@ public class ZoomContainer : ContentView
         if (animate)
         {
             await Task.WhenAll(
-                Content.ScaleTo(scale, DOUBLE_TAP_ANIM_MS, Easing.CubicOut),
-                Content.TranslateTo(tx, ty, DOUBLE_TAP_ANIM_MS, Easing.CubicOut)
+                Content.ScaleToAsync(scale, DOUBLE_TAP_ANIM_MS, Easing.CubicOut),
+                Content.TranslateToAsync(tx, ty, DOUBLE_TAP_ANIM_MS, Easing.CubicOut)
             );
         }
         else
@@ -120,7 +120,7 @@ public class ZoomContainer : ContentView
         if (_containerWidth <= 0 || _containerHeight <= 0)
             return;
 
-        // verhindert wegziehen: Grenzen abhängig vom Zoom
+        // verhindert wegziehen: Grenzen abhaengig vom Zoom
         var maxX = (_containerWidth * (_currentScale - 1)) / 2;
         var maxY = (_containerHeight * (_currentScale - 1)) / 2;
 
@@ -128,5 +128,4 @@ public class ZoomContainer : ContentView
         y = Math.Max(-maxY, Math.Min(maxY, y));
     }
 }
-
 

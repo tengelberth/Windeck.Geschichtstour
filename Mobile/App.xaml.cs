@@ -1,4 +1,4 @@
-﻿using Windeck.Geschichtstour.Mobile.Configuration;
+using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile

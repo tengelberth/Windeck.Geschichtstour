@@ -1,6 +1,5 @@
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Views;
-
 namespace Windeck.Geschichtstour.Mobile.ViewModels
 {
     /// <summary>
@@ -8,16 +7,12 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
     /// </summary>
     public class HomeViewModel : BaseViewModel
     {
-        private string _code;
-
-        // Property für das Code-Eingabefeld
+        private string _code = string.Empty;
         public string Code
         {
             get => _code;
             set => SetProperty(ref _code, value);
         }
-
-        // Commands
         public Command ShowStationCommand { get; }
         public Command ShowAllStationsCommand { get; }
         public Command ShowAllToursCommand { get; }
@@ -29,7 +24,6 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         /// </summary>
         public HomeViewModel()
         {
-            // Initialisiere die Commands und weise ihnen die entsprechenden Methoden zu
             ShowStationCommand = new Command(OnShowStationClicked);
             ShowAllStationsCommand = new Command(OnShowAllStationsClicked);
             ShowAllToursCommand = new Command(OnShowAllToursClicked);
@@ -45,15 +39,11 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         /// </summary>
         private async void OnShowStationClicked()
         {
-            // Überprüfe, ob der Code eingegeben wurde
             if (string.IsNullOrWhiteSpace(Code))
             {
                 await UiNotify.ToastAsync("Bitte gib einen Code ein.");
                 return;
             }
-
-            // Navigiere zur StationContentPage und übergebe den Code als Query-Parameter
-            // `nameof()` stellt sicher, dass die Seite korrekt referenziert wird, auch wenn der Name der Seite geändert wird
             await Shell.Current.GoToAsync($"{nameof(StationContentPage)}?code={Uri.EscapeDataString(Code.Trim())}");
         }
 
@@ -63,7 +53,6 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         /// </summary>
         private async void OnShowAllStationsClicked()
         {
-            // Navigiere zur Stations-Seite
             await Shell.Current.GoToAsync("//stations");
         }
 
@@ -73,10 +62,7 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
         /// </summary>
         private async void OnShowAllToursClicked()
         {
-            // Navigiere zur Touren-Seite
             await Shell.Current.GoToAsync("//tours");
         }
     }
 }
-
-
