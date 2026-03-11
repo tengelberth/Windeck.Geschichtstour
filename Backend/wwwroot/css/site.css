@@ -75,7 +75,7 @@ body {
     }
 }
 
-/* Hover Effekt im Menü (wieder da!) */
+/* Hover Effekt im Menï¿½ (wieder da!) */
 .landing-navlink {
     color: rgba(255, 255, 255, 0.85) !important;
     border-radius: 999px;
@@ -89,7 +89,7 @@ body {
         color: #fff !important;
     }
 
-/* Mobile Menü (nicht transparent!) */
+/* Mobile Menï¿½ (nicht transparent!) */
 @media (max-width: 991px) {
     .navbar-collapse {
         margin-top: 0.75rem;
@@ -173,7 +173,7 @@ body {
 }
 
 /* =========================================================
-   Store Buttons (weiß + Hover Store-Farben)
+   Store Buttons (weiï¿½ + Hover Store-Farben)
    ========================================================= */
 .btn-store {
     background: rgba(255, 255, 255, 0.95);
@@ -189,7 +189,7 @@ body {
         color: #fff;
     }
 
-/* Google Play Hover: Grün */
+/* Google Play Hover: GrÃ¼n */
 .btn-store-play:hover {
     background: #34A853;
     border-color: #34A853;
@@ -573,7 +573,7 @@ body {
     opacity: 0.7;
 }
 
-/* Mobile: Links in die nächste Zeile, aber nebeneinander */
+/* Mobile: Links in die nï¿½chste Zeile, aber nebeneinander */
 @media (max-width: 767.98px) {
     .footer-left {
         display: inline-flex;
@@ -603,7 +603,7 @@ body {
 
 /* Content: Glass/Dark + Blur wie landing-navbar */
 .landing-modal-content {
-    background: rgba(15, 23, 42, 0.82); /* dunkelblau (wie mobile menü) */
+    background: rgba(15, 23, 42, 0.82); /* dunkelblau (wie mobile menï¿½) */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.10);
@@ -635,7 +635,7 @@ body {
         border-bottom-color: rgba(255, 255, 255, 0.45);
     }
 
-/* Close Button: auf dunkel schöner */
+/* Close Button: auf dunkel schï¿½ner */
 .landing-modal-content .btn-close {
     filter: invert(1) grayscale(100%);
     opacity: 0.8;
@@ -645,7 +645,7 @@ body {
         opacity: 1;
     }
 
-/* Buttons im Modal minimal “pill/modern” */
+/* Buttons im Modal minimal ï¿½pill/modernï¿½ */
 .landing-modal-content .btn {
     border-radius: 999px;
 }

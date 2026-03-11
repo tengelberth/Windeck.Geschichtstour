@@ -34,7 +34,7 @@ public partial class StationsMapPage : ContentPage
         _mapView = new MapView
         {
             IsZoomButtonVisible = true,
-            IsNorthingButtonVisible = false,
+            IsNorthingButtonVisible = true,
             IsMyLocationButtonVisible = false,
             MyLocationEnabled = false,
             MyLocationFollow = false
@@ -94,5 +94,6 @@ public partial class StationsMapPage : ContentPage
         await _viewModel.LoadStationsAsync();
     }
 }
+
 
 

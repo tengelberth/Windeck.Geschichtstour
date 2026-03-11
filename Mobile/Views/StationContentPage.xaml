@@ -61,6 +61,7 @@ MaxLines="1" />
 
                         <VerticalStackLayout Spacing="8">
                             <CarouselView BackgroundColor="Transparent"
+                                          HeightRequest="340"
                                           ItemsSource="{Binding ImageMediaItems}"
                                           Position="{Binding MediaPosition, Mode=TwoWay}"
                                           Loop="False"
@@ -178,3 +179,5 @@ Command="{Binding OpenInKomootCommand}" />
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>
+
+

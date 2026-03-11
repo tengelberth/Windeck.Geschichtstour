@@ -33,34 +33,34 @@
                             Command="{Binding StartTourNavigationCommand}" />
 
                     <StackLayout Spacing="8" Margin="0,16,0,0"
-             IsVisible="{Binding HasTour}">
+                                 IsVisible="{Binding HasTour}">
                         <Label Text="Stationen in dieser Tour"
-           FontAttributes="Bold"
-           FontSize="18" />
+                               FontAttributes="Bold"
+                               FontSize="18" />
 
-                        <CollectionView ItemsSource="{Binding OrderedStops}">
-                            <CollectionView.ItemTemplate>
+                        <VerticalStackLayout BindableLayout.ItemsSource="{Binding OrderedStops}"
+                                             Spacing="0">
+                            <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Border Margin="0,8,0,0"
-Padding="10"
-Stroke="{StaticResource Primary}"
-StrokeThickness="1">
+                                            Padding="10"
+                                            Stroke="{StaticResource Primary}"
+                                            StrokeThickness="1">
                                         <Border.StrokeShape>
                                             <RoundRectangle CornerRadius="12" />
                                         </Border.StrokeShape>
                                         <VerticalStackLayout Spacing="2">
                                             <Label Text="{Binding Order, Mode=OneTime, StringFormat='Station {0}'}"
-FontAttributes="Bold"
-FontSize="14" />
+                                                   FontAttributes="Bold"
+                                                   FontSize="14" />
                                             <Label Text="{Binding StationTitle, Mode=OneTime}"
-FontSize="14"
-LineBreakMode="WordWrap" />
+                                                   FontSize="14"
+                                                   LineBreakMode="WordWrap" />
                                         </VerticalStackLayout>
                                     </Border>
-                                    
                                 </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                            </BindableLayout.ItemTemplate>
+                        </VerticalStackLayout>
                     </StackLayout>
 
                 </StackLayout>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
@@ -53,6 +53,11 @@
 		<CodesignEntitlements>Platforms/iOS/Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
+	  <CodesignKey>Apple Development: Created via API (9K2MGSZ45C)</CodesignKey>
+	  <CodesignProvision>VS: de.tobias.engelberth.windeck.geschichtstour Development</CodesignProvision>
+	</PropertyGroup>
+
 
 
 	<ItemGroup>
@@ -60,7 +65,7 @@
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#1953c6" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splashscreen.svg" Color="#1953c6" />
+		<MauiSplashScreen Include="Resources\Splash\splashscreen.svg" Color="#1953c6" BaseSize="260,150" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -125,6 +130,7 @@
 	</ItemGroup>
 
 </Project>
+
 
 
 
