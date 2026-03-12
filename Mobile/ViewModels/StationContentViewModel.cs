@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Maui.Extensions;
 using System.Globalization;
 using Windeck.Geschichtstour.Mobile.Configuration;
@@ -151,7 +151,7 @@ public class StationContentViewModel : BaseViewModel
         if (Station == null)
             return;
 
-        var url = new Uri(_appUrlOptions.PublicBaseUri, $"share/station?code={Uri.EscapeDataString(Station.Code)}").ToString();
+        var url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {
@@ -344,4 +344,3 @@ public class StationContentViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
-

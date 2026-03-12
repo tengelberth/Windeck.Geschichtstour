@@ -1,4 +1,4 @@
-using Windeck.Geschichtstour.Mobile.Configuration;
+﻿using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile
@@ -37,21 +37,25 @@ namespace Windeck.Geschichtstour.Mobile
                 if (!_appUrlOptions.AllowedDeepLinkHosts.Contains(uri.Host))
                     return;
 
-                var code = GetQueryParam(uri, "code");
-                if (string.IsNullOrWhiteSpace(code))
-                    return;
-
                 var path = uri.AbsolutePath.TrimEnd('/').ToLowerInvariant();
 
                 if (path == "/station")
                 {
+                    var code = GetQueryParam(uri, "code");
+                    if (string.IsNullOrWhiteSpace(code))
+                        return;
+
                     await Shell.Current.GoToAsync(
                         $"{nameof(StationContentPage)}?code={Uri.EscapeDataString(code)}");
                 }
-                else if (path == "/share/station")
+                else if (path == "/tour")
                 {
+                    var idValue = GetQueryParam(uri, "id");
+                    if (!int.TryParse(idValue, out var id))
+                        return;
+
                     await Shell.Current.GoToAsync(
-                        $"{nameof(StationTeaserPage)}?code={Uri.EscapeDataString(code)}");
+                        $"{nameof(TourTeaserPage)}?id={id}");
                 }
             });
         }

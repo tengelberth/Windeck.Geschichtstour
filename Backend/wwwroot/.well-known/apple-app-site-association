@@ -7,7 +7,7 @@
     "details": [
       {
         "appID": "923R362WK6.de.tobias.engelberth.windeck.geschichtstour",
-        "paths": [ "/station*", "/share/station*" ]
+        "paths": [ "/station*", "/tour*" ]
       }
     ]
   }

@@ -134,7 +134,7 @@ app.MapGet("/station", (HttpContext ctx) =>
     return Results.Redirect("/Index", permanent: false);
 }).ExcludeFromDescription(); // nicht in Swagger anzeigen
 
-app.MapGet("/share/station", (HttpContext ctx) =>
+app.MapGet("/tour", (HttpContext ctx) =>
 {
     // Optional: Code mitgeben, falls der Wert auf der Startseite weiterverarbeitet werden soll
     //var code = ctx.Request.Query["code"].ToString();
