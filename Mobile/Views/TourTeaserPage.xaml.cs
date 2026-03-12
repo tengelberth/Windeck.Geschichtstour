@@ -1,10 +1,11 @@
-using Windeck.Geschichtstour.Mobile.Helpers;
+﻿using Windeck.Geschichtstour.Mobile.Helpers;
+using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.ViewModels;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 
 /// <summary>
-/// Code-Behind fuer den Tour-Teaser mit Deeplink-Parameterverarbeitung.
+/// Code-Behind für den Tour-Teaser mit Deeplink-Parameterverarbeitung.
 /// </summary>
 public partial class TourTeaserPage : ContentPage, IQueryAttributable
 {
@@ -21,11 +22,17 @@ public partial class TourTeaserPage : ContentPage, IQueryAttributable
     }
 
     /// <summary>
-    /// Uebernimmt Navigationsparameter und laedt die dazugehoerigen Inhalte.
+    /// Übernimmt Navigationsparameter und lädt die dazugehörigen Inhalte.
     /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (!query.TryGetValue("id", out var idObj) || idObj is not string idStr || !int.TryParse(idStr, out var id))
+        if (query.TryGetValue("tour", out var tourObj) && tourObj is TourDto tour)
+        {
+            _viewModel.Tour = tour;
+            return;
+        }
+
+        if (!TryReadTourId(query, out var id))
         {
             await UiNotify.ToastAsync("Keine gültige Tour-ID übergeben.");
             await Shell.Current.GoToAsync("..");
@@ -40,6 +47,19 @@ public partial class TourTeaserPage : ContentPage, IQueryAttributable
             await Shell.Current.GoToAsync("..");
         }
     }
+
+    private static bool TryReadTourId(IDictionary<string, object> query, out int id)
+    {
+        id = 0;
+
+        if (!query.TryGetValue("id", out var idObj) || idObj is null)
+            return false;
+
+        return idObj switch
+        {
+            int intId => (id = intId) > 0,
+            string idStr => int.TryParse(idStr, out id) && id > 0,
+            _ => int.TryParse(idObj.ToString(), out id) && id > 0
+        };
+    }
 }
-
-
