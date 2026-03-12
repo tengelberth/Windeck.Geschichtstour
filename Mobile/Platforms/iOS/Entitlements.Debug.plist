@@ -4,8 +4,8 @@
 <dict>
     <key>com.apple.developer.associated-domains</key>
     <array>
-        <string>applinks:geschichtstour-backend.azurewebsites.net</string>
-        <string>applinks:geschichtstour.windecker-laendchen.com</string>
+        <string>applinks:geschichtstour-backend.azurewebsites.net?mode=developer</string>
+        <string>applinks:geschichtstour.windecker-laendchen.com?mode=developer</string>
     </array>
 </dict>
 </plist>
