@@ -6,46 +6,99 @@
 
     <!-- Zweck: Kurzansicht einer Station als Einstieg in Details. -->
 
-
     <Shell.TitleView>
         <Grid ColumnDefinitions="*,Auto" Padding="0,0,20,0">
             <Label
-            Text="{Binding Station.Title}"
-            VerticalOptions="Center"
-            FontAttributes="Bold"
-            FontSize="18"
-            LineBreakMode="TailTruncation"
-    MaxLines="1" />
+                Text="{Binding Station.Title}"
+                VerticalOptions="Center"
+                FontAttributes="Bold"
+                FontSize="18"
+                LineBreakMode="TailTruncation"
+                MaxLines="1" />
 
             <ImageButton
                 IsVisible="{Binding HasStation}"
-            Grid.Column="1"
-            Source="{AppThemeBinding Light=shareblack.png, Dark=sharewhite.png}"
-            MaximumHeightRequest="24"
-            MaximumWidthRequest="24"
-            BackgroundColor="Transparent"
-            Command="{Binding ShareStationCommand}" />
+                Grid.Column="1"
+                Source="{AppThemeBinding Light=shareblack.png, Dark=sharewhite.png}"
+                MaximumHeightRequest="24"
+                MaximumWidthRequest="24"
+                BackgroundColor="Transparent"
+                Command="{Binding ShareStationCommand}" />
         </Grid>
     </Shell.TitleView>
 
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout
-                Padding="16"
-                Spacing="12">
+            <VerticalStackLayout Padding="16" Spacing="12">
 
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
                                    IsVisible="{Binding IsBusy}"
                                    HorizontalOptions="Center" />
 
-                <StackLayout IsVisible="{Binding HasStation}"
-                             Spacing="8">
+                <VerticalStackLayout IsVisible="{Binding HasStation}" Spacing="10">
                     <Label Text="{Binding Station.Title}"
-       FontSize="24"
-       FontAttributes="Bold" />
+                           FontSize="24"
+                           FontAttributes="Bold" />
+
                     <Label Text="{Binding Station.ShortDescription}"
-FontSize="14"
-LineBreakMode="WordWrap" />
+                           FontSize="14"
+                           LineBreakMode="WordWrap" />
+
+                    <Border Padding="14"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#F4F7FB, Dark=#151D27}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="8">
+                            <HorizontalStackLayout Spacing="8">
+                                <Image Source="qrblue.png"
+                                       HeightRequest="20"
+                                       VerticalOptions="Center" />
+                                <Label Text="Mehr vor Ort entdecken"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <Label Text="Wenn du mehr erfahren willst, schau vor Ort vorbei und scanne den QR-Code an der Station. Dort gelangst du direkt zur vollständigen Geschichte und zu allen Medien."
+                                   FontSize="13"
+                                   LineBreakMode="WordWrap"
+                                   Opacity="0.82" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="14"
+                            Stroke="{AppThemeBinding Light=#D8E2F0, Dark=#243244}"
+                            StrokeThickness="1"
+                            BackgroundColor="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="8">
+                                <Image Source="{AppThemeBinding Light=shareblack.png, Dark=sharewhite.png}"
+                                       HeightRequest="18"
+                                       VerticalOptions="Center" />
+                                <Label Text="Station teilen"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <Label Text="Gefällt dir diese Station? Teile sie direkt mit anderen und erkundet sie gemeinsam!"
+                                   FontSize="13"
+                                   LineBreakMode="WordWrap"
+                                   Opacity="0.82" />
+
+                            <Button Text="Station teilen"
+                                    ImageSource="sharewhite.png"
+                                    HeightRequest="41"
+                                    Command="{Binding ShareStationCommand}" />
+                        </VerticalStackLayout>
+                    </Border>
 
                     <Border Padding="10"
                             BackgroundColor="Transparent"
@@ -61,37 +114,36 @@ LineBreakMode="WordWrap" />
                                     Radius="8"
                                     Opacity="0.25" />
                         </Border.Shadow>
-                        <StackLayout Spacing="2" >
+                        <VerticalStackLayout Spacing="2">
                             <HorizontalStackLayout Spacing="2">
                                 <Image Source="markerblue.png" HeightRequest="20" />
 
                                 <Label Text="Adresse"
-FontAttributes="Bold"
-FontSize="16"
-IsVisible="{Binding Station.Street}" />
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       IsVisible="{Binding Station.Street}" />
                             </HorizontalStackLayout>
-
 
                             <HorizontalStackLayout Spacing="3">
                                 <Label Text="{Binding Station.Street}"
-       IsVisible="{Binding Station.Street}" />
+                                       IsVisible="{Binding Station.Street}" />
                                 <Label Text="{Binding Station.HouseNumber}"
-       IsVisible="{Binding Station.HouseNumber}" />
+                                       IsVisible="{Binding Station.HouseNumber}" />
                             </HorizontalStackLayout>
 
                             <HorizontalStackLayout Spacing="3">
                                 <Label Text="{Binding Station.ZipCode}"
-       IsVisible="{Binding Station.ZipCode}" />
+                                       IsVisible="{Binding Station.ZipCode}" />
                                 <Label Text="{Binding Station.City}"
-       IsVisible="{Binding Station.City}" />
+                                       IsVisible="{Binding Station.City}" />
                             </HorizontalStackLayout>
                             <Button Text="In Google Maps öffnen" Margin="0,10,0,0" ImageSource="naviwhite.png" HeightRequest="41"
-Command="{Binding OpenInMapsCommand}" />
+                                    Command="{Binding OpenInMapsCommand}" />
                             <Button Text="In Komoot Tour planen" Margin="0,5,0,0" ImageSource="trekkingwhite.png" HeightRequest="41"
-Command="{Binding OpenInKomootCommand}" />
-                        </StackLayout>
+                                    Command="{Binding OpenInKomootCommand}" />
+                        </VerticalStackLayout>
                     </Border>
-                </StackLayout>
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

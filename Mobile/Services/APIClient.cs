@@ -158,7 +158,7 @@ public class ApiClient
             {
                 var retry = await ShowRetryDialogAsync(
                     title: "Zeitueberschreitung",
-                    message: "Die Anfrage hat zu lange gedauert. Moechtest du es erneut versuchen?",
+                    message: "Die Anfrage hat zu lange gedauert. Möchtest du es erneut versuchen?",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 

@@ -40,10 +40,10 @@ public partial class StationsMapPage : ContentPage
             MyLocationFollow = false
         };
 
-        // ? MapView in XAML hosten (NICHT Content = _mapView)
+        // MapView in XAML hosten (nicht Content = _mapView)
         MapHost.Content = _mapView;
 
-        // ? Behavior sicher an diese MapView hängen
+        // Behavior sicher an diese MapView hängen
         var bridge = new MapsuiMapViewBridgeBehavior
         {
             FitPinsOnFirstLoad = true,
@@ -94,6 +94,7 @@ public partial class StationsMapPage : ContentPage
         await _viewModel.LoadStationsAsync();
     }
 }
+
 
 
 
