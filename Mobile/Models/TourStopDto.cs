@@ -1,4 +1,4 @@
-namespace Windeck.Geschichtstour.Mobile.Models
+﻿namespace Windeck.Geschichtstour.Mobile.Models
 {
     /// <summary>
     /// Repräsentiert einen Haltepunkt innerhalb einer Tour
@@ -8,6 +8,7 @@ namespace Windeck.Geschichtstour.Mobile.Models
     {
         public int Order { get; set; }
         public int StationId { get; set; }
+        public string? StationCode { get; set; }
         public string? StationTitle { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }

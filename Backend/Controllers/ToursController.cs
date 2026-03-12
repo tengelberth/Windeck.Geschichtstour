@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
@@ -7,7 +7,7 @@ using Windeck.Geschichtstour.Backend.Services;
 namespace Windeck.Geschichtstour.Backend.Controllers
 {
     /// <summary>
-    /// Web-API-Controller für den Zugriff auf Touren.
+    /// Web-API-Controller fÃ¼r den Zugriff auf Touren.
     /// Die mobile App kann damit z. B. eine Liste von Touren anzeigen
     /// und eine Tour im Detail laden, um eine Route zu bauen.
     /// </summary>
@@ -50,6 +50,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     {
                         Order = ts.Order,
                         StationId = ts.StationId,
+                        StationCode = ts.Station?.Code ?? string.Empty,
                         StationTitle = ts.Station?.Title ?? string.Empty,
                         Latitude = ts.Station?.Latitude,
                         Longitude = ts.Station?.Longitude
@@ -67,7 +68,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         }
 
         /// <summary>
-        /// Liefert eine Tour mit allen Stops und den zugehörigen Stationen.
+        /// Liefert eine Tour mit allen Stops und den zugehÃ¶rigen Stationen.
         /// GET: /api/tours/{id}
         /// </summary>
         [HttpGet("{id:int}")]
@@ -101,6 +102,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                     {
                         Order = ts.Order,
                         StationId = ts.StationId,
+                        StationCode = ts.Station?.Code ?? string.Empty,
                         StationTitle = ts.Station?.Title ?? string.Empty,
                         Latitude = ts.Station?.Latitude,
                         Longitude = ts.Station?.Longitude
@@ -119,3 +121,4 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         }
     }
 }
+

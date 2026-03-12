@@ -1,4 +1,4 @@
-namespace Windeck.Geschichtstour.Backend.Dtos
+﻿namespace Windeck.Geschichtstour.Backend.Dtos
 {
     /// <summary>
     /// Repräsentiert einen Haltepunkt innerhalb einer Tour
@@ -13,6 +13,7 @@ namespace Windeck.Geschichtstour.Backend.Dtos
         /// </summary>
         public int StationId { get; set; }
 
+        public string StationCode { get; set; } = string.Empty;
         public string StationTitle { get; set; } = string.Empty;
 
         /// <summary>
