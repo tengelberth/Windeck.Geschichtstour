@@ -1,8 +1,10 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
+
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
+
 /// <summary>
 /// Laedt und verwaltet die Stationsliste fuer die Listenansicht.
 /// </summary>
@@ -10,7 +12,9 @@ public class StationsListViewModel : BaseViewModel
 {
     private readonly ApiClient _apiClient;
     private StationDto? _selectedStation;
+
     public ObservableCollection<StationDto> Stations { get; } = new();
+
     public StationDto? SelectedStation
     {
         get => _selectedStation;
@@ -22,6 +26,7 @@ public class StationsListViewModel : BaseViewModel
             }
         }
     }
+
     public Command RefreshCommand { get; }
 
     /// <summary>
@@ -60,13 +65,14 @@ public class StationsListViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Reagiert auf die Stationsauswahl und navigiert zur Detailansicht.
+    /// Reagiert auf die Stationsauswahl und navigiert direkt zur Inhaltsseite.
     /// </summary>
     private async void OnStationSelected()
     {
         if (SelectedStation == null)
             return;
-        await Shell.Current.GoToAsync($"{nameof(StationTeaserPage)}?code={Uri.EscapeDataString(SelectedStation.Code)}");
+
+        await Shell.Current.GoToAsync($"{nameof(StationContentPage)}?code={Uri.EscapeDataString(SelectedStation.Code)}");
         SelectedStation = null;
     }
 }

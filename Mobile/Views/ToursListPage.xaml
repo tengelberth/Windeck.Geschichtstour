@@ -43,7 +43,7 @@
                                                VerticalOptions="Center" />
                                     </HorizontalStackLayout>
 
-                                    <Label Text="Touren bündeln mehrere aufeinander thematisch abgestimmte Stationen. Wähle eine Tour, um zu sehen, welche Stationen dich erwarten und mach dich gleich auf den Weg."
+                                    <Label Text="Touren bündeln mehrere thematisch aufeinander abgestimmte Stationen. Wähle eine aus und mach dich gleich auf den Weg."
                                            FontSize="14"
                                            LineBreakMode="WordWrap"
                                            Opacity="0.82" />
@@ -81,8 +81,7 @@
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
 
-                                <VerticalStackLayout Spacing="10"
-                                                     CompressedLayout.IsHeadless="true">
+                                <VerticalStackLayout Spacing="10">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="8">
                                         <Label Text="{Binding Title, Mode=OneTime}"
@@ -114,7 +113,7 @@
                                     <Label Text="{Binding Description, Mode=OneTime}"
                                            FontSize="13"
                                            LineBreakMode="TailTruncation"
-                                           MaxLines="2"
+                                           MaxLines="4"
                                            Opacity="0.85" />
                                 </VerticalStackLayout>
                             </Border>

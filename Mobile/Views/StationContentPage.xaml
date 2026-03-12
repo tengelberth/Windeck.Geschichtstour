@@ -195,17 +195,28 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <WebView x:Name="DescriptionWebView"
-                             HeightRequest="{Binding LongDescriptionHeight}"
-                             BackgroundColor="Transparent"
-                             Navigating="DescriptionWebView_Navigating">
-                        <WebView.Source>
-                            <HtmlWebViewSource Html="{Binding LongDescriptionHtml}" />
-                        </WebView.Source>
-                    </WebView>
+                    <VerticalStackLayout Spacing="8"
+                                         IsVisible="{Binding HasLongDescription}">
+                        <WebView x:Name="DescriptionWebView"
+                                 HeightRequest="{Binding LongDescriptionHeight}"
+                                 BackgroundColor="Transparent"
+                                 Navigating="DescriptionWebView_Navigating">
+                            <WebView.Source>
+                                <HtmlWebViewSource Html="{Binding LongDescriptionHtml}" />
+                            </WebView.Source>
+                        </WebView>
+
+                        <Button Text="Beschreibung neu laden"
+                                Command="{Binding ReloadDescriptionCommand}"
+                                HeightRequest="38"
+                                HorizontalOptions="End"
+                                BackgroundColor="{AppThemeBinding Light=#F0F4FA, Dark=#1F2733}"
+                                TextColor="{StaticResource Primary}" />
+                    </VerticalStackLayout>
 
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>
 </ContentPage>
+

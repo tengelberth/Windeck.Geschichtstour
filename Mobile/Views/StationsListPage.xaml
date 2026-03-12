@@ -44,7 +44,7 @@
                                                VerticalOptions="Center" />
                                     </HorizontalStackLayout>
 
-                                    <Label Text="Hier findest du alle Stationen im Überblick. Tippe auf einen Ort und sieh dir vor deinem Besuch an, was dich erwartet."
+                                    <Label Text="Hier siehst du alle verfügbaren Stationen. Tippe auf eine Station, um die zugehörigen Inhalte direkt anzusehen."
                                            FontSize="14"
                                            LineBreakMode="WordWrap"
                                            Opacity="0.82" />
@@ -82,8 +82,7 @@
                                     <RoundRectangle CornerRadius="18" />
                                 </Border.StrokeShape>
 
-                                <VerticalStackLayout Spacing="8"
-                                                     CompressedLayout.IsHeadless="true">
+                                <VerticalStackLayout Spacing="8">
                                     <Grid ColumnDefinitions="*,Auto"
                                           ColumnSpacing="8">
                                         <Label Text="{Binding Title, Mode=OneTime}"
@@ -105,7 +104,7 @@
                                     <Label Text="{Binding ShortDescription, Mode=OneTime}"
                                            FontSize="13"
                                            LineBreakMode="TailTruncation"
-                                           MaxLines="2"
+                                           MaxLines="4"
                                            Opacity="0.85" />
                                 </VerticalStackLayout>
                             </Border>

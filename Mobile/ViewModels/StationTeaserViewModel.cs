@@ -88,7 +88,7 @@ public class StationTeaserViewModel : BaseViewModel
         if (Station == null)
             return;
 
-        var url = new Uri(_appUrlOptions.PublicBaseUri, $"share/station?code={Uri.EscapeDataString(Station.Code)}").ToString();
+        var url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {
@@ -179,10 +179,3 @@ public class StationTeaserViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
-
-
-
-
-
-
-

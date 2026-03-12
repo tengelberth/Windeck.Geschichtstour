@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Windeck.Geschichtstour.Mobile.Views.TourTeaserPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -7,33 +7,115 @@
 
     <!-- Zweck: Kurzansicht einer Tour mit Startaktionen. -->
 
+    <Shell.TitleView>
+        <Grid ColumnDefinitions="*,Auto" Padding="0,0,20,0">
+            <Label Text="{Binding Tour.Title}"
+                   VerticalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   LineBreakMode="TailTruncation"
+                   MaxLines="1" />
+
+            <ImageButton Grid.Column="1"
+                         IsVisible="{Binding HasTour}"
+                         Source="{AppThemeBinding Light=shareblack.png, Dark=sharewhite.png}"
+                         MaximumHeightRequest="24"
+                         MaximumWidthRequest="24"
+                         BackgroundColor="Transparent"
+                         Command="{Binding ShareTourCommand}" />
+        </Grid>
+    </Shell.TitleView>
 
     <ContentPage.Content>
         <ScrollView>
-            <VerticalStackLayout Padding="16" Spacing="12">
+            <VerticalStackLayout Padding="16" Spacing="14">
 
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
                                    IsVisible="{Binding IsBusy}"
                                    HorizontalOptions="Center" />
 
-                <StackLayout IsVisible="{Binding HasTour}" Spacing="8">
-                    <Label Text="{Binding Tour.Title}"
-                           FontSize="24"
-                           FontAttributes="Bold" />
+                <VerticalStackLayout IsVisible="{Binding HasTour}" Spacing="14">
+                    <Border Padding="18"
+                            StrokeThickness="0"
+                            BackgroundColor="{AppThemeBinding Light=#F4F7FB, Dark=#121820}">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="24" />
+                        </Border.StrokeShape>
+                        <Border.Shadow>
+                            <Shadow Brush="#22000000"
+                                    Offset="0,4"
+                                    Radius="12"
+                                    Opacity="0.16" />
+                        </Border.Shadow>
 
-                    <Label Text="{Binding Tour.Description}"
-                           FontSize="14"
-                           LineBreakMode="WordWrap" />
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="{Binding Tour.Title}"
+                                   FontSize="24"
+                                   FontAttributes="Bold" />
 
-                    <Label Text="{Binding Tour.Stops.Count, StringFormat='Stationen in der Tour: {0}'}"
-                           FontSize="12"
-                           TextColor="Gray" />
+                            <Label Text="{Binding Tour.Description}"
+                                   FontSize="14"
+                                   LineBreakMode="WordWrap"
+                                   Opacity="0.84" />
 
-                    <Button Text="In Google Maps öffnen" ImageSource="naviwhite.png" HeightRequest="41"
-                            Command="{Binding StartTourNavigationCommand}" />
+                            <VerticalStackLayout Spacing="8">
+                                <Border Padding="8,4"
+                                        StrokeThickness="0"
+                                        BackgroundColor="{AppThemeBinding Light=#EAF2FF, Dark=#172131}">
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="12" />
+                                    </Border.StrokeShape>
+                                    <Label Text="{Binding StopCountText}"
+                                           FontSize="12"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource Primary}" />
+                                </Border>
 
-                    <StackLayout Spacing="8" Margin="0,16,0,0"
-                                 IsVisible="{Binding HasTour}">
+                                <Label Text="Tippe eine Station an, um die Inhalte direkt zu öffnen."
+                                       FontSize="12"
+                                       VerticalOptions="Center"
+                                       Opacity="0.72" />
+                            </VerticalStackLayout>
+
+                            <Button Text="In Google Maps öffnen"
+                                    ImageSource="naviwhite.png"
+                                    HeightRequest="41"
+                                    Command="{Binding StartTourNavigationCommand}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border Padding="14"
+                            Stroke="{AppThemeBinding Light=#D8E2F0, Dark=#243244}"
+                            StrokeThickness="1"
+                            BackgroundColor="Transparent">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="18" />
+                        </Border.StrokeShape>
+
+                        <VerticalStackLayout Spacing="10">
+                            <HorizontalStackLayout Spacing="8">
+                                <Image Source="{AppThemeBinding Light=shareblack.png, Dark=sharewhite.png}"
+                                       HeightRequest="18"
+                                       VerticalOptions="Center" />
+                                <Label Text="Tour teilen"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+
+                            <Label Text="Teile diese Tour direkt mit anderen und macht euch gemeinsam auf den Weg!"
+                                   FontSize="13"
+                                   LineBreakMode="WordWrap"
+                                   Opacity="0.82" />
+
+                            <Button Text="Tour teilen"
+                                    ImageSource="sharewhite.png"
+                                    HeightRequest="41"
+                                    Command="{Binding ShareTourCommand}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <VerticalStackLayout Spacing="8">
                         <Label Text="Stationen in dieser Tour"
                                FontAttributes="Bold"
                                FontSize="18" />
@@ -43,27 +125,57 @@
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate>
                                     <Border Margin="0,8,0,0"
-                                            Padding="10"
-                                            Stroke="{StaticResource Primary}"
-                                            StrokeThickness="1">
+                                            Padding="14"
+                                            Stroke="{AppThemeBinding Light=#D8E2F0, Dark=#243244}"
+                                            StrokeThickness="1"
+                                            BackgroundColor="Transparent">
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenTourStopCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
                                         <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="12" />
+                                            <RoundRectangle CornerRadius="18" />
                                         </Border.StrokeShape>
-                                        <VerticalStackLayout Spacing="2">
-                                            <Label Text="{Binding Order, Mode=OneTime, StringFormat='Station {0}'}"
-                                                   FontAttributes="Bold"
-                                                   FontSize="14" />
-                                            <Label Text="{Binding StationTitle, Mode=OneTime}"
-                                                   FontSize="14"
-                                                   LineBreakMode="WordWrap" />
-                                        </VerticalStackLayout>
+
+                                        <Grid ColumnDefinitions="Auto,*,Auto"
+                                              ColumnSpacing="12">
+                                            <Border Padding="8,3"
+                                                    StrokeThickness="0"
+                                                    BackgroundColor="{AppThemeBinding Light=#EAF2FF, Dark=#172131}"
+                                                    VerticalOptions="Start">
+                                                <Border.StrokeShape>
+                                                    <RoundRectangle CornerRadius="12" />
+                                                </Border.StrokeShape>
+                                                <Label Text="{Binding Order, Mode=OneTime}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{StaticResource Primary}" />
+                                            </Border>
+
+                                            <VerticalStackLayout Grid.Column="1" Spacing="4">
+                                                <Label Text="{Binding StationTitle, Mode=OneTime}"
+                                                       FontSize="16"
+                                                       FontAttributes="Bold"
+                                                       LineBreakMode="WordWrap" />
+                                                <Label Text="Zur Station öffnen"
+                                                       FontSize="12"
+                                                       Opacity="0.7" />
+                                            </VerticalStackLayout>
+
+                                            <Image Grid.Column="2"
+                                                   Source="arrowrightwhite.png"
+                                                   HeightRequest="14"
+                                                   Rotation="180"
+                                                   VerticalOptions="Center"
+                                                   Opacity="0.45" />
+                                        </Grid>
                                     </Border>
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
                         </VerticalStackLayout>
-                    </StackLayout>
-
-                </StackLayout>
+                    </VerticalStackLayout>
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

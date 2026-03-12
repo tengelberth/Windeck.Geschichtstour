@@ -36,7 +36,7 @@
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center" />
 
-                        <Label Text="Erkunde historische Orte in Windeck mit Bildern, Hintergrundwissen und spannenden Geschichten – direkt draußen beim Spaziergang mit deinem Smartphone."
+                        <Label Text="Erkunde historische Orte in Windeck mit Bildern, Hintergrundwissen und spannenden Geschichten – direkt draußen beim Spaziergang."
                                FontSize="14"
                                LineBreakMode="WordWrap"
                                HorizontalTextAlignment="Center"
@@ -166,16 +166,16 @@
                 </Border.StrokeShape>
 
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Station direkt öffnen"
+                    <Label Text="Station mit Namen suchen"
                            FontSize="19"
                            FontAttributes="Bold" />
 
-                    <Label Text="Wenn du bereits einen Stationscode hast, kannst du den Inhalt direkt aufrufen."
+                    <Label Text="Wenn du bereits einen Stationsnamen hast, kannst du die Station direkt öffnen."
                            FontSize="14"
                            LineBreakMode="WordWrap"
                            Opacity="0.8" />
 
-                    <Entry Placeholder="Code eingeben, z. B. KABELMETAL"
+                    <Entry Placeholder="Namen eingeben, z. B. Kabelmetal"
                            Text="{Binding Code}"
                            Keyboard="Text"
                            ClearButtonVisibility="WhileEditing" />
@@ -251,14 +251,6 @@
                     </Border>
                 </Grid>
             </VerticalStackLayout>
-
-            <Label Text="Tipp: In Karte und Liste bekommst du nur einen kleinen Überblick über Station. Schaue vor Ort vorbei und scanne den QR-Code, um tiefer einzusteigen."
-                   FontSize="12"
-                   LineBreakMode="WordWrap"
-                   Opacity="0.68" />
-
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-
-

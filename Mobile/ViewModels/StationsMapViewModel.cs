@@ -171,6 +171,6 @@ public class StationsMapViewModel : BaseViewModel
         SelectedStation = null;
 
         await Shell.Current.GoToAsync(
-            $"{nameof(Views.StationTeaserPage)}?code={Uri.EscapeDataString(code)}");
+            $"{nameof(Views.StationContentPage)}?code={Uri.EscapeDataString(code)}");
     }
 }

@@ -21,7 +21,8 @@ public class StationContentViewModel : BaseViewModel
     private string? _loadedStationCode;
     private List<MediaItemDto> _imageMediaItems = new();
     private int _mediaPosition;
-    private string _longDescriptionHtml = BuildLongDescriptionHtml(string.Empty);
+    private int _descriptionVersion;
+    private string _longDescriptionHtml = BuildLongDescriptionHtml(string.Empty, 0);
     private double _longDescriptionHeight = 1800;
 
     public IReadOnlyList<MediaItemDto> ImageMediaItems => _imageMediaItems;
@@ -40,7 +41,8 @@ public class StationContentViewModel : BaseViewModel
             {
                 // Abhängige Properties benachrichtigen
                 OnPropertyChanged(nameof(HasStation));
-                LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty);
+                OnPropertyChanged(nameof(HasLongDescription));
+                LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty, ++_descriptionVersion);
                 LongDescriptionHeight = 1800;
                 // Zusätzliche Logik nach der Änderung
                 RebuildImageMediaItems();
@@ -51,6 +53,7 @@ public class StationContentViewModel : BaseViewModel
     }
 
     public bool HasStation => Station != null;
+    public bool HasLongDescription => !string.IsNullOrWhiteSpace(Station?.LongDescription);
 
     public string LongDescriptionHtml
     {
@@ -80,6 +83,7 @@ public class StationContentViewModel : BaseViewModel
     public Command OpenInMapsCommand { get; }
     public Command OpenInKomootCommand { get; }
     public Command ShareStationCommand { get; }
+    public Command ReloadDescriptionCommand { get; }
     public Command<MediaItemDto> OpenMediaOverlayCommand { get; }
 
     /// <summary>
@@ -95,12 +99,18 @@ public class StationContentViewModel : BaseViewModel
         OpenInMapsCommand = new Command(async () => await OpenInMapsAsync(), () => Station != null);
         OpenInKomootCommand = new Command(async () => await OpenInKomootAsync());
         ShareStationCommand = new Command(async () => await ShareStationAsync());
+        ReloadDescriptionCommand = new Command(ReloadDescription);
 
         OpenMediaOverlayCommand = new Command<MediaItemDto>(async item =>
         {
-            if (item == null || string.IsNullOrWhiteSpace(item.FullUrl))
+            if (item == null || string.IsNullOrWhiteSpace(item.FullUrl) || _imageMediaItems.Count == 0)
                 return;
-            var popup = new MediaPreviewPopup(item.FullUrl);
+
+            var initialIndex = _imageMediaItems.IndexOf(item);
+            if (initialIndex < 0)
+                initialIndex = Math.Clamp(MediaPosition, 0, _imageMediaItems.Count - 1);
+
+            var popup = new MediaPreviewPopup(_imageMediaItems, initialIndex);
             await Application.Current.MainPage.ShowPopupAsync(popup);
         });
     }
@@ -184,7 +194,16 @@ public class StationContentViewModel : BaseViewModel
     /// Baut ein vollständiges HTML-Dokument für die Beschreibung inklusive Styling,
     /// Link-Weiterleitung und Höhen-Callback an die WebView.
     /// </summary>
-    private static string BuildLongDescriptionHtml(string contentHtml)
+    private void ReloadDescription()
+    {
+        if (Station == null)
+            return;
+
+        LongDescriptionHeight = 1800;
+        LongDescriptionHtml = BuildLongDescriptionHtml(Station.LongDescription ?? string.Empty, ++_descriptionVersion);
+    }
+
+    private static string BuildLongDescriptionHtml(string contentHtml, int version)
     {
         var content = string.IsNullOrWhiteSpace(contentHtml) ? "<p></p>" : contentHtml;
 
@@ -259,7 +278,7 @@ public class StationContentViewModel : BaseViewModel
             </script>
         </head>
         <body>
-            <div id="content-root">{{content}}</div>
+            <div id="content-root">{{content}}</div><!-- reload: {{version}} -->
         </body>
         </html>
         """;
