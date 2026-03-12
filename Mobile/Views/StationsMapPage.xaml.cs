@@ -44,7 +44,7 @@ public partial class StationsMapPage : ContentPage
         MapHost.Content = _mapView;
 
         // Behavior sicher an diese MapView hängen
-        var bridge = new MapsuiMapViewBridgeBehavior
+        MapsuiMapViewBridgeBehavior bridge = new()
         {
             FitPinsOnFirstLoad = true,
             FitPaddingFactor = 0.20
@@ -62,17 +62,19 @@ public partial class StationsMapPage : ContentPage
         _mapView.Behaviors.Add(bridge);
 
         // Map + OSM
-        var map = new Mapsui.Map();
+        Mapsui.Map map = new();
         map.Layers.Add(OpenStreetMap.CreateTileLayer("Windeck.Geschichtstour/1.0 (mailto:tourismuswindeck@gmail.com)"));
 
         // Startup View: Windeck (Lon,Lat)
-        var center = SphericalMercator.FromLonLat(new MPoint(7.560, 50.792));
+        MPoint center = SphericalMercator.FromLonLat(new MPoint(7.560, 50.792));
 
-        var zoomIndex = 15;
+        int zoomIndex = 15;
         if (map.Navigator.Resolutions.Count > 0)
+        {
             zoomIndex = Math.Min(zoomIndex, map.Navigator.Resolutions.Count - 1);
+        }
 
-        var resolution = map.Navigator.Resolutions.Count > 0
+        double resolution = map.Navigator.Resolutions.Count > 0
             ? map.Navigator.Resolutions[zoomIndex]
             : 1;
 
@@ -88,7 +90,11 @@ public partial class StationsMapPage : ContentPage
     {
         base.OnAppearing();
 
-        if (_initialized) return;
+        if (_initialized)
+        {
+            return;
+        }
+
         _initialized = true;
 
         await _viewModel.LoadStationsAsync();

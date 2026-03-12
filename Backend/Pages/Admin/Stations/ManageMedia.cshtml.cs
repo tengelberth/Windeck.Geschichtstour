@@ -67,7 +67,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int stationId, int mediaId)
         {
-            var media = await _dbContext.MediaItems
+            MediaItem? media = await _dbContext.MediaItems
                 .FirstOrDefaultAsync(m => m.Id == mediaId && m.StationId == stationId);
 
             if (media == null)
@@ -87,7 +87,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public string GetStorageDisplay(MediaItem media)
         {
-            return MediaStorageById.TryGetValue(media.Id, out var value)
+            return MediaStorageById.TryGetValue(media.Id, out string? value)
                 ? value
                 : "-";
         }
@@ -96,7 +96,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         {
             MediaStorageById.Clear();
 
-            foreach (var media in mediaItems)
+            foreach (MediaItem media in mediaItems)
             {
                 MediaStorageById[media.Id] = ResolveStorageText(media.Url);
             }
@@ -115,15 +115,15 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 return "extern";
             }
 
-            var relativePath = url.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
-            var absolutePath = Path.Combine(_env.WebRootPath, relativePath);
+            string relativePath = url.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            string absolutePath = Path.Combine(_env.WebRootPath, relativePath);
 
             if (!System.IO.File.Exists(absolutePath))
             {
                 return "nicht gefunden";
             }
 
-            var fileSizeBytes = new FileInfo(absolutePath).Length;
+            long fileSizeBytes = new FileInfo(absolutePath).Length;
             return FormatFileSize(fileSizeBytes);
         }
 

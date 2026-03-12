@@ -36,19 +36,19 @@ public static class AppUrlOptionsLoader
     /// <returns>Vollstaendig validierte URL-Konfiguration.</returns>
     public static AppUrlOptions Load()
     {
-        var fileConfig = LoadFileConfig();
+        AppSettingsRoot? fileConfig = LoadFileConfig();
 
-        var backendBaseUrl =
+        string backendBaseUrl =
             Environment.GetEnvironmentVariable("WINDECK_BACKEND_BASE_URL")
             ?? fileConfig?.Backend?.BaseUrl
             ?? DefaultBaseUrl;
 
-        var publicBaseUrl =
+        string publicBaseUrl =
             Environment.GetEnvironmentVariable("WINDECK_PUBLIC_BASE_URL")
             ?? fileConfig?.Backend?.PublicBaseUrl
             ?? backendBaseUrl;
 
-        var allowedHosts = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        HashSet<string> allowedHosts = new(StringComparer.OrdinalIgnoreCase)
         {
             NormalizeUri(backendBaseUrl).Host,
             NormalizeUri(publicBaseUrl).Host
@@ -56,15 +56,19 @@ public static class AppUrlOptionsLoader
 
         if (fileConfig?.Backend?.AllowedDeepLinkHosts is { Count: > 0 })
         {
-            foreach (var host in fileConfig.Backend.AllowedDeepLinkHosts.Where(h => !string.IsNullOrWhiteSpace(h)))
+            foreach (string? host in fileConfig.Backend.AllowedDeepLinkHosts.Where(h => !string.IsNullOrWhiteSpace(h)))
+            {
                 allowedHosts.Add(host.Trim());
+            }
         }
 
-        var envHosts = Environment.GetEnvironmentVariable("WINDECK_ALLOWED_DEEPLINK_HOSTS");
+        string? envHosts = Environment.GetEnvironmentVariable("WINDECK_ALLOWED_DEEPLINK_HOSTS");
         if (!string.IsNullOrWhiteSpace(envHosts))
         {
-            foreach (var host in envHosts.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            foreach (string host in envHosts.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            {
                 allowedHosts.Add(host);
+            }
         }
 
         return new AppUrlOptions
@@ -77,12 +81,16 @@ public static class AppUrlOptionsLoader
 
     private static Uri NormalizeUri(string input)
     {
-        if (!Uri.TryCreate(input, UriKind.Absolute, out var parsed))
+        if (!Uri.TryCreate(input, UriKind.Absolute, out Uri? parsed))
+        {
             throw new InvalidOperationException($"Ungueltige URL-Konfiguration: '{input}'.");
+        }
 
-        var normalized = parsed.ToString();
+        string normalized = parsed.ToString();
         if (!normalized.EndsWith('/'))
+        {
             normalized += "/";
+        }
 
         return new Uri(normalized, UriKind.Absolute);
     }
@@ -91,7 +99,7 @@ public static class AppUrlOptionsLoader
     {
         try
         {
-            using var stream = FileSystem.OpenAppPackageFileAsync("appsettings.json").GetAwaiter().GetResult();
+            using Stream stream = FileSystem.OpenAppPackageFileAsync("appsettings.json").GetAwaiter().GetResult();
             return JsonSerializer.Deserialize<AppSettingsRoot>(stream);
         }
         catch

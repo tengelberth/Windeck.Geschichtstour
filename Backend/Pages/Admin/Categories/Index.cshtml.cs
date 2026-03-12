@@ -38,15 +38,17 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            var category = await _dbContext.Categories
+            Category? category = await _dbContext.Categories
                 .Include(c => c.Stations)
                 .FirstOrDefaultAsync(c => c.Id == id);
 
             if (category == null)
+            {
                 return NotFound();
+            }
 
             // Stationen sollen nicht mit gelöscht werden, daher Kategorie-Referenz entfernen
-            foreach (var station in category.Stations)
+            foreach (Station station in category.Stations)
             {
                 station.CategoryId = null;
             }

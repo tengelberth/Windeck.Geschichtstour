@@ -39,12 +39,14 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            var tour = await _dbContext.Tours
+            Tour? tour = await _dbContext.Tours
                 .Include(t => t.Stops)
                 .FirstOrDefaultAsync(t => t.Id == id);
 
             if (tour == null)
+            {
                 return NotFound();
+            }
 
             if (tour.Stops.Any())
             {

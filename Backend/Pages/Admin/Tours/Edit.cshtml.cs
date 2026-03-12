@@ -42,7 +42,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
                     .FirstOrDefaultAsync(t => t.Id == id.Value);
 
                 if (Tour == null)
+                {
                     return NotFound();
+                }
             }
 
             return Page();
@@ -54,7 +56,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
                 return Page();
+            }
 
             if (Tour.Id == 0)
             {

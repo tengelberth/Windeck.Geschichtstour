@@ -32,27 +32,35 @@ public partial class QrScannerPage : ContentPage
         base.OnAppearing();
 
         if (_viewModel.AppearingCommand.CanExecute(null))
+        {
             _viewModel.AppearingCommand.Execute(null);
+        }
     }
 
     protected override void OnDisappearing()
     {
         if (_viewModel.DisappearingCommand.CanExecute(null))
+        {
             _viewModel.DisappearingCommand.Execute(null);
+        }
 
         base.OnDisappearing();
     }
 
     private void CameraView_BarcodesDetected(object? sender, BarcodeDetectionEventArgs e)
     {
-        var raw = e.Results?.FirstOrDefault()?.Value;
+        string? raw = e.Results?.FirstOrDefault()?.Value;
         if (string.IsNullOrWhiteSpace(raw))
+        {
             return;
+        }
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
             if (_viewModel.BarcodeDetectedCommand.CanExecute(raw))
+            {
                 _viewModel.BarcodeDetectedCommand.Execute(raw);
+            }
         });
     }
 }

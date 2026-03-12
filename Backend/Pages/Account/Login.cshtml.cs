@@ -56,24 +56,26 @@ namespace Windeck.Geschichtstour.Backend.Pages.Account
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
                 return Page();
+            }
 
             // Admin-Daten aus der Konfiguration lesen
-            var adminUser = _configuration["AdminAuth:Username"];
-            var adminPassword = _configuration["AdminAuth:Password"];
+            string? adminUser = _configuration["AdminAuth:Username"];
+            string? adminPassword = _configuration["AdminAuth:Password"];
 
             // Einfache Prüfung: Benutzername + Passwort müssen exakt übereinstimmen.
             if (Input.Username == adminUser && Input.Password == adminPassword)
             {
                 // Claims für den angemeldeten Benutzer
-                var claims = new[]
+                Claim[] claims = new[]
                 {
                     new Claim(ClaimTypes.Name, Input.Username),
                     new Claim(ClaimTypes.Role, "Admin")
                 };
 
-                var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var principal = new ClaimsPrincipal(identity);
+                ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                ClaimsPrincipal principal = new(identity);
 
                 // Auth-Cookie erstellen
                 await HttpContext.SignInAsync(

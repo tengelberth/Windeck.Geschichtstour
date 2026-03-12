@@ -81,7 +81,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             await LoadCategoriesAsync();
 
             // Prüfen, ob der Code bereits von einer anderen Station verwendet wird
-            var codeExists = await _dbContext.Stations
+            bool codeExists = await _dbContext.Stations
                 .AnyAsync(s => s.Code == Station.Code && s.Id != Station.Id);
 
             if (codeExists)

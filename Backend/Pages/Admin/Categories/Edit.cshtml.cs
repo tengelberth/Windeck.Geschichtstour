@@ -39,7 +39,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
             {
                 Category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id.Value);
                 if (Category == null)
+                {
                     return NotFound();
+                }
             }
 
             return Page();
@@ -51,7 +53,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Categories
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
+            {
                 return Page();
+            }
 
             if (Category.Id == 0)
             {

@@ -24,7 +24,7 @@ namespace Windeck.Geschichtstour.Mobile
         {
             AppContext.SetSwitch("System.Reflection.NullabilityInfoContext.IsSupported", true);
 
-            var builder = MauiApp.CreateBuilder();
+            MauiAppBuilder builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
                 .UseSkiaSharp()
@@ -65,11 +65,11 @@ namespace Windeck.Geschichtstour.Mobile
 #if ANDROID
             static void TryHandleLink(Android.Content.Intent? intent)
             {
-                var action = intent?.Action;
-                var data = intent?.Data?.ToString();
+                string? action = intent?.Action;
+                string? data = intent?.Data?.ToString();
 
                 if (action == Android.Content.Intent.ActionView && data is not null
-                    && Uri.TryCreate(data, UriKind.Absolute, out var uri))
+                    && Uri.TryCreate(data, UriKind.Absolute, out Uri? uri))
                 {
                     App.Current?.SendOnAppLinkRequestReceived(uri);
                 }
@@ -83,8 +83,10 @@ namespace Windeck.Geschichtstour.Mobile
                     userActivity.ActivityType == Foundation.NSUserActivityType.BrowsingWeb &&
                     userActivity.WebPageUrl is not null)
                 {
-                    if (Uri.TryCreate(userActivity.WebPageUrl.ToString(), UriKind.Absolute, out var uri))
+                    if (Uri.TryCreate(userActivity.WebPageUrl.ToString(), UriKind.Absolute, out Uri? uri))
+                    {
                         App.Current?.SendOnAppLinkRequestReceived(uri);
+                    }
 
                     return true;
                 }
@@ -96,7 +98,7 @@ namespace Windeck.Geschichtstour.Mobile
             builder.Logging.AddDebug();
 #endif
 
-            var appUrlOptions = AppUrlOptionsLoader.Load();
+            AppUrlOptions appUrlOptions = AppUrlOptionsLoader.Load();
             builder.Services.AddSingleton(appUrlOptions);
 
             // Konfigurieren der DI-Container und der App

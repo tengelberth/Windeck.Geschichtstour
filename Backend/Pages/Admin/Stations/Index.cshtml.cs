@@ -32,13 +32,13 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public async Task OnGetAsync()
         {
-            var query = _dbContext.Stations
+            IQueryable<Station> query = _dbContext.Stations
                 .Include(s => s.Category)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                var term = SearchTerm.Trim();
+                string term = SearchTerm.Trim();
                 query = query.Where(s =>
                     s.Title.Contains(term) ||
                     s.Code.Contains(term) ||
@@ -57,7 +57,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            var station = await _dbContext.Stations
+            Station? station = await _dbContext.Stations
                 .Include(s => s.MediaItems)
                 .Include(s => s.TourStops)
                 .FirstOrDefaultAsync(s => s.Id == id);

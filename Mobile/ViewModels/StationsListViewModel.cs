@@ -43,13 +43,17 @@ public class StationsListViewModel : BaseViewModel
     /// </summary>
     public async Task LoadStationsAsync()
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
+
         try
         {
             IsBusy = true;
             Stations.Clear();
-            var stationsFromApi = await _apiClient.GetStationsAsync();
-            foreach (var station in stationsFromApi.OrderBy(s => s.Title))
+            List<StationDto> stationsFromApi = await _apiClient.GetStationsAsync();
+            foreach (StationDto? station in stationsFromApi.OrderBy(s => s.Title))
             {
                 Stations.Add(station);
             }
@@ -70,7 +74,9 @@ public class StationsListViewModel : BaseViewModel
     private async void OnStationSelected()
     {
         if (SelectedStation == null)
+        {
             return;
+        }
 
         await Shell.Current.GoToAsync($"{nameof(StationContentPage)}?code={Uri.EscapeDataString(SelectedStation.Code)}");
         SelectedStation = null;

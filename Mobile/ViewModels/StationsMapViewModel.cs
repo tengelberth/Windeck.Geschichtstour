@@ -22,7 +22,9 @@ public class StationsMapViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _selectedPin, value) && value?.Tag is StationDto station)
+            {
                 SelectedStation = station;
+            }
         }
     }
 
@@ -33,7 +35,9 @@ public class StationsMapViewModel : BaseViewModel
         set
         {
             if (SetProperty(ref _selectedStation, value) && _selectedStation != null)
+            {
                 _ = OnStationSelected();
+            }
         }
     }
 
@@ -118,7 +122,10 @@ public class StationsMapViewModel : BaseViewModel
     /// </summary>
     public async Task LoadStationsAsync()
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
 
         try
         {
@@ -130,9 +137,9 @@ public class StationsMapViewModel : BaseViewModel
             Stations.Clear();
             Pins.Clear();
 
-            var stations = await _apiClient.GetStationsAsync();
+            List<StationDto> stations = await _apiClient.GetStationsAsync();
 
-            foreach (var s in stations.Where(x => x.Latitude.HasValue && x.Longitude.HasValue))
+            foreach (StationDto? s in stations.Where(x => x.Latitude.HasValue && x.Longitude.HasValue))
             {
                 Stations.Add(s);
 
@@ -162,9 +169,12 @@ public class StationsMapViewModel : BaseViewModel
     /// </summary>
     private async Task OnStationSelected()
     {
-        if (SelectedStation == null) return;
+        if (SelectedStation == null)
+        {
+            return;
+        }
 
-        var code = SelectedStation.Code;
+        string code = SelectedStation.Code;
 
         // wichtig: Selection resetten, damit derselbe Pin danach wieder klickbar ist
         SelectedPin = null;

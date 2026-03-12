@@ -1,4 +1,3 @@
-ï»¿using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Maui.Extensions;
 using System.Globalization;
 using Windeck.Geschichtstour.Mobile.Configuration;
@@ -39,12 +38,12 @@ public class StationContentViewModel : BaseViewModel
         {
             if (SetProperty(ref _station, value))
             {
-                // AbhÃ¤ngige Properties benachrichtigen
+                // Abhängige Properties benachrichtigen
                 OnPropertyChanged(nameof(HasStation));
                 OnPropertyChanged(nameof(HasLongDescription));
                 LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty, ++_descriptionVersion);
                 LongDescriptionHeight = 1800;
-                // ZusÃ¤tzliche Logik nach der Ã„nderung
+                // Zusätzliche Logik nach der Änderung
                 RebuildImageMediaItems();
                 // Commands neu bewerten
                 OpenInMapsCommand.ChangeCanExecute();
@@ -103,14 +102,12 @@ public class StationContentViewModel : BaseViewModel
 
         OpenMediaOverlayCommand = new Command<MediaItemDto>(async item =>
         {
-            if (item == null || string.IsNullOrWhiteSpace(item.FullUrl) || _imageMediaItems.Count == 0)
+            if (item == null || string.IsNullOrWhiteSpace(item.FullUrl))
+            {
                 return;
+            }
 
-            var initialIndex = _imageMediaItems.IndexOf(item);
-            if (initialIndex < 0)
-                initialIndex = Math.Clamp(MediaPosition, 0, _imageMediaItems.Count - 1);
-
-            var popup = new MediaPreviewPopup(_imageMediaItems, initialIndex);
+            MediaPreviewPopup popup = new(item.FullUrl, item.Caption);
             await Application.Current.MainPage.ShowPopupAsync(popup);
         });
     }
@@ -122,21 +119,28 @@ public class StationContentViewModel : BaseViewModel
     /// <returns>Asynchroner Vorgang zum Laden und Aktualisieren des Zustands.</returns>
     public async Task LoadByCodeAsync(string code)
     {
-        if (IsBusy) return;
-
-        var normalizedCode = code?.Trim();
-        if (string.IsNullOrWhiteSpace(normalizedCode))
+        if (IsBusy)
+        {
             return;
+        }
+
+        string? normalizedCode = code?.Trim();
+        if (string.IsNullOrWhiteSpace(normalizedCode))
+        {
+            return;
+        }
 
         if (Station is not null && string.Equals(_loadedStationCode, normalizedCode, StringComparison.OrdinalIgnoreCase))
+        {
             return;
+        }
 
         try
         {
             IsBusy = true;
             Station = null;
 
-            var station = await _apiClient.GetStationByCodeAsync(normalizedCode);
+            StationDto? station = await _apiClient.GetStationByCodeAsync(normalizedCode);
             Station = station;
             _loadedStationCode = station?.Code;
         }
@@ -159,9 +163,11 @@ public class StationContentViewModel : BaseViewModel
     public async Task ShareStationAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
-        var url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
+        string url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {
@@ -191,13 +197,15 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Baut ein vollstÃ¤ndiges HTML-Dokument fÃ¼r die Beschreibung inklusive Styling,
-    /// Link-Weiterleitung und HÃ¶hen-Callback an die WebView.
+    /// Baut ein vollständiges HTML-Dokument für die Beschreibung inklusive Styling,
+    /// Link-Weiterleitung und Höhen-Callback an die WebView.
     /// </summary>
     private void ReloadDescription()
     {
         if (Station == null)
+        {
             return;
+        }
 
         LongDescriptionHeight = 1800;
         LongDescriptionHtml = BuildLongDescriptionHtml(Station.LongDescription ?? string.Empty, ++_descriptionVersion);
@@ -205,7 +213,7 @@ public class StationContentViewModel : BaseViewModel
 
     private static string BuildLongDescriptionHtml(string contentHtml, int version)
     {
-        var content = string.IsNullOrWhiteSpace(contentHtml) ? "<p></p>" : contentHtml;
+        string content = string.IsNullOrWhiteSpace(contentHtml) ? "<p></p>" : contentHtml;
 
         return $$"""
         <!doctype html>
@@ -291,7 +299,9 @@ public class StationContentViewModel : BaseViewModel
     private async Task OpenInKomootAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
         if (!Station.Latitude.HasValue || !Station.Longitude.HasValue)
         {
@@ -299,16 +309,16 @@ public class StationContentViewModel : BaseViewModel
             return;
         }
 
-        var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
-        var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+        string lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+        string lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
         // Der "Ortsname"-Teil dient als Label und kann aus Station.Title erzeugt werden,
         // alternativ auch aus einem festen Begriff wie "Ort" (URL-encodiert).
-        var slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
+        string slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
 
-        var sport = "hike";
-        var maxDistanceMeters = 9000;
+        string sport = "hike";
+        int maxDistanceMeters = 9000;
 
-        var uri =
+        string uri =
             $"https://www.komoot.com/de-de/discover/{slug}/@{lat},{lon}/tours" +
             $"?sport={sport}&map=true&max_distance={maxDistanceMeters}&pageNumber=1";
 
@@ -322,19 +332,21 @@ public class StationContentViewModel : BaseViewModel
     private async Task OpenInMapsAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
         string? uri = null;
 
         if (Station.Latitude.HasValue && Station.Longitude.HasValue)
         {
-            var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
-            var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+            string lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+            string lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
             uri = $"https://www.google.com/maps/search/?api=1&query={lat},{lon}";
         }
         else
         {
-            var parts = new[]
+            IEnumerable<string> parts = new[]
             {
                 Station.Title,
                 Station.Street,
@@ -345,11 +357,11 @@ public class StationContentViewModel : BaseViewModel
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .Select(p => p!.Trim());
 
-            var query = string.Join(" ", parts);
+            string query = string.Join(" ", parts);
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                var encoded = Uri.EscapeDataString(query);
+                string encoded = Uri.EscapeDataString(query);
                 uri = $"https://www.google.com/maps/search/?api=1&query={encoded}";
             }
         }
@@ -363,3 +375,5 @@ public class StationContentViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
+
+

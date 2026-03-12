@@ -26,9 +26,9 @@ namespace Windeck.Geschichtstour.Backend.Services
         {
             try
             {
-                var userAgent = httpContext.Request.Headers.UserAgent.ToString();
+                string userAgent = httpContext.Request.Headers.UserAgent.ToString();
 
-                var analyticsEvent = new AnalyticsEvent
+                AnalyticsEvent analyticsEvent = new()
                 {
                     Endpoint = endpoint,
                     EventType = eventType,

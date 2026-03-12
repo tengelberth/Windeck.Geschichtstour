@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <toolkit:Popup
     x:Class="Windeck.Geschichtstour.Mobile.Views.MediaPreviewPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -13,7 +13,6 @@
     <Grid HorizontalOptions="Fill"
           VerticalOptions="Fill">
 
-        <!-- Bildbereich -->
         <Grid Padding="10"
               HorizontalOptions="Fill"
               VerticalOptions="Fill">
@@ -27,7 +26,6 @@
 
         </Grid>
 
-        <!-- Close Button -->
         <Button Text="X"
                 ZIndex="10"
                 BackgroundColor="#66000000"
@@ -40,22 +38,43 @@
                 Margin="0,36,10,0"
                 Clicked="OnCloseClicked" />
 
-        <!-- Hinweis unten -->
-        <Border BackgroundColor="#66000000"
-                StrokeThickness="0"
-                Padding="10,6"
-                HorizontalOptions="Center"
-                VerticalOptions="End"
-                Margin="0,0,0,35">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="16" />
-            </Border.StrokeShape>
+        <VerticalStackLayout HorizontalOptions="Center"
+                             VerticalOptions="End"
+                             Spacing="8"
+                             Margin="16,0,16,35">
 
-            <Label Text="Doppeltippen zum Zoomen"
-                   TextColor="White"
-                   FontSize="12"
-                   Opacity="0.9" />
-        </Border>
+            <Border x:Name="CaptionBorder"
+                    BackgroundColor="#66000000"
+                    StrokeThickness="0"
+                    Padding="12,8"
+                    IsVisible="False">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <Label x:Name="CaptionLabel"
+                       TextColor="White"
+                       FontSize="13"
+                       HorizontalTextAlignment="Center"
+                       LineBreakMode="WordWrap"
+                       MaxLines="3" />
+            </Border>
+
+            <Border BackgroundColor="#66000000"
+                    StrokeThickness="0"
+                    Padding="10,6"
+                    HorizontalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="16" />
+                </Border.StrokeShape>
+
+                <Label Text="Doppeltippen zum Zoomen"
+                       TextColor="White"
+                       FontSize="12"
+                       Opacity="0.9" />
+            </Border>
+
+        </VerticalStackLayout>
 
     </Grid>
 </toolkit:Popup>

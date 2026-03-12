@@ -28,7 +28,7 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
     /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (!query.TryGetValue("code", out var codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
+        if (!query.TryGetValue("code", out object? codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
         {
             await UiNotify.ToastAsync("Kein gültiger Code übergeben.");
             await Shell.Current.GoToAsync("..");
@@ -38,7 +38,9 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
         code = code.Trim();
 
         if (_viewModel.HasStation && string.Equals(_loadedCode, code, StringComparison.OrdinalIgnoreCase))
+        {
             return;
+        }
 
         await _viewModel.LoadByCodeAsync(code);
         _loadedCode = code;
@@ -58,7 +60,9 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
     private async void DescriptionWebView_Navigating(object? sender, WebNavigatingEventArgs e)
     {
         if (string.IsNullOrWhiteSpace(e.Url))
+        {
             return;
+        }
 
         if (e.Url.StartsWith("height:", StringComparison.OrdinalIgnoreCase))
         {
@@ -73,15 +77,19 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
         {
             targetUrl = Uri.UnescapeDataString(e.Url.Substring("extlink:".Length));
         }
-        else if (Uri.TryCreate(e.Url, UriKind.Absolute, out var uri))
+        else if (Uri.TryCreate(e.Url, UriKind.Absolute, out Uri? uri))
         {
-            var scheme = uri.Scheme.ToLowerInvariant();
+            string scheme = uri.Scheme.ToLowerInvariant();
             if (scheme is "http" or "https" or "mailto" or "tel")
+            {
                 targetUrl = e.Url;
+            }
         }
 
         if (string.IsNullOrWhiteSpace(targetUrl))
+        {
             return;
+        }
 
         // Gleiches Verhalten wie im Flyout: direkt über Launcher öffnen.
         e.Cancel = true;
@@ -93,12 +101,14 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
     /// </summary>
     private void ApplyReportedHeight(string rawHeightUrl)
     {
-        var raw = rawHeightUrl.Substring("height:".Length).Trim().Replace(',', '.');
-        if (!double.TryParse(raw, NumberStyles.Any, CultureInfo.InvariantCulture, out var height) || height <= 0)
+        string raw = rawHeightUrl.Substring("height:".Length).Trim().Replace(',', '.');
+        if (!double.TryParse(raw, NumberStyles.Any, CultureInfo.InvariantCulture, out double height) || height <= 0)
+        {
             return;
+        }
 
         // Sicherheitsmarge + sinnvoller Bereich
-        var computedHeight = Math.Clamp(height + 36, 120, 12000);
+        double computedHeight = Math.Clamp(height + 36, 120, 12000);
         _viewModel.LongDescriptionHeight = computedHeight;
     }
 }

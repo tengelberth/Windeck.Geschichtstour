@@ -68,7 +68,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
             if (mediaId == null)
             {
-                var nextSortOrder = await GetNextSortOrderAsync(stationId);
+                int nextSortOrder = await GetNextSortOrderAsync(stationId);
                 Media = new MediaItem
                 {
                     StationId = stationId,
@@ -111,8 +111,8 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
             if (UploadFile != null && UploadFile.Length > 0)
             {
-                var extension = Path.GetExtension(UploadFile.FileName).ToLowerInvariant();
-                var allowedExtensions = new[]
+                string extension = Path.GetExtension(UploadFile.FileName).ToLowerInvariant();
+                string[] allowedExtensions = new[]
                 {
                     ".jpg", ".jpeg", ".png", ".gif"
                     // ".mp3", ".wav", ".mp4"
@@ -124,7 +124,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 }
                 else
                 {
-                    var uploadsRootFolder = Path.Combine(
+                    string uploadsRootFolder = Path.Combine(
                         _env.WebRootPath,
                         "uploads",
                         "stations",
@@ -134,9 +134,9 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 
                     try
                     {
-                        var compressed = await CompressImageAsync(UploadFile, extension);
-                        var fileName = $"{Guid.NewGuid()}{compressed.FileExtension}";
-                        var filePath = Path.Combine(uploadsRootFolder, fileName);
+                        CompressedImageResult compressed = await CompressImageAsync(UploadFile, extension);
+                        string fileName = $"{Guid.NewGuid()}{compressed.FileExtension}";
+                        string filePath = Path.Combine(uploadsRootFolder, fileName);
 
                         await System.IO.File.WriteAllBytesAsync(filePath, compressed.Content);
 
@@ -177,7 +177,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private async Task<int> GetNextSortOrderAsync(int stationId)
         {
-            var mediaCount = await _dbContext.MediaItems
+            int mediaCount = await _dbContext.MediaItems
                 .CountAsync(m => m.StationId == stationId);
 
             return mediaCount + 1;
@@ -188,11 +188,11 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private static async Task<CompressedImageResult> CompressImageAsync(IFormFile file, string originalExtension)
         {
-            await using var inputStream = file.OpenReadStream();
-            using var image = await Image.LoadAsync<Rgba32>(inputStream);
+            await using Stream inputStream = file.OpenReadStream();
+            using Image<Rgba32> image = await Image.LoadAsync<Rgba32>(inputStream);
 
-            var hasTransparency = HasTransparency(image);
-            var targetExtension = ResolveTargetExtension(originalExtension, hasTransparency);
+            bool hasTransparency = HasTransparency(image);
+            string targetExtension = ResolveTargetExtension(originalExtension, hasTransparency);
 
             if (targetExtension == ".jpg")
             {
@@ -201,18 +201,18 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                     image.Mutate(ctx => ctx.BackgroundColor(Color.White));
                 }
 
-                var jpegResult = await EncodeJpegWithTargetSizeAsync(image, MaxUploadSizeBytes);
+                byte[] jpegResult = await EncodeJpegWithTargetSizeAsync(image, MaxUploadSizeBytes);
                 return new CompressedImageResult(jpegResult, ".jpg");
             }
 
             if (targetExtension == ".png")
             {
-                var pngResult = await EncodePngWithTargetSizeAsync(image, MaxUploadSizeBytes);
+                byte[] pngResult = await EncodePngWithTargetSizeAsync(image, MaxUploadSizeBytes);
                 return new CompressedImageResult(pngResult, ".png");
             }
 
-            await using var rawStream = file.OpenReadStream();
-            using var buffer = new MemoryStream();
+            await using Stream rawStream = file.OpenReadStream();
+            using MemoryStream buffer = new();
             await rawStream.CopyToAsync(buffer);
             return new CompressedImageResult(buffer.ToArray(), originalExtension);
         }
@@ -222,12 +222,12 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private static async Task<byte[]> EncodeJpegWithTargetSizeAsync(Image<Rgba32> image, int targetBytes)
         {
-            var qualities = new[] { 90, 82, 75, 68, 60, 52, 45, 38, 32 };
+            int[] qualities = new[] { 90, 82, 75, 68, 60, 52, 45, 38, 32 };
             byte[]? smallest = null;
 
-            foreach (var quality in qualities)
+            foreach (int quality in qualities)
             {
-                var current = await SaveToBytesAsync(image, new JpegEncoder { Quality = quality });
+                byte[] current = await SaveToBytesAsync(image, new JpegEncoder { Quality = quality });
 
                 if (smallest == null || current.Length < smallest.Length)
                 {
@@ -248,18 +248,18 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private static async Task<byte[]> EncodePngWithTargetSizeAsync(Image<Rgba32> image, int targetBytes)
         {
-            var colors = new[] { 256, 192, 128, 96, 64, 48, 32 };
+            int[] colors = new[] { 256, 192, 128, 96, 64, 48, 32 };
             byte[]? smallest = null;
 
-            foreach (var colorCount in colors)
+            foreach (int colorCount in colors)
             {
-                using var candidate = image.CloneAs<Rgba32>();
+                using Image<Rgba32> candidate = image.CloneAs<Rgba32>();
                 candidate.Mutate(ctx => ctx.Quantize(new WuQuantizer(new QuantizerOptions
                 {
                     MaxColors = colorCount
                 })));
 
-                var current = await SaveToBytesAsync(candidate, new PngEncoder
+                byte[] current = await SaveToBytesAsync(candidate, new PngEncoder
                 {
                     CompressionLevel = PngCompressionLevel.BestCompression,
                     ColorType = PngColorType.Palette,
@@ -285,14 +285,14 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private static bool HasTransparency(Image<Rgba32> image)
         {
-            var hasTransparency = false;
+            bool hasTransparency = false;
 
             image.ProcessPixelRows(accessor =>
             {
-                for (var y = 0; y < accessor.Height && !hasTransparency; y++)
+                for (int y = 0; y < accessor.Height && !hasTransparency; y++)
                 {
-                    var row = accessor.GetRowSpan(y);
-                    for (var x = 0; x < row.Length; x++)
+                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    for (int x = 0; x < row.Length; x++)
                     {
                         if (row[x].A < 255)
                         {
@@ -328,7 +328,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         /// </summary>
         private static async Task<byte[]> SaveToBytesAsync(Image image, IImageEncoder encoder)
         {
-            await using var ms = new MemoryStream();
+            await using MemoryStream ms = new();
             await image.SaveAsync(ms, encoder);
             return ms.ToArray();
         }

@@ -24,13 +24,13 @@ namespace Windeck.Geschichtstour.Backend.Data
             // ----------------------------
             // Kategorien anlegen
             // ----------------------------
-            var ortsGeschichte = new Category
+            Category ortsGeschichte = new()
             {
                 Name = "Ortsgeschichte",
                 Description = "Historische Gebäude und Orte im Ortskern."
             };
 
-            var industrieGeschichte = new Category
+            Category industrieGeschichte = new()
             {
                 Name = "Industriegeschichte",
                 Description = "Industrie- und Verkehrsgeschichte entlang der Sieg."
@@ -44,7 +44,7 @@ namespace Windeck.Geschichtstour.Backend.Data
             // (Koordinaten sind initiale Referenzwerte und können später präzisiert werden)
             // ----------------------------
 
-            var rathausRosbach = new Station
+            Station rathausRosbach = new()
             {
                 Code = "RATHAUS_ROSBACH",
                 Title = "Rathaus Rosbach",
@@ -61,7 +61,7 @@ namespace Windeck.Geschichtstour.Backend.Data
                 Category = ortsGeschichte
             };
 
-            var marktplatzRosbach = new Station
+            Station marktplatzRosbach = new()
             {
                 Code = "MARKTPLATZ_ROSBACH",
                 Title = "Marktplatz Rosbach",
@@ -75,7 +75,7 @@ namespace Windeck.Geschichtstour.Backend.Data
                 Category = ortsGeschichte
             };
 
-            var burgWindeck = new Station
+            Station burgWindeck = new()
             {
                 Code = "BURG_WINDECK",
                 Title = "Burg Windeck",
@@ -89,7 +89,7 @@ namespace Windeck.Geschichtstour.Backend.Data
                 Category = ortsGeschichte
             };
 
-            var alterBahnhofSchladern = new Station
+            Station alterBahnhofSchladern = new()
             {
                 Code = "ALTER_BAHNHOF_SCHLADERN",
                 Title = "Alter Bahnhof Schladern",
@@ -112,7 +112,7 @@ namespace Windeck.Geschichtstour.Backend.Data
             // durch reale Dateien im Deployment ersetzt werden.
             // ----------------------------
 
-            var mediaItems = new[]
+            MediaItem[] mediaItems = new[]
             {
                 new MediaItem
                 {
@@ -147,13 +147,13 @@ namespace Windeck.Geschichtstour.Backend.Data
             // Touren anlegen
             // ----------------------------
 
-            var altstadtTourRosbach = new Tour
+            Tour altstadtTourRosbach = new()
             {
                 Title = "Altstadttour Rosbach",
                 Description = "Kurzer Rundgang durch den historischen Ortskern von Rosbach."
             };
 
-            var industrieTourSieg = new Tour
+            Tour industrieTourSieg = new()
             {
                 Title = "Industrie an der Sieg",
                 Description = "Tour zu Standorten der Industrie- und Verkehrsgeschichte entlang der Sieg."
@@ -166,7 +166,7 @@ namespace Windeck.Geschichtstour.Backend.Data
             // TourStops anlegen (Reihenfolge innerhalb der Tour)
             // ----------------------------
 
-            var tourStops = new[]
+            TourStop[] tourStops = new[]
             {
                 // Altstadttour Rosbach
                 new TourStop

@@ -43,15 +43,18 @@ public class ToursListViewModel : BaseViewModel
     /// </summary>
     public async Task LoadToursAsync()
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
 
         try
         {
             IsBusy = true;
             Tours.Clear();
 
-            var tours = await _apiClient.GetToursAsync();
-            foreach (var tour in tours.OrderBy(t => t.Title))
+            List<TourDto> tours = await _apiClient.GetToursAsync();
+            foreach (TourDto? tour in tours.OrderBy(t => t.Title))
             {
                 Tours.Add(tour);
             }
@@ -72,7 +75,9 @@ public class ToursListViewModel : BaseViewModel
     private async void OnTourSelected()
     {
         if (SelectedTour == null)
+        {
             return;
+        }
 
         await Shell.Current.GoToAsync(nameof(TourTeaserPage), new Dictionary<string, object>
         {

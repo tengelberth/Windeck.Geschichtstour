@@ -25,7 +25,7 @@ public partial class StationTeaserPage : ContentPage, IQueryAttributable
     /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (!query.TryGetValue("code", out var codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
+        if (!query.TryGetValue("code", out object? codeObj) || codeObj is not string code || string.IsNullOrWhiteSpace(code))
         {
             await UiNotify.ToastAsync("Kein gültiger Code übergeben.");
             await Shell.Current.GoToAsync("..");

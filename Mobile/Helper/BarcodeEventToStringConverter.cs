@@ -14,7 +14,9 @@ public class BarcodeEventToStringConverter : IValueConverter
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
     {
         if (value is BarcodeDetectionEventArgs e)
+        {
             return e.Results?.FirstOrDefault()?.Value;
+        }
 
         return null;
     }

@@ -35,24 +35,30 @@ namespace Windeck.Geschichtstour.Mobile
             await Dispatcher.DispatchAsync(async () =>
             {
                 if (!_appUrlOptions.AllowedDeepLinkHosts.Contains(uri.Host))
+                {
                     return;
+                }
 
-                var path = uri.AbsolutePath.TrimEnd('/').ToLowerInvariant();
+                string path = uri.AbsolutePath.TrimEnd('/').ToLowerInvariant();
 
                 if (path == "/station")
                 {
-                    var code = GetQueryParam(uri, "code");
+                    string? code = GetQueryParam(uri, "code");
                     if (string.IsNullOrWhiteSpace(code))
+                    {
                         return;
+                    }
 
                     await Shell.Current.GoToAsync(
                         $"{nameof(StationContentPage)}?code={Uri.EscapeDataString(code)}");
                 }
                 else if (path == "/tour")
                 {
-                    var idValue = GetQueryParam(uri, "id");
-                    if (!int.TryParse(idValue, out var id))
+                    string? idValue = GetQueryParam(uri, "id");
+                    if (!int.TryParse(idValue, out int id))
+                    {
                         return;
+                    }
 
                     await Shell.Current.GoToAsync(
                         $"{nameof(TourTeaserPage)}?id={id}");
@@ -68,15 +74,19 @@ namespace Windeck.Geschichtstour.Mobile
         /// <returns>Wert des Parameters oder <c>null</c>, wenn der Parameter nicht vorhanden ist.</returns>
         private static string? GetQueryParam(Uri uri, string key)
         {
-            var query = uri.Query.TrimStart('?');
+            string query = uri.Query.TrimStart('?');
             if (string.IsNullOrWhiteSpace(query))
-                return null;
-
-            foreach (var part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
             {
-                var kv = part.Split('=', 2);
+                return null;
+            }
+
+            foreach (string part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+            {
+                string[] kv = part.Split('=', 2);
                 if (kv.Length == 2 && kv[0].Equals(key, StringComparison.OrdinalIgnoreCase))
+                {
                     return Uri.UnescapeDataString(kv[1]);
+                }
             }
 
             return null;

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
+using Windeck.Geschichtstour.Backend.Models;
 using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Controllers
@@ -34,12 +35,12 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TourDto>>> GetTours()
         {
-            var tours = await _dbContext.Tours
+            List<Tour> tours = await _dbContext.Tours
             .Include(t => t.Stops)
                 .ThenInclude(ts => ts.Station)
             .ToListAsync();
 
-            var result = tours.Select(t => new TourDto
+            List<TourDto> result = tours.Select(t => new TourDto
             {
                 Id = t.Id,
                 Title = t.Title,
@@ -74,7 +75,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TourDto>> GetTourById(int id)
         {
-            var tour = await _dbContext.Tours
+            Tour? tour = await _dbContext.Tours
                 .Include(t => t.Stops)
                     .ThenInclude(ts => ts.Station)
                 .FirstOrDefaultAsync(t => t.Id == id);
@@ -91,7 +92,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                 return NotFound();
             }
 
-            var dto = new TourDto
+            TourDto dto = new()
             {
                 Id = tour.Id,
                 Title = tour.Title,

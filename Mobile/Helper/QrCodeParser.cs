@@ -17,23 +17,35 @@ public static class QrCodeParser
     public static string? TryExtractCode(string raw)
     {
         raw = raw?.Trim() ?? string.Empty;
-        if (raw.Length == 0) return null;
+        if (raw.Length == 0)
+        {
+            return null;
+        }
 
         // Falls QR nur den Code enthält
         if (!raw.Contains("://", StringComparison.OrdinalIgnoreCase) && !raw.Contains("?", StringComparison.Ordinal))
-            return raw;
-
-        if (!Uri.TryCreate(raw, UriKind.Absolute, out var uri))
-            return null;
-
-        var query = uri.Query.TrimStart('?');
-        if (query.Length == 0) return null;
-
-        foreach (var part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
         {
-            var kv = part.Split('=', 2);
+            return raw;
+        }
+
+        if (!Uri.TryCreate(raw, UriKind.Absolute, out Uri? uri))
+        {
+            return null;
+        }
+
+        string query = uri.Query.TrimStart('?');
+        if (query.Length == 0)
+        {
+            return null;
+        }
+
+        foreach (string part in query.Split('&', StringSplitOptions.RemoveEmptyEntries))
+        {
+            string[] kv = part.Split('=', 2);
             if (kv.Length == 2 && kv[0].Equals("code", StringComparison.OrdinalIgnoreCase))
+            {
                 return Uri.UnescapeDataString(kv[1]);
+            }
         }
 
         return null;
@@ -44,20 +56,22 @@ public static class QrCodeParser
     /// </summary>
     public static string? TryNormalizeCode(string? raw)
     {
-        var extracted = string.IsNullOrWhiteSpace(raw) ? null : TryExtractCode(raw.Trim()) ?? raw.Trim();
+        string? extracted = string.IsNullOrWhiteSpace(raw) ? null : TryExtractCode(raw.Trim()) ?? raw.Trim();
         if (string.IsNullOrWhiteSpace(extracted))
+        {
             return null;
+        }
 
-        var expanded = extracted
+        string expanded = extracted
             .Replace("ä", "ae", StringComparison.OrdinalIgnoreCase)
             .Replace("ö", "oe", StringComparison.OrdinalIgnoreCase)
             .Replace("ü", "ue", StringComparison.OrdinalIgnoreCase)
             .Replace("ß", "ss", StringComparison.OrdinalIgnoreCase);
 
-        var builder = new StringBuilder(expanded.Length);
-        var lastWasSeparator = false;
+        StringBuilder builder = new(expanded.Length);
+        bool lastWasSeparator = false;
 
-        foreach (var ch in expanded)
+        foreach (char ch in expanded)
         {
             if (char.IsLetterOrDigit(ch))
             {
@@ -76,7 +90,7 @@ public static class QrCodeParser
             }
         }
 
-        var normalized = builder.ToString().Trim('_');
+        string normalized = builder.ToString().Trim('_');
         return normalized.Length == 0 ? null : normalized;
     }
 }

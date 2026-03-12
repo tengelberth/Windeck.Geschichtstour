@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Maui.Views;
 
 namespace Windeck.Geschichtstour.Mobile.Views;
 
@@ -10,16 +10,21 @@ public partial class MediaPreviewPopup : Popup
     /// <summary>
     /// Initialisiert eine neue Instanz von MediaPreviewPopup.
     /// </summary>
-    public MediaPreviewPopup(string imageUrl)
+    public MediaPreviewPopup(string imageUrl, string? caption = null)
     {
         InitializeComponent();
 
         PreviewImage.Source = imageUrl;
 
-        // fast fullscreen
-        var info = DeviceDisplay.MainDisplayInfo;
-        var widthDp = info.Width / info.Density;
-        var heightDp = info.Height / info.Density;
+        if (!string.IsNullOrWhiteSpace(caption))
+        {
+            CaptionLabel.Text = caption.Trim();
+            CaptionBorder.IsVisible = true;
+        }
+
+        DisplayInfo info = DeviceDisplay.MainDisplayInfo;
+        double widthDp = info.Width / info.Density;
+        double heightDp = info.Height / info.Density;
 
         WidthRequest = widthDp;
         HeightRequest = heightDp;

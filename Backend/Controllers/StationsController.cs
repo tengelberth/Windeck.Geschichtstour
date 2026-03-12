@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Dtos;
+using Windeck.Geschichtstour.Backend.Models;
 using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Controllers
@@ -35,13 +36,13 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         public async Task<ActionResult<IEnumerable<StationDto>>> GetStations()
         {
             // Stationen inklusive Kategorie und Medien laden.
-            var stations = await _dbContext.Stations
+            List<Station> stations = await _dbContext.Stations
                 .Include(s => s.Category)
                 .Include(s => s.MediaItems)
                 .ToListAsync();
 
             // In DTOs projizieren, damit die App nur die benötigten Felder sieht.
-            var result = stations.Select(s => new StationDto
+            IEnumerable<StationDto> result = stations.Select(s => new StationDto
             {
                 Id = s.Id,
                 Code = s.Code,
@@ -85,7 +86,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
         public async Task<ActionResult<StationDto>> GetStationByCode(string code)
         {
             // Station inkl. Kategorie und Medien anhand des Codes suchen.
-            var station = await _dbContext.Stations
+            Station? station = await _dbContext.Stations
                 .Include(s => s.Category)
                 .Include(s => s.MediaItems)
                 .FirstOrDefaultAsync(s => s.Code == code);
@@ -103,7 +104,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                 return NotFound();
             }
 
-            var dto = new StationDto
+            StationDto dto = new()
             {
                 Id = station.Id,
                 Code = station.Code,

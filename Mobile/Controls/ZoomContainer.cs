@@ -1,4 +1,4 @@
-namespace Windeck.Geschichtstour.Mobile.Controls;
+﻿namespace Windeck.Geschichtstour.Mobile.Controls;
 
 /// <summary>
 /// Ermoeglicht Zoomen und Verschieben von eingebettetem Seiteninhalt.
@@ -31,19 +31,22 @@ public class ZoomContainer : ContentView
         };
 
         // 1-Finger bewegen
-        var pan = new PanGestureRecognizer();
+        PanGestureRecognizer pan = new();
         pan.PanUpdated += OnPanUpdated;
         GestureRecognizers.Add(pan);
 
         // Double Tap = Zoom Toggle
-        var doubleTap = new TapGestureRecognizer { NumberOfTapsRequired = 2 };
+        TapGestureRecognizer doubleTap = new() { NumberOfTapsRequired = 2 };
         doubleTap.Tapped += OnDoubleTapped;
         GestureRecognizers.Add(doubleTap);
     }
 
     async void OnDoubleTapped(object? sender, EventArgs e)
     {
-        if (Content == null) return;
+        if (Content == null)
+        {
+            return;
+        }
 
         Content.AnchorX = 0.5;
         Content.AnchorY = 0.5;
@@ -65,17 +68,23 @@ public class ZoomContainer : ContentView
 
     void OnPanUpdated(object? sender, PanUpdatedEventArgs e)
     {
-        if (Content == null) return;
+        if (Content == null)
+        {
+            return;
+        }
 
         // nur bewegen wenn gezoomt
-        if (_currentScale <= 1.01) return;
+        if (_currentScale <= 1.01)
+        {
+            return;
+        }
 
         switch (e.StatusType)
         {
             case GestureStatus.Running:
                 {
-                    var newX = _xOffset + e.TotalX;
-                    var newY = _yOffset + e.TotalY;
+                    double newX = _xOffset + e.TotalX;
+                    double newY = _yOffset + e.TotalY;
 
                     ClampTranslation(ref newX, ref newY);
 
@@ -95,7 +104,10 @@ public class ZoomContainer : ContentView
 
     async Task ApplyTransformAsync(double scale, double tx, double ty, bool animate)
     {
-        if (Content == null) return;
+        if (Content == null)
+        {
+            return;
+        }
 
         // Clamp Scale
         scale = Math.Max(MIN_SCALE, Math.Min(MAX_SCALE, scale));
@@ -118,14 +130,15 @@ public class ZoomContainer : ContentView
     void ClampTranslation(ref double x, ref double y)
     {
         if (_containerWidth <= 0 || _containerHeight <= 0)
+        {
             return;
+        }
 
         // verhindert wegziehen: Grenzen abhaengig vom Zoom
-        var maxX = (_containerWidth * (_currentScale - 1)) / 2;
-        var maxY = (_containerHeight * (_currentScale - 1)) / 2;
+        double maxX = (_containerWidth * (_currentScale - 1)) / 2;
+        double maxY = (_containerHeight * (_currentScale - 1)) / 2;
 
         x = Math.Max(-maxX, Math.Min(maxX, x));
         y = Math.Max(-maxY, Math.Min(maxY, y));
     }
 }
-

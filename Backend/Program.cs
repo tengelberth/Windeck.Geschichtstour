@@ -5,7 +5,7 @@ using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Services;
 
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // --------------------------------------------------------
 // Dienste registrieren (Dependency Injection Container)
@@ -62,22 +62,22 @@ builder.Services.AddSwaggerGen(options =>
     });
 
     // XML-Kommentare (wenn aktiviert, siehe csproj)
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
+    string xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    string xmlPath = System.IO.Path.Combine(AppContext.BaseDirectory, xmlFile);
     if (System.IO.File.Exists(xmlPath))
     {
         options.IncludeXmlComments(xmlPath);
     }
 });
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 // ----------------------------------------
 // Datenbank migrieren und Startinhalte anlegen
 // ----------------------------------------
-using (var scope = app.Services.CreateScope())
+using (IServiceScope scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
     // Stellt sicher, dass alle Migrationen angewendet sind.
     dbContext.Database.Migrate();
@@ -106,7 +106,7 @@ app.UseStaticFiles();
 // AASA explizit ausliefern (weil keine Dateiendung)
 app.MapGet("/.well-known/apple-app-site-association", (IWebHostEnvironment env) =>
 {
-    var filePath = Path.Combine(env.WebRootPath, ".well-known", "apple-app-site-association");
+    string filePath = Path.Combine(env.WebRootPath, ".well-known", "apple-app-site-association");
     return Results.File(filePath, "application/json");
 }).ExcludeFromDescription(); // nicht in Swagger anzeigen
 

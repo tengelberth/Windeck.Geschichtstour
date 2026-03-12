@@ -26,13 +26,13 @@ public partial class TourTeaserPage : ContentPage, IQueryAttributable
     /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        if (query.TryGetValue("tour", out var tourObj) && tourObj is TourDto tour)
+        if (query.TryGetValue("tour", out object? tourObj) && tourObj is TourDto tour)
         {
             _viewModel.Tour = tour;
             return;
         }
 
-        if (!TryReadTourId(query, out var id))
+        if (!TryReadTourId(query, out int id))
         {
             await UiNotify.ToastAsync("Keine gültige Tour-ID übergeben.");
             await Shell.Current.GoToAsync("..");
@@ -52,8 +52,10 @@ public partial class TourTeaserPage : ContentPage, IQueryAttributable
     {
         id = 0;
 
-        if (!query.TryGetValue("id", out var idObj) || idObj is null)
+        if (!query.TryGetValue("id", out object? idObj) || idObj is null)
+        {
             return false;
+        }
 
         return idObj switch
         {

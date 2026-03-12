@@ -47,7 +47,7 @@ namespace Windeck.Geschichtstour.Mobile.ViewModels
                 return;
             }
 
-            var normalizedCode = QrCodeParser.TryNormalizeCode(Code);
+            string? normalizedCode = QrCodeParser.TryNormalizeCode(Code);
             if (string.IsNullOrWhiteSpace(normalizedCode))
             {
                 await UiNotify.ToastAsync("Der Stationscode konnte nicht erkannt werden.");

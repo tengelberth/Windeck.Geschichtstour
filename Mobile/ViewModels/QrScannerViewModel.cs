@@ -39,7 +39,7 @@ public class QrScannerViewModel : BaseViewModel
     {
         Interlocked.Exchange(ref _handling, 0);
 
-        var status = await Permissions.RequestAsync<Permissions.Camera>();
+        PermissionStatus status = await Permissions.RequestAsync<Permissions.Camera>();
         if (status != PermissionStatus.Granted)
         {
             await UiNotify.SnackbarAsync(
@@ -68,13 +68,17 @@ public class QrScannerViewModel : BaseViewModel
     private async Task OnBarcodeDetectedAsync(string? raw)
     {
         if (string.IsNullOrWhiteSpace(raw))
+        {
             return;
+        }
 
         if (Interlocked.Exchange(ref _handling, 1) == 1)
+        {
             return;
+        }
 
         // Parsing darf im Background passieren
-        var code = QrCodeParser.TryExtractCode(raw);
+        string? code = QrCodeParser.TryExtractCode(raw);
 
         // Alles UI-relevante auf den MainThread
         await MainThread.InvokeOnMainThreadAsync(async () =>

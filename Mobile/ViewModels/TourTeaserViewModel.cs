@@ -60,14 +60,17 @@ public class TourTeaserViewModel : BaseViewModel
     /// </summary>
     public async Task LoadByIdAsync(int id)
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
 
         try
         {
             IsBusy = true;
             Tour = null;
 
-            var tour = await _apiClient.GetTourByIdAsync(id);
+            TourDto? tour = await _apiClient.GetTourByIdAsync(id);
             Tour = tour;
         }
         catch (Exception ex)
@@ -87,9 +90,11 @@ public class TourTeaserViewModel : BaseViewModel
     private async Task OpenTourInMapsAsync()
     {
         if (Tour == null)
+        {
             return;
+        }
 
-        var stopsWithCoords = Tour.Stops
+        List<TourStopDto> stopsWithCoords = Tour.Stops
             .Where(s => s != null && s.Latitude.HasValue && s.Longitude.HasValue)
             .OrderBy(s => s.Order)
             .ToList();
@@ -100,18 +105,18 @@ public class TourTeaserViewModel : BaseViewModel
             return;
         }
 
-        var destination = stopsWithCoords.Last()!;
-        var waypoints = stopsWithCoords.SkipLast(1).ToList();
+        TourStopDto destination = stopsWithCoords.Last()!;
+        List<TourStopDto> waypoints = stopsWithCoords.SkipLast(1).ToList();
 
         string FormatCoords(TourStopDto t) =>
             $"{t.Latitude!.Value.ToString(CultureInfo.InvariantCulture)},{t.Longitude!.Value.ToString(CultureInfo.InvariantCulture)}";
 
-        var destStr = FormatCoords(destination);
+        string destStr = FormatCoords(destination);
         string url = $"https://www.google.com/maps/dir/?api=1&destination={destStr}";
 
         if (waypoints.Any())
         {
-            var wp = string.Join("|", waypoints.Select(FormatCoords));
+            string wp = string.Join("|", waypoints.Select(FormatCoords));
             url += $"&waypoints={wp}";
         }
 
@@ -124,7 +129,9 @@ public class TourTeaserViewModel : BaseViewModel
     private async Task OpenTourStopAsync(TourStopDto? stop)
     {
         if (string.IsNullOrWhiteSpace(stop?.StationCode))
+        {
             return;
+        }
 
         await Shell.Current.GoToAsync($"{nameof(StationContentPage)}?code={Uri.EscapeDataString(stop.StationCode)}");
     }
@@ -135,9 +142,11 @@ public class TourTeaserViewModel : BaseViewModel
     private async Task ShareTourAsync()
     {
         if (Tour == null)
+        {
             return;
+        }
 
-        var url = new Uri(_appUrlOptions.PublicBaseUri, $"tour?id={Tour.Id}").ToString();
+        string url = new Uri(_appUrlOptions.PublicBaseUri, $"tour?id={Tour.Id}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {

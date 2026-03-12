@@ -32,7 +32,7 @@ public static class UiNotify
     /// </summary>
     public static Task SnackbarAsync(string message, string actionText, Action action, int seconds = 5)
     {
-        var snackbarOptions = new SnackbarOptions
+        SnackbarOptions snackbarOptions = new()
         {
             BackgroundColor = SnackBackground,
             TextColor = TextColor,
@@ -56,9 +56,9 @@ public static class UiNotify
     /// </summary>
     public static async Task<bool> SnackbarRetryAsync(string message, string actionText = "Wiederholen", int seconds = 5)
     {
-        var tcs = new TaskCompletionSource<bool>();
+        TaskCompletionSource<bool> tcs = new();
 
-        var snackbarOptions = new SnackbarOptions
+        SnackbarOptions snackbarOptions = new()
         {
             BackgroundColor = SnackBackground,
             TextColor = TextColor,
@@ -68,7 +68,7 @@ public static class UiNotify
             ActionButtonFont = Microsoft.Maui.Font.SystemFontOfSize(14),
         };
 
-        var snackbar = Snackbar.Make(
+        ISnackbar snackbar = Snackbar.Make(
             message: message,
             action: () => tcs.TrySetResult(true),
             actionButtonText: actionText,
@@ -78,7 +78,7 @@ public static class UiNotify
 
         await snackbar.Show();
 
-        var finished = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(seconds)));
+        Task finished = await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(seconds)));
         return finished == tcs.Task && tcs.Task.Result;
     }
 }

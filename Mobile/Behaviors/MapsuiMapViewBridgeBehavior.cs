@@ -150,7 +150,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     private void MapView_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(MapView.Map))
+        {
             AttachMap(_mapView?.Map);
+        }
     }
 
     /// <summary>
@@ -181,7 +183,9 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     private void DetachPinsCollection()
     {
         if (_notifyPins != null)
+        {
             _notifyPins.CollectionChanged -= Pins_CollectionChanged;
+        }
 
         _notifyPins = null;
     }
@@ -203,7 +207,7 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         MainThread.BeginInvokeOnMainThread(() => IsPinsSynchronized = false);
 
         _syncCts?.Cancel();
-        var cts = _syncCts = new CancellationTokenSource();
+        CancellationTokenSource cts = _syncCts = new CancellationTokenSource();
 
         try
         {
@@ -214,18 +218,26 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
             return;
         }
 
-        if (cts.IsCancellationRequested) return;
+        if (cts.IsCancellationRequested)
+        {
+            return;
+        }
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
-            if (_mapView == null) return;
+            if (_mapView == null)
+            {
+                return;
+            }
 
             _mapView.Pins.Clear();
 
             if (ItemsSource != null)
             {
-                foreach (var p in ItemsSource)
+                foreach (Pin p in ItemsSource)
+                {
                     _mapView.Pins.Add(p);
+                }
             }
 
             _mapView.RefreshGraphics();
@@ -237,9 +249,13 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
             if (FitPinsOnFirstLoad && !_didInitialFit && _mapView.Pins.Count > 0)
             {
                 if (IsViewportInitialized)
+                {
                     FitToPins();
+                }
                 else
+                {
                     _pendingFit = true;
+                }
             }
 
             IsPinsSynchronized = true;
@@ -252,14 +268,23 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void OnSelectedPinVmChanged(Pin? oldPin, Pin? newPin)
     {
-        if (_mapView == null) return;
-        if (_ignoreSelected) return;
+        if (_mapView == null)
+        {
+            return;
+        }
+
+        if (_ignoreSelected)
+        {
+            return;
+        }
 
         MainThread.BeginInvokeOnMainThread(() =>
         {
             // VM -> View
             if (_mapView != null && _mapView.SelectedPin != newPin)
+            {
                 _mapView.SelectedPin = newPin;
+            }
         });
     }
 
@@ -268,7 +293,10 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void MapView_SelectedPinChanged(object? sender, SelectedPinChangedEventArgs e)
     {
-        if (_mapView == null) return;
+        if (_mapView == null)
+        {
+            return;
+        }
 
         // View -> VM
         _ignoreSelected = true;
@@ -287,11 +315,17 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void AttachMap(Mapsui.Map? map)
     {
-        if (ReferenceEquals(_map, map)) return;
+        if (ReferenceEquals(_map, map))
+        {
+            return;
+        }
 
         DetachMap();
         _map = map;
-        if (_map == null) return;
+        if (_map == null)
+        {
+            return;
+        }
 
         _map.ViewportInitialized += Map_ViewportInitialized;
         _map.DataChanged += Map_DataChanged;
@@ -308,7 +342,10 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void DetachMap()
     {
-        if (_map == null) return;
+        if (_map == null)
+        {
+            return;
+        }
 
         _map.ViewportInitialized -= Map_ViewportInitialized;
         _map.DataChanged -= Map_DataChanged;
@@ -346,11 +383,14 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void UpdateMapBusy()
     {
-        var map = _map;
-        if (map == null) return;
+        Mapsui.Map? map = _map;
+        if (map == null)
+        {
+            return;
+        }
 
         // Busy, wenn irgendein Layer gerade fetch/render macht
-        var busy = map.Layers?.Any(l => l is ILayer layer && layer.Busy) == true;
+        bool busy = map.Layers?.Any(l => l is ILayer layer && layer.Busy) == true;
 
         MainThread.BeginInvokeOnMainThread(() => IsMapBusy = busy);
     }
@@ -360,34 +400,40 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void FitToPins()
     {
-        if (_mapView?.Map == null) return;
+        if (_mapView?.Map == null)
+        {
+            return;
+        }
 
-        var pins = _mapView.Pins.ToList();
-        if (pins.Count == 0) return;
+        List<Pin> pins = _mapView.Pins.ToList();
+        if (pins.Count == 0)
+        {
+            return;
+        }
 
         // 1 Pin: nur zentrieren (Zoom beibehalten)
         if (pins.Count == 1)
         {
-            var p = pins[0];
-            var center = SphericalMercator.FromLonLat(new MPoint(p.Position.Longitude, p.Position.Latitude));
+            Pin p = pins[0];
+            MPoint center = SphericalMercator.FromLonLat(new MPoint(p.Position.Longitude, p.Position.Latitude));
             _mapView.Map.Navigator.CenterOnAndZoomTo(center, _mapView.Map.Navigator.Viewport.Resolution);
             _didInitialFit = true;
             return;
         }
 
         // Extent berechnen (OSM = EPSG:3857)
-        var merc = pins.Select(p => SphericalMercator.FromLonLat(new MPoint(p.Position.Longitude, p.Position.Latitude))).ToList();
+        List<MPoint> merc = pins.Select(p => SphericalMercator.FromLonLat(new MPoint(p.Position.Longitude, p.Position.Latitude))).ToList();
 
-        var minX = merc.Min(m => m.X);
-        var minY = merc.Min(m => m.Y);
-        var maxX = merc.Max(m => m.X);
-        var maxY = merc.Max(m => m.Y);
+        double minX = merc.Min(m => m.X);
+        double minY = merc.Min(m => m.Y);
+        double maxX = merc.Max(m => m.X);
+        double maxY = merc.Max(m => m.Y);
 
-        var rect = new MRect(minX, minY, maxX, maxY);
+        MRect rect = new(minX, minY, maxX, maxY);
 
         // Padding
-        var padX = rect.Width * FitPaddingFactor;
-        var padY = rect.Height * FitPaddingFactor;
+        double padX = rect.Width * FitPaddingFactor;
+        double padY = rect.Height * FitPaddingFactor;
         rect = rect.Grow(padX, padY);
 
         _mapView.Map.Navigator.ZoomToBox(rect);
@@ -407,8 +453,15 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
     /// </summary>
     private void TryMarkViewportInitialized()
     {
-        if (_mapView?.Map == null) return;
-        if (IsViewportInitialized) return;
+        if (_mapView?.Map == null)
+        {
+            return;
+        }
+
+        if (IsViewportInitialized)
+        {
+            return;
+        }
 
         // MAUI Size ist der zuverlässigste Indikator
         if (_mapView.Width > 0 && _mapView.Height > 0)
@@ -424,9 +477,11 @@ public class MapsuiMapViewBridgeBehavior : Behavior<MapView>
         }
 
         // Optional zusätzlich: Mapsui Viewport HasSize (falls stabil verfügbar)
-        var vp = _mapView.Map.Navigator.Viewport;
+        Viewport vp = _mapView.Map.Navigator.Viewport;
         if (vp.HasSize())
+        {
             IsViewportInitialized = true;
+        }
     }
 
 

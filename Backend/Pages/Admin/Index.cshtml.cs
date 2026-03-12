@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
+using Windeck.Geschichtstour.Backend.Models;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin
 {
@@ -40,10 +41,10 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
             CategoryCount = await _dbContext.Categories.CountAsync();
             MediaCount = await _dbContext.MediaItems.CountAsync();
 
-            var endDate = DateTime.UtcNow.Date;
-            var startDate = await ResolveStartDateAsync(endDate, zeitraum);
+            DateTime endDate = DateTime.UtcNow.Date;
+            DateTime startDate = await ResolveStartDateAsync(endDate, zeitraum);
 
-            var analyticsBaseQuery = _dbContext.AnalyticsEvents
+            IQueryable<AnalyticsEvent> analyticsBaseQuery = _dbContext.AnalyticsEvents
                 .AsNoTracking()
                 .Where(a => a.CreatedAtUtc >= startDate && a.CreatedAtUtc < endDate.AddDays(1));
 
@@ -62,7 +63,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
 
             var groupedPerDayMap = groupedPerDay.ToDictionary(x => x.Day, x => x);
 
-            for (var day = startDate; day <= endDate; day = day.AddDays(1))
+            for (DateTime day = startDate; day <= endDate; day = day.AddDays(1))
             {
                 TimelineLabels.Add(day.ToString("dd.MM."));
 
@@ -100,7 +101,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
 
         private async Task<DateTime> ResolveStartDateAsync(DateTime endDate, string? zeitraum)
         {
-            var selectedPeriod = (zeitraum ?? "30").Trim().ToLowerInvariant();
+            string selectedPeriod = (zeitraum ?? "30").Trim().ToLowerInvariant();
 
             switch (selectedPeriod)
             {
@@ -116,7 +117,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin
                     SelectedPeriod = "all";
                     SelectedPeriodLabel = "Gesamter Zeitraum";
 
-                    var minEventDate = await _dbContext.AnalyticsEvents
+                    DateTime? minEventDate = await _dbContext.AnalyticsEvents
                         .AsNoTracking()
                         .MinAsync(a => (DateTime?)a.CreatedAtUtc);
 

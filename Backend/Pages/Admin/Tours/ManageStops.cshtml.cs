@@ -104,7 +104,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
             }
 
             // Station prüfen
-            var station = await _dbContext.Stations.FindAsync(SelectedStationId);
+            Station? station = await _dbContext.Stations.FindAsync(SelectedStationId);
             if (station == null)
             {
                 ModelState.AddModelError(string.Empty, "Die ausgewählte Station existiert nicht.");
@@ -133,7 +133,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
                 return Page();
             }
 
-            var stop = new TourStop
+            TourStop stop = new()
             {
                 TourId = Tour.Id,
                 StationId = station.Id,
@@ -153,7 +153,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         /// </summary>
         public async Task<IActionResult> OnPostDeleteStopAsync(int id, int stopId)
         {
-            var stop = await _dbContext.TourStops
+            TourStop? stop = await _dbContext.TourStops
                 .FirstOrDefaultAsync(ts => ts.Id == stopId && ts.TourId == id);
 
             if (stop == null)
@@ -187,7 +187,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
 
             await LoadStationOptionsAsync();
 
-            var stop = Tour.Stops.FirstOrDefault(ts => ts.Id == stopId);
+            TourStop? stop = Tour.Stops.FirstOrDefault(ts => ts.Id == stopId);
             if (stop == null)
             {
                 return NotFound();

@@ -25,7 +25,7 @@ public class StationTeaserViewModel : BaseViewModel
                 OnPropertyChanged(nameof(HasStation));
 
                 // Commands neu bewerten
-                (OpenInMapsCommand as Command)?.ChangeCanExecute();
+                OpenInMapsCommand?.ChangeCanExecute();
             }
         }
     }
@@ -57,14 +57,17 @@ public class StationTeaserViewModel : BaseViewModel
     /// <returns>Asynchroner Vorgang zum Laden und Setzen der Station.</returns>
     public async Task LoadByCodeAsync(string code)
     {
-        if (IsBusy) return;
+        if (IsBusy)
+        {
+            return;
+        }
 
         try
         {
             IsBusy = true;
             Station = null;
 
-            var station = await _apiClient.GetStationByCodeAsync(code);
+            StationDto? station = await _apiClient.GetStationByCodeAsync(code);
             Station = station;
         }
         catch (Exception ex)
@@ -86,9 +89,11 @@ public class StationTeaserViewModel : BaseViewModel
     public async Task ShareStationAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
-        var url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
+        string url = new Uri(_appUrlOptions.PublicBaseUri, $"station?code={Uri.EscapeDataString(Station.Code)}").ToString();
 
         await Share.RequestAsync(new ShareTextRequest
         {
@@ -106,7 +111,9 @@ public class StationTeaserViewModel : BaseViewModel
     private async Task OpenInKomootAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
         if (!Station.Latitude.HasValue || !Station.Longitude.HasValue)
         {
@@ -114,17 +121,17 @@ public class StationTeaserViewModel : BaseViewModel
             return;
         }
 
-        var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
-        var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+        string lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+        string lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
 
         // Der "Ortsname"-Teil dient als Label und kann aus Station.Title erzeugt werden,
         // alternativ auch aus einem festen Begriff wie "Ort" (URL-encodiert).
-        var slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
+        string slug = Uri.EscapeDataString(Station.Title?.Trim() ?? "Ort");
 
-        var sport = "hike";
-        var maxDistanceMeters = 5000;
+        string sport = "hike";
+        int maxDistanceMeters = 5000;
 
-        var uri =
+        string uri =
             $"https://www.komoot.com/de-de/discover/{slug}/@{lat},{lon}/tours" +
             $"?sport={sport}&map=true&max_distance={maxDistanceMeters}&pageNumber=1";
 
@@ -138,19 +145,21 @@ public class StationTeaserViewModel : BaseViewModel
     private async Task OpenInMapsAsync()
     {
         if (Station == null)
+        {
             return;
+        }
 
         string? uri = null;
 
         if (Station.Latitude.HasValue && Station.Longitude.HasValue)
         {
-            var lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
-            var lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
+            string lat = Station.Latitude.Value.ToString(CultureInfo.InvariantCulture);
+            string lon = Station.Longitude.Value.ToString(CultureInfo.InvariantCulture);
             uri = $"https://www.google.com/maps/search/?api=1&query={lat},{lon}";
         }
         else
         {
-            var parts = new[]
+            IEnumerable<string> parts = new[]
             {
                 Station.Title,
                 Station.Street,
@@ -161,11 +170,11 @@ public class StationTeaserViewModel : BaseViewModel
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .Select(p => p!.Trim());
 
-            var query = string.Join(" ", parts);
+            string query = string.Join(" ", parts);
 
             if (!string.IsNullOrWhiteSpace(query))
             {
-                var encoded = Uri.EscapeDataString(query);
+                string encoded = Uri.EscapeDataString(query);
                 uri = $"https://www.google.com/maps/search/?api=1&query={encoded}";
             }
         }

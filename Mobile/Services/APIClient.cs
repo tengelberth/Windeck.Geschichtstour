@@ -35,14 +35,16 @@ public class ApiClient
     /// <returns>Liste mit Stationen; bei Fehlern eine leere Liste.</returns>
     public async Task<List<StationDto>> GetStationsAsync(CancellationToken cancellationToken = default)
     {
-        var result = await GetWithRetryAsync(
+        List<StationDto>? result = await GetWithRetryAsync(
             endpoint: "api/stations",
             typeInfo: ApiJsonContext.Default.ListStationDto,
             cancellationToken: cancellationToken);
 
-        var stations = result ?? new List<StationDto>();
-        foreach (var station in stations)
+        List<StationDto> stations = result ?? new List<StationDto>();
+        foreach (StationDto? station in stations)
+        {
             NormalizeStationMediaUrls(station);
+        }
 
         return stations;
     }
@@ -56,17 +58,21 @@ public class ApiClient
     public async Task<StationDto?> GetStationByCodeAsync(string code, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(code))
+        {
             throw new ArgumentException("Code darf nicht leer sein.", nameof(code));
+        }
 
-        var endpoint = $"api/stations/by-code/{Uri.EscapeDataString(code.Trim())}";
+        string endpoint = $"api/stations/by-code/{Uri.EscapeDataString(code.Trim())}";
 
-        var station = await GetWithRetryAsync(
+        StationDto? station = await GetWithRetryAsync(
             endpoint: endpoint,
             typeInfo: ApiJsonContext.Default.StationDto,
             cancellationToken: cancellationToken);
 
         if (station != null)
+        {
             NormalizeStationMediaUrls(station);
+        }
 
         return station;
     }
@@ -78,7 +84,7 @@ public class ApiClient
     /// <returns>Liste mit Touren; bei Fehlern eine leere Liste.</returns>
     public async Task<List<TourDto>> GetToursAsync(CancellationToken cancellationToken = default)
     {
-        var result = await GetWithRetryAsync(
+        List<TourDto>? result = await GetWithRetryAsync(
             endpoint: "api/tours",
             typeInfo: ApiJsonContext.Default.ListTourDto,
             cancellationToken: cancellationToken);
@@ -94,7 +100,7 @@ public class ApiClient
     /// <returns>Geladene Tour oder <c>null</c>, wenn sie nicht verfuegbar ist.</returns>
     public async Task<TourDto?> GetTourByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var endpoint = $"api/tours/{id}";
+        string endpoint = $"api/tours/{id}";
 
         return await GetWithRetryAsync(
             endpoint: endpoint,
@@ -119,35 +125,41 @@ public class ApiClient
         {
             if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
             {
-                var retry = await ShowRetryDialogAsync(
+                bool retry = await ShowRetryDialogAsync(
                     title: "Kein Internet",
                     message: "Du bist offline. Bitte pruefe deine Verbindung und versuche es erneut.",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
                 if (!retry)
+                {
                     return default;
+                }
 
                 continue;
             }
 
             try
             {
-                using var response = await _httpClient.GetAsync(endpoint, cancellationToken);
+                using HttpResponseMessage response = await _httpClient.GetAsync(endpoint, cancellationToken);
 
                 if (response.StatusCode == HttpStatusCode.NotFound)
+                {
                     return default;
+                }
 
                 if (!response.IsSuccessStatusCode)
                 {
-                    var retry = await ShowRetryDialogAsync(
+                    bool retry = await ShowRetryDialogAsync(
                         title: "Serverfehler",
                         message: $"Die Daten konnten nicht geladen werden. (HTTP {(int)response.StatusCode})",
                         accept: "Wiederholen",
                         cancel: "Abbrechen");
 
                     if (!retry)
+                    {
                         return default;
+                    }
 
                     continue;
                 }
@@ -156,36 +168,42 @@ public class ApiClient
             }
             catch (OperationCanceledException) when (!cancellationToken.IsCancellationRequested)
             {
-                var retry = await ShowRetryDialogAsync(
+                bool retry = await ShowRetryDialogAsync(
                     title: "Zeitueberschreitung",
                     message: "Die Anfrage hat zu lange gedauert. Möchtest du es erneut versuchen?",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
                 if (!retry)
+                {
                     return default;
+                }
             }
             catch (HttpRequestException)
             {
-                var retry = await ShowRetryDialogAsync(
+                bool retry = await ShowRetryDialogAsync(
                     title: "Verbindung fehlgeschlagen",
                     message: "Der Server ist momentan nicht erreichbar. Bitte versuche es spaeter erneut.",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
                 if (!retry)
+                {
                     return default;
+                }
             }
             catch (Exception)
             {
-                var retry = await ShowRetryDialogAsync(
+                bool retry = await ShowRetryDialogAsync(
                     title: "Fehler",
                     message: "Es ist ein unerwarteter Fehler aufgetreten.",
                     accept: "Wiederholen",
                     cancel: "Abbrechen");
 
                 if (!retry)
+                {
                     return default;
+                }
             }
         }
     }
@@ -213,7 +231,7 @@ public class ApiClient
     /// <param name="station">Station mit zu normalisierenden Medien.</param>
     private void NormalizeStationMediaUrls(StationDto station)
     {
-        foreach (var mediaItem in station.MediaItems)
+        foreach (MediaItemDto mediaItem in station.MediaItems)
         {
             if (string.IsNullOrWhiteSpace(mediaItem.Url))
             {
