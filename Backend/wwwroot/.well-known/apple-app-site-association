@@ -1,10 +1,13 @@
-{
+﻿{
+  "activitycontinuation": {
+    "apps": [ "9K2MGSZ45C.de.tobias.engelberth.windeck.geschichtstour" ]
+  },
   "applinks": {
     "apps": [],
     "details": [
       {
-        "appID": "923R362WK6.de.tobias.engelberth.windeck.geschichtstour",
-        "paths": [ "/station*", "/share/station*" ]
+        "appID": "9K2MGSZ45C.de.tobias.engelberth.windeck.geschichtstour",
+        "paths": [ "*", "/*" ]
       }
     ]
   }

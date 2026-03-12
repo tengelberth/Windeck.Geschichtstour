@@ -41,19 +41,21 @@
                 Clicked="OnCloseClicked" />
 
         <!-- Hinweis unten -->
-        <Frame BackgroundColor="#66000000"
-               Padding="10,6"
-               CornerRadius="16"
-               HasShadow="False"
-               HorizontalOptions="Center"
-               VerticalOptions="End"
-               Margin="0,0,0,35">
+        <Border BackgroundColor="#66000000"
+                StrokeThickness="0"
+                Padding="10,6"
+                HorizontalOptions="Center"
+                VerticalOptions="End"
+                Margin="0,0,0,35">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="16" />
+            </Border.StrokeShape>
 
             <Label Text="Doppeltippen zum Zoomen"
                    TextColor="White"
                    FontSize="12"
                    Opacity="0.9" />
-        </Frame>
+        </Border>
 
     </Grid>
 </toolkit:Popup>
