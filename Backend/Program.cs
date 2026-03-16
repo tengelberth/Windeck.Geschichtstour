@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
+using System.IO.Compression;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Services;
-
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -32,10 +33,27 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         maxRetryDelay: TimeSpan.FromSeconds(10),
         errorNumbersToAdd: null)));
 
-
 // Web-API-Controller für die mobile App.
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
+// Komprimierung für HTML/CSS/JS/JSON aktivieren, um Erstaufrufe kleiner und schneller zu machen.
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+    options.Providers.Add<BrotliCompressionProvider>();
+    options.Providers.Add<GzipCompressionProvider>();
+});
+
+builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
+
+builder.Services.Configure<GzipCompressionProviderOptions>(options =>
+{
+    options.Level = CompressionLevel.Fastest;
+});
 
 // Cookie-Authentifizierung hinzufügen
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -75,8 +93,13 @@ WebApplication app = builder.Build();
 // ----------------------------------------
 // Datenbank migrieren und Startinhalte anlegen
 // ----------------------------------------
-using (IServiceScope scope = app.Services.CreateScope())
+bool runDbInitializationOnStartup =
+    builder.Configuration.GetValue<bool?>("RunDatabaseInitializationOnStartup")
+    ?? app.Environment.IsDevelopment();
+
+if (runDbInitializationOnStartup)
 {
+    using IServiceScope scope = app.Services.CreateScope();
     AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
     // Stellt sicher, dass alle Migrationen angewendet sind.
@@ -100,8 +123,18 @@ app.UseSwaggerUI(options =>
 // HTTPS-Umleitung aktivieren.
 app.UseHttpsRedirection();
 
+// Antworten vor der Auslieferung komprimieren.
+app.UseResponseCompression();
+
 // Statische Dateien aus wwwroot ausliefern (z. B. CSS, JS, Medien).
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        const int durationInSeconds = 60 * 60 * 24 * 7; // 7 Tage
+        ctx.Context.Response.Headers.CacheControl = $"public,max-age={durationInSeconds}";
+    }
+});
 
 // AASA explizit ausliefern (weil keine Dateiendung)
 app.MapGet("/.well-known/apple-app-site-association", (IWebHostEnvironment env) =>
@@ -109,6 +142,11 @@ app.MapGet("/.well-known/apple-app-site-association", (IWebHostEnvironment env) 
     string filePath = Path.Combine(env.WebRootPath, ".well-known", "apple-app-site-association");
     return Results.File(filePath, "application/json");
 }).ExcludeFromDescription(); // nicht in Swagger anzeigen
+
+// Leichter Warmup-/Health-Endpunkt für App Service Health Check / Warmup-Pings.
+app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }))
+    .AllowAnonymous()
+    .ExcludeFromDescription();
 
 // Routing aktivieren.
 app.UseRouting();
@@ -121,31 +159,11 @@ app.UseAuthorization();
 // Wenn jemand /station?code=XYZ öffnet, leite auf /Index weiter (optional: Query behalten)
 app.MapGet("/station", (HttpContext ctx) =>
 {
-    // Optional: Code mitgeben, falls der Wert auf der Startseite weiterverarbeitet werden soll
-    //var code = ctx.Request.Query["code"].ToString();
-
-    // Variante ohne Query-Weitergabe:
-    // return Results.Redirect("/Index", permanent: false);
-
-    // Variante mit Query-Weitergabe:
-    //if (!string.IsNullOrWhiteSpace(code))
-    //    return Results.Redirect($"/Index?code={Uri.EscapeDataString(code)}", permanent: false);
-
     return Results.Redirect("/Index", permanent: false);
 }).ExcludeFromDescription(); // nicht in Swagger anzeigen
 
 app.MapGet("/tour", (HttpContext ctx) =>
 {
-    // Optional: Code mitgeben, falls der Wert auf der Startseite weiterverarbeitet werden soll
-    //var code = ctx.Request.Query["code"].ToString();
-
-    // Variante ohne Query-Weitergabe:
-    // return Results.Redirect("/Index", permanent: false);
-
-    // Variante mit Query-Weitergabe:
-    //if (!string.IsNullOrWhiteSpace(code))
-    //    return Results.Redirect($"/Index?code={Uri.EscapeDataString(code)}", permanent: false);
-
     return Results.Redirect("/Index", permanent: false);
 }).ExcludeFromDescription(); // nicht in Swagger anzeigen
 
@@ -157,6 +175,3 @@ app.MapControllers();
 
 // Anwendung starten.
 app.Run();
-
-
-
