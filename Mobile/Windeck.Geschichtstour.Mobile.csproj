@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFrameworks>net10.0-android;net10.0-ios</TargetFrameworks>
@@ -49,17 +49,13 @@
 	  <CodesignEntitlements>Platforms\iOS\Entitlements.Debug.plist</CodesignEntitlements>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'!='Debug'">
-	  <CodesignKey>Apple Development: Created via API (99VA83NRMR)</CodesignKey>
-	  <CodesignProvision>VS: de.tobias.engelberth.windeck.geschichtstour Development</CodesignProvision>
-	  <ProvisioningType>automatic</ProvisioningType>
+		<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'!='Debug'">
+	  <CodesignKey>Apple Distribution: Martina Schneider (923R362WK6)</CodesignKey>
+	  <CodesignProvision>Distribution Profile Geschichtstour Windeck</CodesignProvision>
+	  <ProvisioningType>manual</ProvisioningType>
 	  <CodesignEntitlements>Platforms\iOS\Entitlements.plist</CodesignEntitlements>
 	</PropertyGroup>
 
-	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios'">
-	  <CodesignKey>Apple Development: Created via API (99VA83NRMR)</CodesignKey>
-	  <CodesignProvision>VS: de.tobias.engelberth.windeck.geschichtstour Development</CodesignProvision>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<!-- App Icon -->
@@ -130,3 +126,4 @@
 	</ItemGroup>
 
 </Project>
+
