@@ -43,7 +43,7 @@
                                                VerticalOptions="Center" />
                                     </HorizontalStackLayout>
 
-                                    <Label Text="Touren bündeln mehrere thematisch aufeinander abgestimmte Stationen. Wähle eine aus und mach dich gleich auf den Weg."
+                                    <Label Text="Touren bündeln mehrere thematisch aufeinander abgestimmte Stationen. Wähle eine Tour aus und mach dich gleich auf den Weg."
                                            FontSize="14"
                                            LineBreakMode="WordWrap"
                                            Opacity="0.82" />

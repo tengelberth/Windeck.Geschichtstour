@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Windeck.Geschichtstour.Mobile.Views.HomePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -36,7 +36,7 @@
                                FontAttributes="Bold"
                                HorizontalTextAlignment="Center" />
 
-                        <Label Text="Erkunde historische Orte in Windeck mit Bildern, Hintergrundwissen und spannenden Geschichten – direkt draußen beim Spaziergang."
+                        <Label Text="Erkunde historische Orte in Windeck anhand von Bildern, interessantem Hintergrundwissen und spannenden Geschichten - direkt draußen beim Spaziergang."
                                FontSize="14"
                                LineBreakMode="WordWrap"
                                HorizontalTextAlignment="Center"
@@ -203,23 +203,29 @@
                             <RoundRectangle CornerRadius="22" />
                         </Border.StrokeShape>
 
-                        <VerticalStackLayout Spacing="10">
-                            <Image Source="markerblue.png"
+                        <Grid RowDefinitions="Auto,Auto,*,Auto"
+                              RowSpacing="10">
+                            <Image Grid.Row="0"
+                                   Source="markerblue.png"
                                    HeightRequest="20"
                                    HorizontalOptions="Start" />
-                            <Label Text="Stationen entdecken"
+                            <Label Grid.Row="1"
+                                   Text="Stationen entdecken"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    LineBreakMode="WordWrap" />
-                            <Label Text="Finde Orte auf der Karte und entdecke Stationen in deiner Umgebung."
+                            <Label Grid.Row="2"
+                                   Text="Finde Orte auf der Karte und entdecke Stationen in deiner Umgebung."
                                    FontSize="13"
                                    LineBreakMode="WordWrap"
                                    Opacity="0.8" />
-                            <Button Text="Stationen"
+                            <Button Grid.Row="3"
+                                    Text="Stationen"
                                     ImageSource="markerwhite.png"
                                     HeightRequest="42"
+                                    VerticalOptions="End"
                                     Command="{Binding ShowAllStationsCommand}" />
-                        </VerticalStackLayout>
+                        </Grid>
                     </Border>
 
                     <Border Grid.Column="1"
@@ -231,23 +237,29 @@
                             <RoundRectangle CornerRadius="22" />
                         </Border.StrokeShape>
 
-                        <VerticalStackLayout Spacing="10">
-                            <Image Source="mapblue.png"
+                        <Grid RowDefinitions="Auto,Auto,*,Auto"
+                              RowSpacing="10">
+                            <Image Grid.Row="0"
+                                   Source="mapblue.png"
                                    HeightRequest="20"
                                    HorizontalOptions="Start" />
-                            <Label Text="Touren entdecken"
+                            <Label Grid.Row="1"
+                                   Text="Touren entdecken"
                                    FontSize="16"
                                    FontAttributes="Bold"
                                    LineBreakMode="WordWrap" />
-                            <Label Text="Starte eine Tour mit mehreren aufeinander abgestimmten Stationen."
+                            <Label Grid.Row="2"
+                                   Text="Starte eine Tour mit mehreren aufeinander abgestimmten Stationen."
                                    FontSize="13"
                                    LineBreakMode="WordWrap"
                                    Opacity="0.8" />
-                            <Button Text="Touren"
+                            <Button Grid.Row="3"
+                                    Text="Touren"
                                     ImageSource="mapwhite.png"
                                     HeightRequest="42"
+                                    VerticalOptions="End"
                                     Command="{Binding ShowAllToursCommand}" />
-                        </VerticalStackLayout>
+                        </Grid>
                     </Border>
                 </Grid>
             </VerticalStackLayout>
