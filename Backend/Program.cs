@@ -148,6 +148,17 @@ app.MapGet("/healthz", () => Results.Ok(new { status = "ok" }))
     .AllowAnonymous()
     .ExcludeFromDescription();
 
+// Bereitsschafts-Check mit minimalem Datenbankzugriff für Warmup-Pings auf den API-Pfad.
+app.MapGet("/readyz", async (AppDbContext dbContext) =>
+{
+    bool canConnect = await dbContext.Database.CanConnectAsync();
+    return canConnect
+        ? Results.Ok(new { status = "ready" })
+        : Results.StatusCode(StatusCodes.Status503ServiceUnavailable);
+})
+    .AllowAnonymous()
+    .ExcludeFromDescription();
+
 // Routing aktivieren.
 app.UseRouting();
 
