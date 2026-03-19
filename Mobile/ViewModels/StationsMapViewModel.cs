@@ -1,4 +1,4 @@
-﻿using Mapsui.UI.Maui;
+using Mapsui.UI.Maui;
 using System.Collections.ObjectModel;
 using Windeck.Geschichtstour.Mobile.Models;
 using Windeck.Geschichtstour.Mobile.Services;
@@ -6,7 +6,7 @@ using Windeck.Geschichtstour.Mobile.Services;
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
 /// <summary>
-/// Laedt Stationsdaten fuer die Karte und koordiniert Pin-Auswahl sowie Overlay-Status.
+/// Lädt Stationsdaten fuer die Karte und koordiniert Pin-Auswahl sowie Overlay-Status.
 /// </summary>
 public class StationsMapViewModel : BaseViewModel
 {
@@ -51,6 +51,7 @@ public class StationsMapViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(IsOverlayVisible));
                 OnPropertyChanged(nameof(BusyText));
+                OnPropertyChanged(nameof(BusyDetails));
             }
         }
     }
@@ -65,6 +66,7 @@ public class StationsMapViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(IsOverlayVisible));
                 OnPropertyChanged(nameof(BusyText));
+                OnPropertyChanged(nameof(BusyDetails));
             }
         }
     }
@@ -79,6 +81,7 @@ public class StationsMapViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(IsOverlayVisible));
                 OnPropertyChanged(nameof(BusyText));
+                OnPropertyChanged(nameof(BusyDetails));
             }
         }
     }
@@ -93,6 +96,7 @@ public class StationsMapViewModel : BaseViewModel
             {
                 OnPropertyChanged(nameof(IsOverlayVisible));
                 OnPropertyChanged(nameof(BusyText));
+                OnPropertyChanged(nameof(BusyDetails));
             }
         }
     }
@@ -103,10 +107,16 @@ public class StationsMapViewModel : BaseViewModel
         (HasCompletedInitialStationsLoad && !IsPinsSynchronized);
 
     public string BusyText =>
-        !IsViewportInitialized ? "Karte wird initialisiert..." :
-        IsBusy ? "Stationen werden geladen..." :
+        !IsViewportInitialized ? "Karte lädt..." :
+        IsBusy ? LoadingMessage :
         (HasCompletedInitialStationsLoad && !IsPinsSynchronized) ? "Pins werden gesetzt..." :
-        IsMapBusy ? "Karte laedt..." :
+        IsMapBusy ? "Karte lädt..." :
+        string.Empty;
+
+    public string BusyDetails =>
+        !IsViewportInitialized ? "Einen Moment noch - die Kartenansicht wird vorbereitet." :
+        IsBusy ? LoadingElapsedText :
+        (HasCompletedInitialStationsLoad && !IsPinsSynchronized) ? "Die Stationen werden gerade auf der Karte verteilt." :
         string.Empty;
 
     /// <summary>
@@ -115,10 +125,20 @@ public class StationsMapViewModel : BaseViewModel
     public StationsMapViewModel(ApiClient apiClient)
     {
         _apiClient = apiClient;
+
+        PropertyChanged += (_, args) =>
+        {
+            if (args.PropertyName is nameof(LoadingMessage) or nameof(LoadingElapsedText) or nameof(IsBusy))
+            {
+                OnPropertyChanged(nameof(IsOverlayVisible));
+                OnPropertyChanged(nameof(BusyText));
+                OnPropertyChanged(nameof(BusyDetails));
+            }
+        };
     }
 
     /// <summary>
-    /// Laedt Stationsdaten aus dem Backend und aktualisiert den ViewModel-Zustand.
+    /// Lädt Stationsdaten aus dem Backend und aktualisiert den ViewModel-Zustand.
     /// </summary>
     public async Task LoadStationsAsync()
     {
@@ -131,8 +151,18 @@ public class StationsMapViewModel : BaseViewModel
         {
             HasCompletedInitialStationsLoad = false;
             IsBusy = true;
+            StartLoadingFeedback(
+                "Hoppla, da hast du uns wohl beim Nickerchen erwischt.",
+                "Wir wecken gerade kurz den Server auf.",
+                "Im Hintergrund fährt jetzt auch die Datenbank hoch.",
+                "Das dauert einen kleinen Moment. So sparen wir jedoch laufende Kosten.",
+                "Sobald der Server wach ist, werden die nächsten Anfragen deutlich schneller bearbeitet.",
+                "Fast da - wir sammeln die Inhalte gerade für dich zusammen.",
+                "Dir gefällt die App oder du hast Verbesserungsvorschläge? Dann schreib uns gern eine Rezension im Store.",
+                "Du findest, es fehlen noch Stationen? Dann melde dich und gestalte die Inhalte mit.");
             OnPropertyChanged(nameof(IsOverlayVisible));
             OnPropertyChanged(nameof(BusyText));
+            OnPropertyChanged(nameof(BusyDetails));
 
             Stations.Clear();
             Pins.Clear();
@@ -156,10 +186,12 @@ public class StationsMapViewModel : BaseViewModel
         }
         finally
         {
+            StopLoadingFeedback();
             IsBusy = false;
             HasCompletedInitialStationsLoad = true;
             OnPropertyChanged(nameof(IsOverlayVisible));
             OnPropertyChanged(nameof(BusyText));
+            OnPropertyChanged(nameof(BusyDetails));
             System.Diagnostics.Debug.WriteLine($"Pins: {Pins.Count}");
         }
     }
@@ -184,3 +216,4 @@ public class StationsMapViewModel : BaseViewModel
             $"{nameof(Views.StationContentPage)}?code={Uri.EscapeDataString(code)}");
     }
 }
+

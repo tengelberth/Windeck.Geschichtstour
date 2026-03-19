@@ -21,7 +21,7 @@ public partial class StationTeaserPage : ContentPage, IQueryAttributable
     }
 
     /// <summary>
-    /// Uebernimmt Navigationsparameter und laedt die dazugehoerigen Inhalte.
+    /// Uebernimmt Navigationsparameter und lädt die dazugehörigen Inhalte.
     /// </summary>
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {

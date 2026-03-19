@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
 using SkiaSharp.Views.Maui.Controls.Hosting;
 using Windeck.Geschichtstour.Mobile.Configuration;
@@ -102,6 +103,9 @@ namespace Windeck.Geschichtstour.Mobile
 
             // Konfigurieren der DI-Container und der App
             builder.Services.AddSingleton<AppShell>();
+
+            // Registriere den JSON-Cache als Singleton, damit Listen und Details plattformneutral zwischen App-Starts erhalten bleiben.
+            builder.Services.AddSingleton<JsonCacheService>();
 
             // Registriere den ApiClient als Singleton, damit immer nur eine Instanz existiert
             builder.Services.AddSingleton<ApiClient>();

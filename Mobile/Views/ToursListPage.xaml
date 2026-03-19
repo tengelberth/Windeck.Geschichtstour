@@ -53,6 +53,28 @@
                             <Label Text="Zum Aktualisieren nach unten ziehen."
                                    FontSize="12"
                                    Opacity="0.6" />
+
+                            <Border IsVisible="{Binding IsBusy}"
+                                    Padding="12"
+                                    StrokeThickness="0"
+                                    BackgroundColor="{AppThemeBinding Light=#EAF2FF, Dark=#172131}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+
+                                <VerticalStackLayout Spacing="2">
+                                    <Label Text="{Binding LoadingMessage}"
+                                           FontSize="13"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center"
+                                           TextColor="{StaticResource Primary}" />
+                                    <Label Text="{Binding LoadingElapsedText}"
+                                           FontSize="11"
+                                           HorizontalOptions="Center"
+                                           Opacity="0.72" />
+                                </VerticalStackLayout>
+                            </Border>
                         </VerticalStackLayout>
                     </CollectionView.Header>
 

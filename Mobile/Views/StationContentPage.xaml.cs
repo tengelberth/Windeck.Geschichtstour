@@ -47,8 +47,14 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
 
         if (!_viewModel.HasStation)
         {
-            await UiNotify.ToastAsync($"Keine Station mit Code '{code}' gefunden.");
-            await Shell.Current.GoToAsync("..");
+            if (_viewModel.LastLoadWasNotFound)
+            {
+                await UiNotify.ToastAsync($"Keine Station mit Code '{code}' gefunden.");
+                await Shell.Current.GoToAsync("..");
+                return;
+            }
+
+            await UiNotify.ToastAsync("Die Station konnte gerade nicht geladen werden. Bitte versuche es gleich noch einmal.");
         }
     }
 
@@ -112,5 +118,3 @@ public partial class StationContentPage : ContentPage, IQueryAttributable
         _viewModel.LongDescriptionHeight = computedHeight;
     }
 }
-
-

@@ -24,9 +24,14 @@
                 <ActivityIndicator IsRunning="True" />
                 <Label Text="{Binding BusyText}"
                        TextColor="White"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="{Binding BusyDetails}"
+                       TextColor="White"
+                       Opacity="0.88"
+                       FontSize="12"
                        HorizontalTextAlignment="Center" />
             </VerticalStackLayout>
         </Grid>
     </Grid>
 </ContentPage>
-

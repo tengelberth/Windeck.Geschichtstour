@@ -36,6 +36,28 @@
                                    IsVisible="{Binding IsBusy}"
                                    HorizontalOptions="Center" />
 
+                <Border IsVisible="{Binding IsBusy}"
+                        Padding="12"
+                        StrokeThickness="0"
+                        BackgroundColor="{AppThemeBinding Light=#EAF2FF, Dark=#172131}">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="16" />
+                    </Border.StrokeShape>
+
+                    <VerticalStackLayout Spacing="3">
+                        <Label Text="{Binding LoadingMessage}"
+                               HorizontalOptions="Center"
+                               HorizontalTextAlignment="Center"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}" />
+                        <Label Text="{Binding LoadingElapsedText}"
+                               HorizontalOptions="Center"
+                               FontSize="12"
+                               Opacity="0.74" />
+                    </VerticalStackLayout>
+                </Border>
+
                 <VerticalStackLayout IsVisible="{Binding HasTour}" Spacing="14">
                     <Border Padding="18"
                             StrokeThickness="0"
@@ -169,7 +191,7 @@
                                                        FontSize="16"
                                                        FontAttributes="Bold"
                                                        LineBreakMode="WordWrap" />
-                                                <Label Text="Zur Station öffnen"
+                                                <Label Text="Station öffnen"
                                                        FontSize="12"
                                                        Opacity="0.7" />
                                             </VerticalStackLayout>

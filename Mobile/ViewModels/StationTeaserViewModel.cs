@@ -7,7 +7,7 @@ using Windeck.Geschichtstour.Mobile.Services;
 namespace Windeck.Geschichtstour.Mobile.ViewModels;
 
 /// <summary>
-/// Laedt Stations-Teaserdaten und stellt Aktionen fuer Teilen und Navigation bereit.
+/// Lädt Stations-Teaserdaten und stellt Aktionen fuer Teilen und Navigation bereit.
 /// </summary>
 public class StationTeaserViewModel : BaseViewModel
 {
@@ -51,7 +51,7 @@ public class StationTeaserViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Laedt die Station fuer den uebergebenen Code und setzt den Anzeigestatus.
+    /// Lädt die Station fuer den uebergebenen Code und setzt den Anzeigestatus.
     /// </summary>
     /// <param name="code">Stationscode aus QR-Code oder Deeplink.</param>
     /// <returns>Asynchroner Vorgang zum Laden und Setzen der Station.</returns>
@@ -83,9 +83,9 @@ public class StationTeaserViewModel : BaseViewModel
 
 
     /// <summary>
-    /// Erstellt einen oeffentlichen Share-Link zur aktuellen Station.
+    /// Erstellt einen öffentlichen Share-Link zur aktuellen Station.
     /// </summary>
-    /// <returns>Asynchroner Vorgang zum Oeffnen des systemweiten Share-Dialogs.</returns>
+    /// <returns>Asynchroner Vorgang zum öffnen des systemweiten Share-Dialogs.</returns>
     public async Task ShareStationAsync()
     {
         if (Station == null)
@@ -105,7 +105,7 @@ public class StationTeaserViewModel : BaseViewModel
 
 
     /// <summary>
-    /// Oeffnet die aktuelle Station mit Koordinaten in Komoot.
+    /// öffnet die aktuelle Station mit Koordinaten in Komoot.
     /// </summary>
     /// <returns>Asynchroner Vorgang zum Starten der externen App bzw. Website.</returns>
     private async Task OpenInKomootAsync()
@@ -139,7 +139,7 @@ public class StationTeaserViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Oeffnet die aktuelle Station in einer Karten-App per Koordinaten oder Adresse.
+    /// öffnet die aktuelle Station in einer Karten-App per Koordinaten oder Adresse.
     /// </summary>
     /// <returns>Asynchroner Vorgang zum Starten der Karten-App.</returns>
     private async Task OpenInMapsAsync()

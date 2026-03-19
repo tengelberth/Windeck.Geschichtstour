@@ -31,6 +31,11 @@ public class StationContentViewModel : BaseViewModel
         ? string.Empty
         : $"{MediaPosition + 1}/{_imageMediaItems.Count}";
 
+    /// <summary>
+    /// Kennzeichnet den letzten Ladevorgang explizit als serverseitig nicht gefundene Station.
+    /// </summary>
+    public bool LastLoadWasNotFound { get; private set; }
+
     public StationDto? Station
     {
         get => _station;
@@ -38,12 +43,12 @@ public class StationContentViewModel : BaseViewModel
         {
             if (SetProperty(ref _station, value))
             {
-                // Abh�ngige Properties benachrichtigen
+                // Abhängige Properties benachrichtigen
                 OnPropertyChanged(nameof(HasStation));
                 OnPropertyChanged(nameof(HasLongDescription));
                 LongDescriptionHtml = BuildLongDescriptionHtml(_station?.LongDescription ?? string.Empty, ++_descriptionVersion);
                 LongDescriptionHeight = 1800;
-                // Zus�tzliche Logik nach der �nderung
+                // Zusätzliche Logik nach der Änderung
                 RebuildImageMediaItems();
                 // Commands neu bewerten
                 OpenInMapsCommand.ChangeCanExecute();
@@ -113,7 +118,7 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Laedt Stationsdetails fuer den uebergebenen Code und aktualisiert die Medienliste.
+    /// Lädt Stationsdetails fuer den uebergebenen Code und aktualisiert die Medienliste.
     /// </summary>
     /// <param name="code">Stationscode aus QR-Code oder Deeplink.</param>
     /// <returns>Asynchroner Vorgang zum Laden und Aktualisieren des Zustands.</returns>
@@ -135,31 +140,79 @@ public class StationContentViewModel : BaseViewModel
             return;
         }
 
+        bool loadedFromCache = false;
+
         try
         {
-            IsBusy = true;
-            Station = null;
+            LastLoadWasNotFound = false;
 
-            StationDto? station = await _apiClient.GetStationByCodeAsync(normalizedCode);
-            Station = station;
-            _loadedStationCode = station?.Code;
+            StationDto? cachedStation = await _apiClient.TryGetCachedStationByCodeAsync(normalizedCode);
+            if (cachedStation != null)
+            {
+                Station = cachedStation;
+                _loadedStationCode = cachedStation.Code;
+                loadedFromCache = true;
+            }
+
+            if (!loadedFromCache)
+            {
+                IsBusy = true;
+                StartLoadingFeedback(
+                    "Hoppla, da hast du uns wohl beim Nickerchen erwischt.",
+                    "Wir wecken gerade kurz den Server auf.",
+                    "Im Hintergrund führt jetzt auch die Datenbank hoch.",
+                    "Das dauert einen kleinen Moment. So sparen wir jedoch laufende Kosten.",
+                    "Sobald der Server wach ist, werden die nächsten Anfragen deutlich schneller bearbeitet.",
+                    "Fast da - wir sammeln die Inhalte gerade für dich zusammen.",
+                "Dir gefällt die App oder du hast Verbesserungsvorschläge? Dann schreib uns gern eine Rezension im Store.",
+                "Du findest, es fehlen noch Stationen? Dann melde dich und gestalte die Inhalte mit.");
+                Station = null;
+            }
+
+            ApiClient.StationFetchResult result = await _apiClient.GetStationByCodeWithStatusAsync(normalizedCode, allowUserRetryUi: false);
+            if (result.Station != null)
+            {
+                Station = result.Station;
+                LastLoadWasNotFound = false;
+                _loadedStationCode = result.Station.Code;
+            }
+            else if (!loadedFromCache)
+            {
+                Station = null;
+                LastLoadWasNotFound = result.WasNotFound;
+                _loadedStationCode = null;
+            }
+            else
+            {
+                // Bereits sichtbare Cachedaten sollen bei einem stillen Hintergrundfehler oder späterem 404 nicht sofort verschwinden.
+                LastLoadWasNotFound = false;
+            }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Fehler beim Laden der Station mit Code {normalizedCode}: {ex}");
-            Station = null;
-            _loadedStationCode = null;
+            if (!loadedFromCache)
+            {
+                Station = null;
+                _loadedStationCode = null;
+            }
+
+            LastLoadWasNotFound = false;
         }
         finally
         {
-            IsBusy = false;
+            if (!loadedFromCache)
+            {
+                StopLoadingFeedback();
+                IsBusy = false;
+            }
         }
     }
 
     /// <summary>
-    /// Erstellt einen oeffentlichen Share-Link zur aktuellen Station.
+    /// Erstellt einen öffentlichen Share-Link zur aktuellen Station.
     /// </summary>
-    /// <returns>Asynchroner Vorgang zum Oeffnen des systemweiten Share-Dialogs.</returns>
+    /// <returns>Asynchroner Vorgang zum öffnen des systemweiten Share-Dialogs.</returns>
     public async Task ShareStationAsync()
     {
         if (Station == null)
@@ -197,8 +250,8 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Baut ein vollst�ndiges HTML-Dokument f�r die Beschreibung inklusive Styling,
-    /// Link-Weiterleitung und H�hen-Callback an die WebView.
+    /// Baut ein vollständiges HTML-Dokument für die Beschreibung inklusive Styling,
+    /// Link-Weiterleitung und Höhen-Callback an die WebView.
     /// </summary>
     private void ReloadDescription()
     {
@@ -230,7 +283,7 @@ public class StationContentViewModel : BaseViewModel
                 body {
                     margin: 0;
                     padding: 0;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segö UI', sans-serif;
                     font-size: 16px;
                     line-height: 1.5;
                     color: #1b1b1b;
@@ -293,7 +346,7 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Oeffnet die aktuelle Station mit Koordinaten in Komoot.
+    /// öffnet die aktuelle Station mit Koordinaten in Komoot.
     /// </summary>
     /// <returns>Asynchroner Vorgang zum Starten der externen App bzw. Website.</returns>
     private async Task OpenInKomootAsync()
@@ -326,7 +379,7 @@ public class StationContentViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Oeffnet die Station in einer Karten-App per Koordinaten oder Adresse.
+    /// öffnet die Station in einer Karten-App per Koordinaten oder Adresse.
     /// </summary>
     /// <returns>Asynchroner Vorgang zum Starten der Karten-App.</returns>
     private async Task OpenInMapsAsync()
@@ -375,5 +428,3 @@ public class StationContentViewModel : BaseViewModel
         await Launcher.OpenAsync(uri);
     }
 }
-
-

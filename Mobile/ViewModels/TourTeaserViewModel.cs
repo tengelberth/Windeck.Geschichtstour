@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Windeck.Geschichtstour.Mobile.Configuration;
 using Windeck.Geschichtstour.Mobile.Helpers;
 using Windeck.Geschichtstour.Mobile.Models;
@@ -65,22 +65,53 @@ public class TourTeaserViewModel : BaseViewModel
             return;
         }
 
+        bool loadedFromCache = false;
+
         try
         {
-            IsBusy = true;
-            Tour = null;
+            TourDto? cachedTour = await _apiClient.TryGetCachedTourByIdAsync(id);
+            if (cachedTour != null)
+            {
+                Tour = cachedTour;
+                loadedFromCache = true;
+            }
 
-            TourDto? tour = await _apiClient.GetTourByIdAsync(id);
-            Tour = tour;
+            if (!loadedFromCache)
+            {
+                IsBusy = true;
+                StartLoadingFeedback(
+                    "Hoppla, da hast du uns wohl beim Nickerchen erwischt.",
+                    "Wir wecken gerade kurz den Server auf.",
+                    "Im Hintergrund fährt jetzt auch die Datenbank hoch.",
+                    "Das dauert einen kleinen Moment. So sparen wir jedoch laufende Kosten.",
+                    "Sobald der Server wach ist, werden die nächsten Anfragen deutlich schneller bearbeitet.",
+                    "Fast da - wir sammeln die Inhalte gerade für dich zusammen.",
+                "Dir gefällt die App oder du hast Verbesserungsvorschläge? Dann schreib uns gern eine Rezension im Store.",
+                "Du findest, es fehlen noch Stationen? Dann melde dich und gestalte die Inhalte mit.");
+                Tour = null;
+            }
+
+            TourDto? tour = await _apiClient.GetTourByIdAsync(id, allowUserRetryUi: false);
+            if (tour != null || !loadedFromCache)
+            {
+                Tour = tour;
+            }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Fehler beim Laden der Tour {id}: {ex}");
-            Tour = null;
+            if (!loadedFromCache)
+            {
+                Tour = null;
+            }
         }
         finally
         {
-            IsBusy = false;
+            if (!loadedFromCache)
+            {
+                StopLoadingFeedback();
+                IsBusy = false;
+            }
         }
     }
 
@@ -101,7 +132,7 @@ public class TourTeaserViewModel : BaseViewModel
 
         if (stopsWithCoords.Count < 2)
         {
-            await UiNotify.ToastAsync("Keine Tourdaten zum Berechnen verfügbar.");
+            await UiNotify.ToastAsync("Keine Tourdaten zum Berechnen verf�gbar.");
             return;
         }
 
@@ -156,3 +187,4 @@ public class TourTeaserViewModel : BaseViewModel
         });
     }
 }
+

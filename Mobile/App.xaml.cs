@@ -1,4 +1,5 @@
 ﻿using Windeck.Geschichtstour.Mobile.Configuration;
+using Windeck.Geschichtstour.Mobile.Services;
 using Windeck.Geschichtstour.Mobile.Views;
 
 namespace Windeck.Geschichtstour.Mobile
@@ -9,18 +10,32 @@ namespace Windeck.Geschichtstour.Mobile
     public partial class App : Application
     {
         private readonly AppUrlOptions _appUrlOptions;
+        private readonly ApiClient _apiClient;
+        private int _warmupInProgress;
 
         /// <summary>
-        /// Initialisiert die Anwendung und setzt die Shell als Hauptseite.
+        /// Initialisiert die Anwendung, setzt die Shell als Hauptseite und startet den stillen Backend-Warmup.
         /// </summary>
         /// <param name="serviceProvider">DI-Container zum Aufloesen von AppShell.</param>
         /// <param name="appUrlOptions">Konfiguration fuer gueltige Deeplink-Hosts.</param>
-        public App(IServiceProvider serviceProvider, AppUrlOptions appUrlOptions)
+        /// <param name="apiClient">API-Client fuer den stillen readyz-Aufruf beim Start.</param>
+        public App(IServiceProvider serviceProvider, AppUrlOptions appUrlOptions, ApiClient apiClient)
         {
             _appUrlOptions = appUrlOptions;
+            _apiClient = apiClient;
             InitializeComponent();
 
             MainPage = serviceProvider.GetRequiredService<AppShell>();
+            TriggerBackendWarmup();
+        }
+
+        /// <summary>
+        /// Startet beim Zurueckkehren in die App erneut einen leichten Warmup, falls der Backend-Pfad wieder kalt wurde.
+        /// </summary>
+        protected override void OnResume()
+        {
+            base.OnResume();
+            TriggerBackendWarmup();
         }
 
         /// <summary>
@@ -64,6 +79,39 @@ namespace Windeck.Geschichtstour.Mobile
                         $"{nameof(TourTeaserPage)}?id={id}");
                 }
             });
+        }
+
+        /// <summary>
+        /// Stösst einen stillen Warmup-Lauf an, ohne die UI davon abhängig zu machen.
+        /// </summary>
+        private void TriggerBackendWarmup()
+        {
+            _ = WarmupBackendAsync();
+        }
+
+        /// <summary>
+        /// Ruft den readyz-Endpunkt mit kurzem Timeout auf, um den ersten Datenbankzugriff beim aktiven Nutzer abzufedern.
+        /// </summary>
+        private async Task WarmupBackendAsync()
+        {
+            if (Interlocked.Exchange(ref _warmupInProgress, 1) == 1)
+            {
+                return;
+            }
+
+            try
+            {
+                using CancellationTokenSource cts = new(TimeSpan.FromSeconds(4));
+                await _apiClient.PingReadyAsync(cts.Token);
+            }
+            catch
+            {
+                // Der Warmup bleibt bewusst still und darf die App nicht stoeren.
+            }
+            finally
+            {
+                Interlocked.Exchange(ref _warmupInProgress, 0);
+            }
         }
 
         /// <summary>

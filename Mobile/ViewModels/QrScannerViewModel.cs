@@ -33,7 +33,7 @@ public class QrScannerViewModel : BaseViewModel
     }
 
     /// <summary>
-    /// Wird beim Anzeigen aufgerufen und laedt asynchron die benoetigten Daten.
+    /// Wird beim Anzeigen aufgerufen und lädt asynchron die benötigten Daten.
     /// </summary>
     private async Task OnAppearingAsync()
     {

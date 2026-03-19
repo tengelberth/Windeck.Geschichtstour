@@ -6,7 +6,7 @@
     xmlns:zxing="clr-namespace:ZXing.Net.Maui.Controls;assembly=ZXing.Net.MAUI.Controls"
     Title="QR-Code scannen">
 
-    <!-- Zweck: Scanner-Oberflaeche zum Erfassen von QR-Codes. -->
+    <!-- Zweck: Scanner-Oberfläche zum Erfassen von QR-Codes. -->
 
 
     <Grid>
