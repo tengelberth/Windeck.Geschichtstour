@@ -55,6 +55,8 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
         /// </summary>
         public async Task<IActionResult> OnPostAsync()
         {
+            Tour.TourLink = NormalizeTourLink(Tour.TourLink);
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -74,6 +76,25 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Tours
             await _dbContext.SaveChangesAsync();
 
             return RedirectToPage("Index");
+        }
+
+        /// <summary>
+        /// Ergänzt bei Tour-Links bei Bedarf das HTTPS-Schema.
+        /// </summary>
+        private static string? NormalizeTourLink(string? tourLink)
+        {
+            if (string.IsNullOrWhiteSpace(tourLink))
+            {
+                return null;
+            }
+
+            string normalizedUrl = tourLink.Trim();
+            if (!normalizedUrl.Contains("://", StringComparison.Ordinal))
+            {
+                normalizedUrl = $"https://{normalizedUrl}";
+            }
+
+            return normalizedUrl;
         }
     }
 }

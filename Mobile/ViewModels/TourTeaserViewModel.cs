@@ -30,6 +30,7 @@ public class TourTeaserViewModel : BaseViewModel
             if (SetProperty(ref _tour, value))
             {
                 OnPropertyChanged(nameof(HasTour));
+                OnPropertyChanged(nameof(HasTourLink));
                 OnPropertyChanged(nameof(OrderedStops));
                 OnPropertyChanged(nameof(StopCountText));
             }
@@ -37,9 +38,11 @@ public class TourTeaserViewModel : BaseViewModel
     }
 
     public bool HasTour => Tour != null;
+    public bool HasTourLink => !string.IsNullOrWhiteSpace(Tour?.TourLink);
     public string StopCountText => Tour == null ? string.Empty : $"{Tour.Stops.Count} Stationen";
 
     public Command StartTourNavigationCommand { get; }
+    public Command StartTourLinkCommand { get; }
     public Command<TourStopDto> OpenTourStopCommand { get; }
     public Command ShareTourCommand { get; }
 
@@ -51,6 +54,7 @@ public class TourTeaserViewModel : BaseViewModel
         _apiClient = apiClient;
         _appUrlOptions = appUrlOptions;
         StartTourNavigationCommand = new Command(async () => await OpenTourInMapsAsync());
+        StartTourLinkCommand = new Command(async () => await OpenTourLinkAsync());
         OpenTourStopCommand = new Command<TourStopDto>(async stop => await OpenTourStopAsync(stop));
         ShareTourCommand = new Command(async () => await ShareTourAsync());
     }
@@ -115,6 +119,45 @@ public class TourTeaserViewModel : BaseViewModel
         }
     }
 
+    /// <summary>
+    /// Öffnet den optional hinterlegten externen Tour-Link.
+    /// </summary>
+    private async Task OpenTourLinkAsync()
+    {
+        if (!TryGetTourLinkUri(out Uri? uri))
+        {
+            await UiNotify.ToastAsync("Kein gültiger Tour-Link hinterlegt.");
+            return;
+        }
+
+        await Launcher.OpenAsync(uri!);
+    }
+
+    /// <summary>
+    /// Normalisiert den externen Tour-Link zu einer absoluten HTTP(S)-URL.
+    /// </summary>
+    private bool TryGetTourLinkUri(out Uri? uri)
+    {
+        uri = null;
+
+        string? rawUrl = Tour?.TourLink?.Trim();
+        if (string.IsNullOrWhiteSpace(rawUrl))
+        {
+            return false;
+        }
+
+        if (!rawUrl.Contains("://", StringComparison.Ordinal))
+        {
+            rawUrl = $"https://{rawUrl}";
+        }
+
+        if (!Uri.TryCreate(rawUrl, UriKind.Absolute, out uri))
+        {
+            return false;
+        }
+
+        return uri != null && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
+    }
     /// <summary>
     /// Öffnet die ausgewählte Tour in der Karten-App.
     /// </summary>
@@ -187,4 +230,3 @@ public class TourTeaserViewModel : BaseViewModel
         });
     }
 }
-

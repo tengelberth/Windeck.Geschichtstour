@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
     x:Class="Windeck.Geschichtstour.Mobile.Views.TourTeaserPage"
     x:Name="TourTeaserRoot"
@@ -98,6 +98,12 @@
        FontSize="12"
        VerticalOptions="Center"
        Opacity="0.72" />
+
+                            <Button Text="Mit unserer Tour starten"
+                                    IsVisible="{Binding HasTourLink}"
+                                    ImageSource="mapwhite.png"
+                                    HeightRequest="41"
+                                    Command="{Binding StartTourLinkCommand}" />
 
                             <Button Text="In Google Maps öffnen"
                                     ImageSource="naviwhite.png"

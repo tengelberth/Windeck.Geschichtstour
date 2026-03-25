@@ -27,6 +27,11 @@ namespace Windeck.Geschichtstour.Backend.Models
         public string? Description { get; set; }
 
         /// <summary>
+        /// Optionaler Link, z. B. zu Komoot oder einer geführten Route.
+        /// </summary>
+        public string? TourLink { get; set; }
+
+        /// <summary>
         /// Alle Haltepunkte (Stops) der Tour in der vorgesehenen Reihenfolge.
         /// </summary>
         public List<TourStop> Stops { get; set; } = new();

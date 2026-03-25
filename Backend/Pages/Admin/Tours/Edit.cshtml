@@ -26,6 +26,15 @@
         <span asp-validation-for="Tour.Description" class="text-danger"></span>
     </div>
 
+    <div class="mb-3">
+        <label asp-for="Tour.TourLink" class="form-label">Komoot-/Tour-Link</label>
+        <input asp-for="Tour.TourLink" class="form-control" placeholder="https://..." />
+        <small class="form-text text-muted">
+            Optional. Wenn ein Link hinterlegt ist, erscheint in der App ein Button "Tour starten".
+        </small>
+        <span asp-validation-for="Tour.TourLink" class="text-danger"></span>
+    </div>
+
     <button type="submit" class="btn btn-primary">
         <i class="bi bi-check-lg me-1"></i>
         Speichern

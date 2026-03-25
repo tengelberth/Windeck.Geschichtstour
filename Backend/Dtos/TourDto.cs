@@ -19,6 +19,11 @@ namespace Windeck.Geschichtstour.Backend.Dtos
         public string? Description { get; set; }
 
         /// <summary>
+        /// Optionaler Link, z. B. fuer Komoot oder eine fertige Tour-Route.
+        /// </summary>
+        public string? TourLink { get; set; }
+
+        /// <summary>
         /// Haltepunkte der Tour in der Reihenfolge, in der sie besucht werden sollen.
         /// </summary>
         public List<TourStopDto> Stops { get; set; } = new();

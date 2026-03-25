@@ -45,6 +45,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                 Id = t.Id,
                 Title = t.Title,
                 Description = t.Description,
+                TourLink = t.TourLink,
                 Stops = t.Stops
                     .OrderBy(s => s.Order)
                     .Select(ts => new TourStopDto
@@ -97,6 +98,7 @@ namespace Windeck.Geschichtstour.Backend.Controllers
                 Id = tour.Id,
                 Title = tour.Title,
                 Description = tour.Description,
+                TourLink = tour.TourLink,
                 Stops = tour.Stops
                     .OrderBy(ts => ts.Order)
                     .Select(ts => new TourStopDto

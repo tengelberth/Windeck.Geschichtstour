@@ -12,6 +12,8 @@ namespace Windeck.Geschichtstour.Mobile.Models
 
         public string? Description { get; set; }
 
+        public string? TourLink { get; set; }
+
         public List<TourStopDto> Stops { get; set; } = new();
     }
 }
