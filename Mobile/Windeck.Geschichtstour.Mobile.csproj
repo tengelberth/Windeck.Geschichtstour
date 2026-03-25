@@ -31,7 +31,9 @@
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-		<ApplicationVersion>2</ApplicationVersion>
+		<ApplicationVersion>5</ApplicationVersion>
+		<!-- Optionaler Schalter für einen lokal installierbaren Distribution-Testbuild ohne Archiv/IPA. -->
+		<LocalIosDistributionSigning>false</LocalIosDistributionSigning>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -45,11 +47,20 @@
 	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'=='Debug'">
 	  <CodesignKey>Apple Development: Created via API (99VA83NRMR)</CodesignKey>
 	  <CodesignProvision>VS: de.tobias.engelberth.windeck.geschichtstour Development</CodesignProvision>
-	  <ProvisioningType>automatic</ProvisioningType>
+	  <ProvisioningType>manual</ProvisioningType>
 	  <CodesignEntitlements>Platforms\iOS\Entitlements.Debug.plist</CodesignEntitlements>
 	</PropertyGroup>
 
-		<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'!='Debug'">
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'=='Release' and '$(ArchiveOnBuild)'!='true' and '$(BuildIpa)'!='true' and '$(LocalIosDistributionSigning)'!='true'">
+	  <!-- Lokales Release-Testen auf einem Gerät braucht Development-Signing; das Store-Profil ist nur für Archiv/App Store Connect geeignet. -->
+	  <CodesignKey>Apple Development: Created via API (99VA83NRMR)</CodesignKey>
+	  <CodesignProvision>VS: de.tobias.engelberth.windeck.geschichtstour Development</CodesignProvision>
+	  <ProvisioningType>manual</ProvisioningType>
+	  <CodesignEntitlements>Platforms\iOS\Entitlements.Debug.plist</CodesignEntitlements>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(TargetFramework)'=='net10.0-ios' and '$(Configuration)'=='Release' and ('$(ArchiveOnBuild)'=='true' Or '$(BuildIpa)'=='true' Or '$(LocalIosDistributionSigning)'=='true')">
+	  <!-- Für echte Archive/IPAs bleibt Distribution-Signing aktiv. -->
 	  <CodesignKey>Apple Distribution: Martina Schneider (923R362WK6)</CodesignKey>
 	  <CodesignProvision>Distribution Profile Geschichtstour Windeck</CodesignProvision>
 	  <ProvisioningType>manual</ProvisioningType>

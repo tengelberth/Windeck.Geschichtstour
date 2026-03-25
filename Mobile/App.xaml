@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:Windeck.Geschichtstour.Mobile"
              x:Class="Windeck.Geschichtstour.Mobile.App">
 
-    <!-- Zweck: Globale App-Ressourcen und Styles fuer die MAUI-Anwendung. -->
+    <!-- Zweck: Globale App-Ressourcen und Styles für die MAUI-Anwendung. -->
 
     <Application.Resources>
         <ResourceDictionary>
