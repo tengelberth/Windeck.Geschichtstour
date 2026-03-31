@@ -1,4 +1,4 @@
-﻿using Android.App;
+using Android.App;
 using Android.Content;
 using Android.Content.PM;
 
@@ -11,14 +11,28 @@ namespace Windeck.Geschichtstour.Mobile
     Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
     DataScheme = "https",
     DataHost = "geschichtstour-backend.azurewebsites.net",
-    DataPathPrefix = "/",
+    DataPathPrefix = "/station",
+    AutoVerify = true)]
+    [IntentFilter(
+    new[] { Intent.ActionView },
+    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+    DataScheme = "https",
+    DataHost = "geschichtstour-backend.azurewebsites.net",
+    DataPathPrefix = "/tour",
     AutoVerify = true)]
     [IntentFilter(
     new[] { Intent.ActionView },
     Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
     DataScheme = "https",
     DataHost = "geschichtstour.windecker-laendchen.com",
-    DataPathPrefix = "/",
+    DataPathPrefix = "/station",
+    AutoVerify = true)]
+    [IntentFilter(
+    new[] { Intent.ActionView },
+    Categories = new[] { Intent.CategoryDefault, Intent.CategoryBrowsable },
+    DataScheme = "https",
+    DataHost = "geschichtstour.windecker-laendchen.com",
+    DataPathPrefix = "/tour",
     AutoVerify = true)]
     public class MainActivity : MauiAppCompatActivity
     {
