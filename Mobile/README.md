@@ -1,10 +1,10 @@
 # Mobile - Windeck.Geschichtstour.Mobile
 
-.NET MAUI App fuer die digitale Geschichtstour Windeck.
+.NET MAUI App für die digitale Geschichtstour Windeck.
 
 Die App konsumiert ausschliesslich das Backend unter `Backend/` und bietet:
 - Startseite mit Code-Eingabe
-- QR-Scanner fuer Stationscodes
+- QR-Scanner für Stationscodes
 - Stationslisten- und Kartenansicht
 - Tourenliste und Tour-Teaser
 - Medienanzeige je Station
@@ -14,7 +14,7 @@ Die App konsumiert ausschliesslich das Backend unter `Backend/` und bietet:
 - Views: XAML-Seiten in `Views/`
 - ViewModels: Logik und Commands in `ViewModels/`
 - Services: API-Zugriff in `Services/`
-- Models: DTOs fuer API-Daten in `Models/`
+- Models: DTOs für API-Daten in `Models/`
 - Helper/Behaviors/Controls: UI- und Plattform-nahe Hilfen
 
 ## API-Anbindung
@@ -30,7 +30,7 @@ Die App konsumiert ausschliesslich das Backend unter `Backend/` und bietet:
 ## Build und Start
 
 Voraussetzungen:
-- .NET 8 SDK
+- .NET 10 SDK
 - MAUI Workloads
 - Android SDK bzw. iOS Toolchain (je nach Zielplattform)
 
@@ -40,19 +40,19 @@ Beispiele:
 
 ## Deep Links
 
-Die App verarbeitet Deeplinks fuer Stationen, z. B.:
+Die App verarbeitet Deeplinks für Stationen und Touren:
 - `/station?code=...`
-- `/share/station?code=...`
+- `/tour?id=...`
 
 Hinweis: Android-/iOS-Intentfilter bzw. Associated Domains sind plattformspezifisch
 und weiterhin statisch in den Plattformdateien hinterlegt.
-Bei Domainwechsel muessen daher auch `Mobile/Platforms/Android/MainActivity.cs`
+Bei Domainwechsel müssen daher auch `Mobile/Platforms/Android/MainActivity.cs`
 und `Mobile/Platforms/iOS/Entitlements.plist` angepasst werden.
 
 ## Open-Source-Hinweis
 
-Auch fuer das Mobile-Projekt gilt die proprietaere Lizenz aus `LICENSE.md` (Repository-Root).
+Auch für das Mobile-Projekt gilt die proprietäre Lizenz aus `LICENSE.md` (Repository-Root).
 Wichtige Kurzfassung:
 - Code-Urheberrecht: Tobias Engelberth
-- Inhalte/Medien-Urheberrecht: Tourismus Windecker Laendchen e.V.
-- Medienassets (Bilder, Logos, PDFs usw.) duerfen nicht wiederverwendet werden.
+- Inhalte/Medien-Urheberrecht: Tourismus Windecker Ländchen e.V.
+- Medienassets (Bilder, Logos, PDFs usw.) dürfen nicht wiederverwendet werden.

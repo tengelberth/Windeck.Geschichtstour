@@ -30,7 +30,7 @@
 		<ApplicationId>de.tobias.engelberth.windeck.geschichtstour</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
 		<ApplicationVersion>5</ApplicationVersion>
 		<!-- Optionaler Schalter für einen lokal installierbaren Distribution-Testbuild ohne Archiv/IPA. -->
 		<LocalIosDistributionSigning>false</LocalIosDistributionSigning>
