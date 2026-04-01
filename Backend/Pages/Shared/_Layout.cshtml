@@ -20,6 +20,8 @@
     <!-- FavIcon setzen -->
     <link rel="icon" type="image/png" sizes="32x32" href="~/images/tourismusverein-logo.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="~/images/tourismusverein-logo.png" />
+
+    @await RenderSectionAsync("Head", required: false)
 </head>
 
 <body>
@@ -63,7 +65,7 @@
                         </li>
 
                         <li class="nav-item ms-lg-2">
-                            <a class="btn btn-sm btn-primary rounded-pill px-3 landing-admin-btn" href="/Admin" target="_blank">
+                            <a class="btn btn-sm btn-primary rounded-pill px-3 landing-admin-btn" href="/Admin" target="_blank" rel="nofollow noopener">
                                 <i class="bi bi-shield-lock me-1"></i> Admin
                             </a>
                         </li>
@@ -107,7 +109,7 @@
 
                             <span class="footer-sep">|</span>
 
-                            <a class="footer-link" href="/swagger" target="_blank" rel="noopener">
+                            <a class="footer-link" href="/swagger" target="_blank" rel="nofollow noopener">
                                 API (Swagger)
                             </a>
                         </div>

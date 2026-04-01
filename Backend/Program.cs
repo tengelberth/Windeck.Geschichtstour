@@ -109,6 +109,23 @@ if (runDbInitializationOnStartup)
     SeedData.Initialize(dbContext);
 }
 
+// Admin-, Login- und Swagger-Bereiche sollen nicht von Suchmaschinen indexiert werden.
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/Admin", StringComparison.OrdinalIgnoreCase)
+        || context.Request.Path.StartsWithSegments("/Account", StringComparison.OrdinalIgnoreCase)
+        || context.Request.Path.StartsWithSegments("/swagger", StringComparison.OrdinalIgnoreCase))
+    {
+        context.Response.OnStarting(() =>
+        {
+            context.Response.Headers["X-Robots-Tag"] = "noindex, nofollow, noarchive";
+            return Task.CompletedTask;
+        });
+    }
+
+    await next();
+});
+
 // --------------------------------------------------------
 // HTTP-Pipeline konfigurieren
 // --------------------------------------------------------
