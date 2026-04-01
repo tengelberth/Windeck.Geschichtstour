@@ -160,7 +160,7 @@ public class StationContentViewModel : BaseViewModel
                 StartLoadingFeedback(
                     "Hoppla, da hast du uns wohl beim Nickerchen erwischt.",
                     "Wir wecken kurz den Server auf.",
-                    "Im Hintergrund führt jetzt auch die Datenbank hoch.",
+                    "Im Hintergrund fährt jetzt auch die Datenbank hoch.",
                     "Das dauert einen kleinen Moment. So sparen wir jedoch laufende Kosten.",
                     "Sobald der Server wach ist, werden die nächsten Anfragen deutlich schneller bearbeitet.",
                     "Fast da - wir sammeln die Inhalte jetzt für dich zusammen.",

@@ -3,32 +3,34 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Models;
+using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 {
     /// <summary>
-    /// Laedt und verwaltet die Stationsuebersicht im Adminbereich.
+    /// Lädt und verwaltet die Stationsübersicht im Adminbereich.
     /// </summary>
     public class IndexModel : PageModel
     {
         private readonly AppDbContext _dbContext;
+        private readonly IWebHostEnvironment _env;
 
         /// <summary>
         /// Initialisiert eine neue Instanz von IndexModel.
         /// </summary>
-        public IndexModel(AppDbContext dbContext)
+        public IndexModel(AppDbContext dbContext, IWebHostEnvironment env)
         {
             _dbContext = dbContext;
+            _env = env;
         }
 
         [BindProperty(SupportsGet = true)]
         public string? SearchTerm { get; set; }
 
-
         public IList<Station> Stations { get; set; } = new List<Station>();
 
         /// <summary>
-        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// Lädt die für die Seite benötigten Daten bei einer GET-Anfrage.
         /// </summary>
         public async Task OnGetAsync()
         {
@@ -50,7 +52,6 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 .ToListAsync();
         }
 
-
         /// <summary>
         /// Löscht eine Station anhand der ID.
         /// Wird über ein POST-Formular mit Handler "Delete" aufgerufen.
@@ -67,27 +68,27 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
                 return NotFound();
             }
 
-            // Zunächst abhängige TourStops löschen
+            // Zunächst abhängige TourStops löschen.
             if (station.TourStops.Any())
             {
                 _dbContext.TourStops.RemoveRange(station.TourStops);
             }
 
-            // Medienobjekte löschen (Metadaten; Dateien im Storage muessen separat behandelt werden)
             if (station.MediaItems.Any())
             {
                 _dbContext.MediaItems.RemoveRange(station.MediaItems);
             }
 
             _dbContext.Stations.Remove(station);
-            TempData["SuccessMessage"] = "Station wurde gelöscht.";
             await _dbContext.SaveChangesAsync();
 
-            // Nach dem Löschen wieder auf die Übersicht
+            bool storageCleanupSucceeded = StationUploadStorage.TryDeleteStationUploadDirectory(_env.WebRootPath, station.Id);
+
+            TempData["SuccessMessage"] = storageCleanupSucceeded
+                ? "Station wurde gelöscht."
+                : "Station wurde gelöscht. Die zugehörigen Upload-Dateien konnten auf dem Server nicht vollständig entfernt werden.";
+
             return RedirectToPage();
         }
     }
 }
-
-
-
