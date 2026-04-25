@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://geschichtstour-backend.azurewebsites.net/sitemap.xml
