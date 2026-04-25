@@ -1,6 +1,6 @@
 # Windeck.Geschichtstour
 
-Digitale Geschichtstour fuer die Gemeinde Windeck:
+Digitale Geschichtstour für die Gemeinde Windeck:
 - `Backend/`: ASP.NET Core Backend (Admin + REST API)
 - `Mobile/`: .NET MAUI App (Android/iOS)
 
@@ -10,7 +10,7 @@ Das Projekt verbindet historische Inhalte vor Ort mit digitaler Nutzung:
 - Stationen per QR-Code aufrufen
 - Inhalte in der App lesen und ansehen
 - Touren mit mehreren Stationen darstellen
-- Inhalte zentral ueber die Admin-Oberfläche pflegen
+- Inhalte zentral über die Admin-Oberfläche pflegen
 
 ## Repository-Struktur
 
@@ -21,9 +21,9 @@ Das Projekt verbindet historische Inhalte vor Ort mit digitaler Nutzung:
 ## Schnellstart
 
 1. Voraussetzungen:
-   - .NET 8 SDK
+   - .NET 10 SDK
    - SQL Server (lokal oder remote)
-   - optional: MAUI Workloads fuer Mobile
+   - optional: MAUI Workloads für Mobile
 2. Backend starten:
    - `dotnet run --project Backend/Windeck.Geschichtstour.Backend.csproj`
 3. Mobile starten:
@@ -51,13 +51,13 @@ Die Nutzung ist in `LICENSE.md` geregelt (proprietäre Source-Available-Lizenz).
 Kurzfassung:
 - Code-Urheberrecht: Tobias Engelberth
 - Inhalte/Medien-Urheberrecht: Tourismus Windecker Ländchen e.V.
-- Gemeinde Windeck: exklusives operatives Nutzungsrecht fuer produktiven Einsatz
-- Dritte: Code nur fuer private, nicht-öffentliche Projekte
+- Gemeinde Windeck: exklusives operatives Nutzungsrecht für produktiven Einsatz
+- Dritte: Code nur für private, nicht-öffentliche Projekte
 - Bilder, Logos, PDFs und sonstige Medien: nur ansehen/herunterladen, keine Wiederverwendung
 
 ## Sicherheit vor Veröffentlichung
 
-Vor einer öffentlichen Bereitstellung bitte insbesondere pruefen:
+Vor einer öffentlichen Bereitstellung bitte insbesondere prüfen:
 - `Backend/appsettings.json` (Admin-Zugangsdaten)
 - `Backend/wwwroot/uploads/` (Dateiinhalte, Rechte, personenbezogene Daten)
 - keine gesperrten Medieninhalte unerlaubt weitergeben oder weiterverwenden

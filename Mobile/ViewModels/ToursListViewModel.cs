@@ -73,8 +73,8 @@ public class ToursListViewModel : BaseViewModel
                         ? "Ich hole kurz die neuesten Touren rein."
                         : "Hoppla, da hast du uns wohl beim Nickerchen erwischt.",
                     hasExistingData
-                    ? "Ich gleiche gerade ab, ob sich etwas verändert hat."
-                        : "Wir wecken gerade kurz den Server auf.",
+                    ? "Ich gleiche kurz ab, ob sich etwas verändert hat."
+                        : "Wir wecken kurz den Server auf.",
                     hasExistingData
                         ? "Fast da - die Tourenliste wird gerade aufgefrischt."
                     : "Im Hintergrund fährt jetzt auch die Datenbank hoch.",
@@ -84,7 +84,7 @@ public class ToursListViewModel : BaseViewModel
                     hasExistingData
                         ? "Fertig - die Touren sind gleich wieder aktuell."
                     : "Sobald der Server wach ist, werden die nächsten Anfragen deutlich schneller bearbeitet.",
-                    "Fast da - wir sammeln die Inhalte gerade für dich zusammen.",
+                    "Fast da - wir sammeln die Inhalte jetzt für dich zusammen.",
                     "Dir gefällt die App oder du hast Verbesserungsvorschläge? Dann schreib uns gern eine Rezension im Store.",
                     "Du findest, es fehlen noch Stationen? Dann melde dich und gestalte die Inhalte mit.");
             }

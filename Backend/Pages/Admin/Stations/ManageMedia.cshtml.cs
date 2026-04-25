@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Windeck.Geschichtstour.Backend.Data;
 using Windeck.Geschichtstour.Backend.Models;
+using Windeck.Geschichtstour.Backend.Services;
 
 namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
 {
@@ -39,7 +40,7 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
         public Dictionary<int, string> MediaStorageById { get; } = new();
 
         /// <summary>
-        /// Laedt die fuer die Seite benoetigten Daten bei einer GET-Anfrage.
+        /// Lädt die für die Seite benötigten Daten bei einer GET-Anfrage.
         /// </summary>
         public async Task<IActionResult> OnGetAsync(int stationId)
         {
@@ -76,8 +77,15 @@ namespace Windeck.Geschichtstour.Backend.Pages.Admin.Stations
             }
 
             _dbContext.MediaItems.Remove(media);
-            TempData["SuccessMessage"] = "Medium wurde gelöscht.";
             await _dbContext.SaveChangesAsync();
+
+            bool storageCleanupSucceeded =
+                StationUploadStorage.TryDeleteLocalMediaFile(_env.WebRootPath, media.Url)
+                && StationUploadStorage.TryDeleteStationUploadDirectoryIfEmpty(_env.WebRootPath, stationId);
+
+            TempData["SuccessMessage"] = storageCleanupSucceeded
+                ? "Medium wurde gelöscht."
+                : "Medium wurde gelöscht. Die zugehörige Datei konnte auf dem Server nicht vollständig entfernt werden.";
 
             return RedirectToPage(new { stationId });
         }
